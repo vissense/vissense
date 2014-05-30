@@ -1,0 +1,23 @@
+{
+  "name": "vissense",
+  "version": "0.0.1",
+  "homepage": "https://github.com/theborakompanioni/vissense",
+  "authors": [
+    "tbk"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "qunit": "~1.14.0"
+  }
+}

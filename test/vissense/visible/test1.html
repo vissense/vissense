@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test 1</title>
+  <link rel="stylesheet" href="../../../bower_components/qunit/qunit/qunit.css">
+</head>
+<body>
+
+  <div id="testNode1" style="height: 1px; width: 1px; background-color: red;"></div>
+
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+  <div id="testNode2" style="position: absolute; top: 0; left:-1px; height: 2px; width: 2px; background-color: red;"></div>
+
+  <div id="testNode3" style="position: absolute; left:-1px; top: -1px; height: 2px; width: 2px; background-color: red;"></div>
+
+<div id="testNode4" style="position: absolute; top: 0; left:-9px; height: 1px; width: 10px; background-color: red;"></div>
+
+  <script src="../../../bower_components/qunit/qunit/qunit.js"></script>
+  
+  <script src="../../../dist/vissense.min.js"></script>
+  
+
+  <script>
+  var element1 = document.getElementById('testNode1');
+  var element2 = document.getElementById('testNode2');
+  var element3 = document.getElementById('testNode3');
+  var element4 = document.getElementById('testNode4');
+  var vis1 = new VISSENSE.Vissense(element1);
+  var vis2 = new VISSENSE.Vissense(element2);
+  var vis3 = new VISSENSE.Vissense(element3);
+  var vis4 = new VISSENSE.Vissense(element4);
+
+  test( "if element1 is visible", function() {
+    ok( true === vis1.isVisible(), "Passed: element1 is visible" );
+    ok( 1 === vis1.getCurrentVisibilityPercentage(), "Passed: element3 is 100% visible");
+  });
+  test( "if element2 is visible", function() {
+    ok( true === vis2.isVisible(), "Passed: element2 is visible" );
+    ok( true === !vis2.isFullyVisible(), "Passed: element2 is NOT fully visible" );
+    ok( 0.5 === vis2.getCurrentVisibilityPercentage(), "Passed: element2 is 50% visible" );
+  });
+  test( "if element3 is visible", function() {
+    ok( true === vis3.isVisible(), "Passed: element3 is visible" );
+    ok( true === !vis3.isFullyVisible(), "Passed: element3 is NOT fully visible" );
+    ok( 0.25 === vis3.getCurrentVisibilityPercentage(), "Passed: element3 is 25% visible" );
+  });
+  test( "if element4 is visible", function() {
+    ok( true === vis4.isVisible(), "Passed: element4 is visible" );
+    ok( true === !vis4.isFullyVisible(), "Passed: element4 is NOT fully visible" );
+    ok( 0.1 === vis4.getCurrentVisibilityPercentage(), "Passed: element4 is 25% visible" );
+  });
+
+  </script>
+
+</body>
+</html>

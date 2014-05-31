@@ -27,7 +27,7 @@
  * fireIfVisibilityPercentageChanged(function() { ... });
  *
  */
-;(function(window, Math, VisSense, Visibility) {
+;(function(window, Math, VisSense, VisSenseUtils, Visibility) {
     /** Used as a safe reference for `undefined` in pre ES5 environments */
     var undefined;
 

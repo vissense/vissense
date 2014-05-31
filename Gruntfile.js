@@ -37,7 +37,7 @@ module.exports = function (grunt) {
                     'src2/vissense.timers.js',
                     'src2/vissense.metrics.js'
                 ],
-                dest: '../vissense-plygrnd/app/lib/vissense2.js'
+                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js'
             }
         },
         uglify: {
@@ -49,8 +49,8 @@ module.exports = function (grunt) {
                 dest: 'dist/vissense.min.js'
             },
             dist2: {
-                src: '../vissense-plygrnd/app/lib/vissense2.js',
-                dest: '../vissense-plygrnd/app/lib/vissense2.min.js'
+                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js',
+                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.min.js'
             }
         },
         jshint: {

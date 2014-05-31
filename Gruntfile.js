@@ -31,6 +31,7 @@ module.exports = function (grunt) {
             core: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
+                    'src2/vissense.utils.js',
                     'src2/vissense.core.js',
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js'
@@ -38,8 +39,8 @@ module.exports = function (grunt) {
             monitor: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.core.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.core.js',
                     'src2/vissense.monitor.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js'
@@ -47,8 +48,8 @@ module.exports = function (grunt) {
             timers: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.core.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.core.js',
                     'src2/vissense.monitor.js',
                     'src2/vissense.timers.js'
                 ],
@@ -58,8 +59,8 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.core.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.core.js',
                     'src2/vissense.monitor.js',
                     'src2/vissense.timers.js',
                     'src2/vissense.stopwatch.js',
@@ -71,8 +72,8 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.core.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.core.js',
                     'src2/vissense.monitor.js',
                     'src2/vissense.timers.js',
                     'src2/vissense.stopwatch.js',

@@ -4,19 +4,14 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-
-/**
- * depends on ['vissense.core']
- * TODO: refactor later, should not depend on vissense.core
- */
-;(function(window, VisSense) {
+;(function(window) {
   /** Used as a safe reference for `undefined` in pre ES5 environments */
   var undefined;
 
   /** Used as a reference to the global object */
   var root = (typeof window === 'object' && window) || this;
 
-  var _utils = VisSense._utils = {};
+  var utils = root.VisSenseUtils = {};
 
   /*--------------------------------------------------------------------------*/
 	// http://dustindiaz.com/rock-solid-addevent
@@ -101,11 +96,11 @@
     }
 
 
-    _utils.addEvent = addEvent;
-    _utils.extend = extend;
-    _utils.now = now;
-    _utils.defer = defer;
+    utils.addEvent = addEvent;
+    utils.extend = extend;
+    utils.now = now;
+    utils.defer = defer;
 
     addEvent(root, 'unload', EventCache.flush);
 
-}.call(this, this, this.VisSense));
+}.call(this, this));

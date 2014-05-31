@@ -40,7 +40,7 @@
         FULLY_VISIBLE: 2
     };
 
-    var updateTriggerEvents = ['DOMContentLoaded', 'load', 'scroll', 'resize'];
+    var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
     var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
 
@@ -150,12 +150,12 @@
             onPageVisibilityChange(_update);
 
             for(var i in updateTriggerEvents) {
-                VisSense._utils.addEvent(root, updateTriggerEvents[i], _update);
+                VisSenseUtils.addEvent(root, updateTriggerEvents[i], _update);
             }
 
             _update();
             // reschedule update immediately
-            VisSense._utils.defer(_update);
+            VisSenseUtils.defer(_update);
         }());
 
         function _update() {
@@ -323,4 +323,4 @@
         return emitEvents[eventName](handler);
     };
 
-}.call(this, this, this.Math, this.VisSense, this.Visibility));
+}.call(this, this, this.Math, this.VisSense, this.VisSenseUtils, this.Visibility));

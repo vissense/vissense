@@ -4,7 +4,7 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, Math, Visibility) {
+;(function(window, Math, VisSenseUtils, Visibility) {
   /** Used as a safe reference for `undefined` in pre ES5 environments */
   var undefined;
 
@@ -461,4 +461,4 @@
 
   // export Vissense
   root[libName] = runInContext(root);
-}.call(this, this, this.Math, this.Visibility));
+}.call(this, this, this.Math, this.VisSenseUtils, this.Visibility));

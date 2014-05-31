@@ -14,8 +14,6 @@
     /** Used as a reference to the global object */
     var root = (typeof window === 'object' && window) || this;
 
-
-
     // Stop timer from `every` method by it’s ID.
     function cancel(timer) {
         clearInterval(timer.id);

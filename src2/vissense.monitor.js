@@ -27,7 +27,7 @@
  * fireIfVisibilityPercentageChanged(function() { ... });
  *
  */
-;(function(window, VisSense, Math) {
+;(function(window, Math, VisSense, Visibility) {
     /** Used as a safe reference for `undefined` in pre ES5 environments */
     var undefined;
 
@@ -45,7 +45,7 @@
     function fireIf(when, callback) {
       return function () {
         if (when()) {
-          callback();
+          callback(arguments);
         }
       };
     }
@@ -66,10 +66,10 @@
         return states.VISIBLE;
     }
 
-    function _nextStatus(oldStatus, visobj) {
+    function _nextStatus(visobj, oldStatus) {
         var prev = !oldStatus ? null : {
-            state:oldStatus.state,
-            visibility_percentage: oldStatus.visibility_percentage
+            'state':oldStatus.state,
+            'visibility_percentage': oldStatus.visibility_percentage
         };
 
         var s = {};
@@ -103,6 +103,10 @@
         self.status = function(prop) {
             return _private.status[prop];
         };
+
+        self.getVisibilityPercentage = function() {
+            return self.status('visibility_percentage');
+        }
         /**
         * read-only access to status
         */
@@ -122,19 +126,23 @@
             return lastListenerId;
         };
 
-        _init();
-        // schedule update immediately
-        VisSense._utils.defer(_update);
+        VisMon.prototype.update = _update;
 
-        function _init() {
+        (function init() {
             for(var i in updateTriggerEvents) {
                 VisSense._utils.addEvent(root, updateTriggerEvents[i], _update);
             }
-            _update();
-        }
+
+            self.update();
+            // reschedule update immediately
+            VisSense._utils.defer(_update);
+
+
+            //Visibility.onVisible
+        }());
 
         function _update() {
-            _private.status = _nextStatus(_private.status, visobj);
+            _private.status = _nextStatus( visobj, _private.status);
 
             // notify listeners
             fireListeners(_private.listeners, self);
@@ -163,7 +171,7 @@
 
     VisMon.prototype.wasFullyVisible = function() {
         var prev = this.prev();
-        return !!prev && (prev.state === states.VISIBLE);
+        return !!prev && (prev.state === states.FULLY_VISIBLE);
     };
 
     VisMon.prototype.isHidden = function() {
@@ -171,13 +179,23 @@
     };
 
     VisMon.prototype.isVisible = function() {
-        return this.status('state') === states.HIDDEN;
+        return this.status('state') === states.VISIBLE;
     };
 
     VisMon.prototype.isFullyVisible = function() {
-        return this.status('state') === states.HIDDEN;
+        return this.status('state') === states.FULLY_VISIBLE;
     };
 
+    /**
+    * returns whether the state has changed.
+    *
+    * if no previous state is available (because it is the initial state)
+    * the visibility is considered changed. However, this is only true for
+    * the execution cycle in which the instance was created.
+    *
+    * VisSense(document.getElementById('example1')).monitor().hasVisibilityChanged();
+    * // = true
+    */
     VisMon.prototype.hasVisibilityChanged = function() {
         var prev = this.prev();
         return !prev || (prev.state !== this.status('state'));
@@ -245,6 +263,10 @@
     * Fires NOT when state transits from:
     * VISIBLE => FULLY_VISIBLE or
     * FULLY_VISIBLE => VISIBLE
+    *
+    * VisSense(document.getElementById('example1')).monitor().onVisible(function() {
+    *   Animations.startAnimation();
+    * });
     */
     VisMon.prototype.onVisible = function (callback) {
         var self = this;
@@ -274,9 +296,9 @@
         var emitEvents = {
             'hidden' : this.onHidden,
             'visible' : this.onVisible,
-            'fully-visible' : this.onFullyVisible,
-            'percentage-change' : this.onVisibilityPercentageChange,
-            'visibility-change' : this.onVisibilityChange
+            'fullyvisible' : this.onFullyVisible,
+            'percentagechange' : this.onVisibilityPercentageChange,
+            'visibilitychange' : this.onVisibilityChange
         };
         if(!emitEvents[eventName]) {
             throw new Error("VisMon: Event '"+ eventName +"' is not supported");
@@ -284,4 +306,4 @@
         return emitEvents[eventName](handler);
     };
 
-}.call(this, this, this.VisSense, this.Math));
+}.call(this, this, this.Math, this.VisSense, this.Visibility));

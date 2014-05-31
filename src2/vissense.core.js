@@ -4,7 +4,7 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, Math) {
+;(function(window, Math, Visibility) {
   /** Used as a safe reference for `undefined` in pre ES5 environments */
   var undefined;
 
@@ -17,10 +17,15 @@
   /** Used as the property name for wrapper metadata */
   var expando = '__' + libName + '@' + version + '__';
 
+  var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
+
   /** Used as a reference to the global object */
   var root = (typeof window === 'object' && window) || this;
 
   /*--------------------------------------------------------------------------*/
+    function pageIsVisible() {
+        return PageVisibilityAPIAvailable ? !Visibility.hidden() : true;
+    }
 
     function _noop() {}
 
@@ -104,22 +109,26 @@
 		return true;
 	};
 
-	function isVisibleByStyling(element) {
-		if (element === _window(element).document) {
-			return true;
-		}
-		if (!element || !element.parentNode){
-			return false;
-		}
+    function isVisibleByStyling(element) {
+        if (element === _window(element).document) {
+            return true;
+        }
+        if (!element || !element.parentNode){
+            return false;
+        }
 
-		if(_isHiddenInputElement(element)) {
-			return false;
-		}
+        if(_isHiddenInputElement(element)) {
+            return false;
+        }
 
-		var visibility = _findEffectiveStyleProperty(element, 'visibility');
-		var displayed = isDisplayed(element);
-		return (visibility !== 'hidden' && visibility !== 'collapse' && displayed);
-	};
+        var visibility = _findEffectiveStyleProperty(element, 'visibility');
+        var opacity = _findEffectiveStyleProperty(element, 'opacity');
+        var displayed = isDisplayed(element);
+        return (opacity !== '0' &&
+            visibility !== 'hidden' &&
+            visibility !== 'collapse' &&
+            displayed === true);
+    };
 
   /* @category Styling --------------------------------------------------------------------------*/
 
@@ -195,13 +204,13 @@
 
     /* @category Visibility --------------------------------------------------------------------------*/
 	function isFullyVisible(element) {
-		return isFullyInViewport(element) && isVisibleByStyling(element);
+		return pageIsVisible() && isFullyInViewport(element) && isVisibleByStyling(element);
 	}
     function isVisible(element) {
-        return isInViewport(element) && isVisibleByStyling(element);
+        return pageIsVisible() && isInViewport(element) && isVisibleByStyling(element);
     }
     function isHidden(element) {
-        return !isVisible(element);
+        return !pageIsVisible() || !isVisible(element);
     }
     /**
     * Returns a function that invokes callback only if element is fully visible
@@ -428,9 +437,6 @@
 
 	Vissense.prototype.getFullyVisibleThreshold = _noop;
 
-	Vissense.prototype.hasVisibilityChanged = _noop;
-	Vissense.prototype.hasVisibilityPercentageChanged = _noop;
-
 	Vissense.prototype.getTimeVisible = _noop;
 	Vissense.prototype.getTimeFullyVisible = _noop;
 	Vissense.prototype.getTimeVisibleRelative = _noop;
@@ -453,4 +459,4 @@
 
   // export Vissense
   root[libName] = runInContext(root);
-}.call(this, this, this.Math));
+}.call(this, this, this.Math, this.Visibility));

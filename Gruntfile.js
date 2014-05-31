@@ -30,6 +30,7 @@ module.exports = function (grunt) {
             },
             dist2: {
                 src: [
+                    'bower_components/visibilityjs/lib/visibility.core.js',
                     'src2/vissense.core.js',
                     'src2/vissense.utils.js',
                     'src2/vissense.monitor.js',

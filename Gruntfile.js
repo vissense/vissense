@@ -62,6 +62,7 @@ module.exports = function (grunt) {
                     'src2/vissense.utils.js',
                     'src2/vissense.monitor.js',
                     'src2/vissense.timers.js',
+                    'src2/vissense.stopwatch.js',
                     'src2/vissense.metrics.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js'
@@ -74,6 +75,7 @@ module.exports = function (grunt) {
                     'src2/vissense.utils.js',
                     'src2/vissense.monitor.js',
                     'src2/vissense.timers.js',
+                    'src2/vissense.stopwatch.js',
                     'src2/vissense.metrics.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js'

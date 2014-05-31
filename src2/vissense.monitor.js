@@ -196,7 +196,7 @@
     };
 
     VisMon.prototype.isVisible = function() {
-        return this.status('state') === states.VISIBLE;
+        return this.status('state') === states.VISIBLE || this.isFullyVisible();
     };
 
     VisMon.prototype.isFullyVisible = function() {

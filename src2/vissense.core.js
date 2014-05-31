@@ -171,7 +171,7 @@
 	};
 
 	function getVisibilityPercentage(element) {
-		if(!isInViewport(element) || !isVisibleByStyling(element)) {
+		if(!isInViewport(element) || !isVisibleByStyling(element) || !pageIsVisible()) {
 			return 0;
 		}
 

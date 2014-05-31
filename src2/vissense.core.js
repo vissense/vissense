@@ -17,10 +17,10 @@
   /** Used as the property name for wrapper metadata */
   var expando = '__' + libName + '@' + version + '__';
 
-  var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
-
   /** Used as a reference to the global object */
   var root = (typeof window === 'object' && window) || this;
+
+  var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
 
   /*--------------------------------------------------------------------------*/
     function pageIsVisible() {
@@ -171,7 +171,7 @@
 	};
 
 	function getVisibilityPercentage(element) {
-		if(!isInViewport(element)) {
+		if(!isInViewport(element) || !isVisibleByStyling(element)) {
 			return 0;
 		}
 
@@ -298,7 +298,7 @@
     /**
      * An object used to flag environments features.
      */
-    var support = Vissense.support = {};
+    var support = Vissense.support = (function() {
 
       /**
        * Detect IE version
@@ -335,15 +335,17 @@
       } catch(e) {}
       return false;
     }
+      var support = {};
+      support.MinIEVersion = 7;
+      support.PageVisibilityAPIAvailable = PageVisibilityAPIAvailable;
+      support.IEVersion = getIEVersion();
+      support.DOMPresent = isDomPresent();
+      support.CanReadStyle = canReadStyle();
+      support.BrowserSupported = !(support.IEVersion < support.MinIEVersion);
 
-    (function() {
-      support.min_ie_version = 7;
-      support.ie_version = getIEVersion();
-      support.dom_present = isDomPresent();
-      support.can_read_style = canReadStyle();
-      support.browser_supported = !(support.ie_version < support.min_ie_version);
+      support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
 
-      support.compatible = support.dom_present && support.can_read_style && support.browser_supported;
+      return support;
     }());
 
     /*--------------------------------------------------------------------------*/

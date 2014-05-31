@@ -42,6 +42,20 @@
 
     var updateTriggerEvents = ['DOMContentLoaded', 'load', 'scroll', 'resize'];
 
+    var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
+
+    /*--------------------------------------------------------------------------*/
+
+    function _noop() {}
+
+    function onPageVisibilityChange(callback) {
+        if(PageVisibilityAPIAvailable) {
+            Visibility.change(function (e, state) {
+                callback(e, state);
+            });
+        }
+    }
+
     function fireIf(when, callback) {
       return function () {
         if (when()) {
@@ -126,19 +140,22 @@
             return lastListenerId;
         };
 
+        /**
+        * expose update method
+        */
         VisMon.prototype.update = _update;
 
         (function init() {
+            // recognize tab/window changes
+            onPageVisibilityChange(_update);
+
             for(var i in updateTriggerEvents) {
                 VisSense._utils.addEvent(root, updateTriggerEvents[i], _update);
             }
 
-            self.update();
+            _update();
             // reschedule update immediately
             VisSense._utils.defer(_update);
-
-
-            //Visibility.onVisible
         }());
 
         function _update() {

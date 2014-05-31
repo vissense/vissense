@@ -18,7 +18,6 @@
     /** Used as a reference to the global object */
     var root = (typeof window === 'object' && window) || this;
 
-
     var parseConfig = function(config) {
         var c = {
             visibleUpdateInterval: 250,
@@ -67,9 +66,6 @@
                     return r;
                 }
                 return 0;
-            };
-            this.startIfNotRunning = function() {
-                return !$.running ? this.start() : $.startTime;
             };
 
             this.stop = function () {

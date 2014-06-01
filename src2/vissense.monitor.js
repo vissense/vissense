@@ -44,16 +44,6 @@
 
     /*--------------------------------------------------------------------------*/
 
-    function _noop() {}
-
-    function fireIf(when, callback) {
-      return function () {
-        if (when()) {
-          callback(arguments);
-        }
-      };
-    }
-
     function fireListeners(listeners, context) {
         for(var i in listeners) {
             listeners[i].call(context || root);
@@ -226,11 +216,9 @@
     */
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
         var self = this;
-        return fireIf(function() {
+        return VisSenseUtils.fireIf(function() {
             return self.hasVisibilityChanged();
-        }, function() {
-            callback();
-        });
+        }, callback);
     };
 
     /**
@@ -242,7 +230,7 @@
     */
     VisMon.prototype.fireIfVisibilityPercentageChanged = function(callback) {
         var self = this;
-        return fireIf(function() {
+        return VisSenseUtils.fireIf(function() {
             return self.hasVisibilityPercentageChanged();
         }, callback);
     };
@@ -277,7 +265,7 @@
     */
     VisMon.prototype.onVisible = function (callback) {
         var self = this;
-        var handler = this.fireIfVisibilityChanged(fireIf(function() {
+        var handler = this.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
             return !self.prev() || self.wasHidden();
         }, this.visobj().fireIfVisible(callback)));
         return this.register(handler);

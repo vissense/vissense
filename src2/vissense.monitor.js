@@ -44,35 +44,102 @@
 
     /*--------------------------------------------------------------------------*/
 
+    var VisState = (function() {
+        var STATES = {
+            HIDDEN: 0,
+            VISIBLE: 1,
+            FULLY_VISIBLE: 2
+        };
+
+        function VisState(state) {
+            this.isVisible = function() {
+                return state ===  STATES.VISIBLE || this.isFullyVisible();
+            };
+            this.isFullyVisible = function() {
+                return state ===  STATES.FULLY_VISIBLE;
+            };
+            this.isHidden = function() {
+                return state ===  STATES.HIDDEN;
+            };
+            this.state = function() {
+                return state;
+            };
+        }
+
+        function withPrevious(visstate, prev) {
+            if(!!prev) {
+                // disable getting previous state from prev
+                prev.prev = VisSenseUtils.noop;
+            }
+
+            visstate.wasVisible = function() {
+                return !!prev && prev.isVisible();
+            };
+            visstate.wasFullyVisible = function() {
+                return !!prev && prev.isFullyVisible();
+            };
+            visstate.wasHidden = function() {
+                return !!prev && prev.isHidden();
+            };
+            visstate.hasVisibilityChanged = function() {
+                return !prev || state !== prev.state();
+            };
+            visstate.prev = function() {
+                return prev;
+            };
+            return visstate;
+        }
+
+        function withPercentage(visstate, percentage) {
+            visstate.hasVisibilityPercentageChanged = function() {
+                return !this.prev() || percentage !== this.prev().percentage();
+            };
+            visstate.percentage = function() {
+                return percentage;
+            };
+            return visstate;
+        }
+
+        function state(status, percentage, prev) {
+            return withPrevious(withPercentage(new VisState(status), percentage), prev);
+        }
+
+        var exports = {};
+
+        exports.state = state;
+
+        exports.hidden = function(percentage, prev) {
+            return state(STATES.HIDDEN, percentage, prev || null);
+        };
+
+        exports.visible = function(percentage, prev) {
+            return state(STATES.VISIBLE, percentage, prev || null);
+        };
+        exports.fullyvisible = function(percentage, prev) {
+            return state(STATES.FULLY_VISIBLE, percentage, prev || null);
+        };
+
+        return exports;
+    }());
+
+    function nextState(visobj, visstate) {
+        var percentage = visobj.getVisibilityPercentage();
+        if(visobj.isHidden()) {
+            return VisState.hidden(percentage, visstate);
+        } else if (visobj.isFullyVisible()) {
+             return VisState.fullyvisible(percentage, visstate);
+        } else if (visobj.isVisible()) {
+          return VisState.visible(percentage, visstate);
+        }
+        throw new Error('IllegalState');
+    };
+
+    /*--------------------------------------------------------------------------*/
+
     function fireListeners(listeners, context) {
         for(var i in listeners) {
             listeners[i].call(context || root);
         }
-    }
-
-    function state(visobj) {
-        if(visobj.isHidden()) {
-            return states.HIDDEN;
-        } else if (visobj.isFullyVisible()) {
-            return states.FULLY_VISIBLE;
-        }
-
-        return states.VISIBLE;
-    }
-
-    function _nextStatus(visobj, oldStatus) {
-        var prev = !oldStatus ? null : {
-            'state':oldStatus.state,
-            'visibility_percentage': oldStatus.visibility_percentage
-        };
-
-        var s = {};
-
-        s.prev = prev;
-        s.state = state(visobj);
-        s.visibility_percentage = parseFloat(visobj.getVisibilityPercentage().toFixed(4));
-
-        return s;
     }
     /*--------------------------------------------------------------------------*/
 
@@ -95,18 +162,17 @@
         * read-only access to status
         */
         self.status = function(prop) {
-            return _private.status[prop];
+            return _private.status;
         };
 
         self.getVisibilityPercentage = function() {
-            return self.status('visibility_percentage');
+            return self.status().percentage();
         }
         /**
         * read-only access to status
         */
         self.prev = function(prop) {
-            var prev = self.status('prev');
-            return prev && prop ? prev[prop] : prev;
+            return self.status().prev();
         };
 
         // Adds a listener.
@@ -139,7 +205,7 @@
         }());
 
         function _update() {
-            _private.status = _nextStatus( visobj, _private.status);
+            _private.status = nextState( visobj, _private.status);
 
             // notify listeners
             fireListeners(_private.listeners, self);
@@ -155,55 +221,7 @@
         return monitor(this, config);
     };
 
-  /*--------------------------------------------------------------------------*/
-    VisMon.prototype.wasHidden = function() {
-        var prev = this.prev();
-        return !!prev && (prev.state === states.HIDDEN);
-    };
 
-    VisMon.prototype.wasVisible = function() {
-        var prev = this.prev();
-        return !!prev && (prev.state === states.VISIBLE) || this.wasFullyVisible();
-    };
-
-    VisMon.prototype.wasFullyVisible = function() {
-        var prev = this.prev();
-        return !!prev && (prev.state === states.FULLY_VISIBLE);
-    };
-
-    VisMon.prototype.isHidden = function() {
-        return this.status('state') === states.HIDDEN;
-    };
-
-    VisMon.prototype.isVisible = function() {
-        return this.status('state') === states.VISIBLE || this.isFullyVisible();
-    };
-
-    VisMon.prototype.isFullyVisible = function() {
-        return this.status('state') === states.FULLY_VISIBLE;
-    };
-
-    /**
-    * returns whether the state has changed.
-    *
-    * if no previous state is available (because it is the initial state)
-    * the visibility is considered changed. However, this is only true for
-    * the execution cycle in which the instance was created.
-    *
-    * VisSense(document.getElementById('example1')).monitor().hasVisibilityChanged();
-    * // = true
-    */
-    VisMon.prototype.hasVisibilityChanged = function() {
-        var prev = this.prev();
-        return !prev || (prev.state !== this.status('state'));
-    };
-
-    VisMon.prototype.hasVisibilityPercentageChanged = function() {
-        var prev = this.status('prev');
-        var vp = this.status('visibility_percentage');
-        /* true if there is no previous state or if visibility changed */
-        return !prev || (prev.visibility_percentage !== vp);
-    };
     /**
     * Returns a function that invokes callback only
     * if the visibility state changes.
@@ -217,7 +235,7 @@
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
         var self = this;
         return VisSenseUtils.fireIf(function() {
-            return self.hasVisibilityChanged();
+            return self.status().hasVisibilityChanged();
         }, callback);
     };
 
@@ -231,7 +249,7 @@
     VisMon.prototype.fireIfVisibilityPercentageChanged = function(callback) {
         var self = this;
         return VisSenseUtils.fireIf(function() {
-            return self.hasVisibilityPercentageChanged();
+            return self.status().hasVisibilityPercentageChanged();
         }, callback);
     };
 
@@ -239,16 +257,14 @@
     * Fires when visibility state changes
     */
     VisMon.prototype.onVisibilityChange = function (callback) {
-        var handler = this.fireIfVisibilityChanged(callback);
-        return this.register(handler);
+        return this.register(this.fireIfVisibilityChanged(callback));
     };
 
     /**
     * Fires when visibility percentage changes
     */
     VisMon.prototype.onVisibilityPercentageChange = function (callback) {
-        var handler = this.fireIfVisibilityPercentageChanged(callback);
-        return this.register(handler);
+        return this.register(this.fireIfVisibilityPercentageChanged(callback));
     };
 
     /**
@@ -265,9 +281,15 @@
     */
     VisMon.prototype.onVisible = function (callback) {
         var self = this;
+
+        var fireIfVisible =  VisSenseUtils.fireIf(function() {
+            return self.status().isVisible();
+        }, callback);
+
+        // only fire when coming from state hidden or no previous state is present
         var handler = this.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
-            return !self.prev() || self.wasHidden();
-        }, this.visobj().fireIfVisible(callback)));
+            return !self.status().prev() || self.status().wasHidden();
+        }, fireIfVisible));
         return this.register(handler);
     };
 
@@ -275,7 +297,12 @@
     * Fires when visibility changes and element becomes fully visible
     */
     VisMon.prototype.onFullyVisible = function (callback) {
-        var handler = this.fireIfVisibilityChanged(this.visobj().fireIfFullyVisible(callback));
+        var self = this;
+        var fireIfFullyVisible =  VisSenseUtils.fireIf(function() {
+            return self.status().isFullyVisible();
+        }, callback);
+
+        var handler = this.fireIfVisibilityChanged(fireIfFullyVisible);
         return this.register(handler);
     };
 
@@ -283,7 +310,13 @@
     * Fires when visibility changes and element becomes hidden
     */
     VisMon.prototype.onHidden = function (callback) {
-        var handler = this.fireIfVisibilityChanged(this.visobj().fireIfHidden(callback));
+        var self = this;
+
+        var fireIfHidden =  VisSenseUtils.fireIf(function() {
+            return self.status().isHidden();
+        }, callback);
+
+        var handler = this.fireIfVisibilityChanged(fireIfHidden);
         return this.register(handler);
     };
 

@@ -5,7 +5,7 @@
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 /*
- * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor']
+ * depends on ['vissense.core', 'vissense.monitor']
  */
 ;(function(window, VisSense) {
     if(!VisSense || !VisSense.monitor) {
@@ -89,8 +89,6 @@
         //
         // On change state from hidden to visible timers will be execute.
         VisTimer.prototype.every = function (interval, hiddenInterval, callback, runNow) {
-            init();
-
             if (!callback) {
                 callback = hiddenInterval;
                 hiddenInterval = null;
@@ -133,9 +131,6 @@
             _private.timers = [];
         };
 
-        init();
-
-
         // Try to run timer from every method by it’s ID. It will be use
         // `interval` or `hiddenInterval` depending on visibility state.
         // If page is hidden and `hiddenInterval` is null,
@@ -145,7 +140,7 @@
         function _run(id, runNow) {
             var interval, timer = _private.timers[id];
 
-            if (vismon.isHidden()) {
+            if (vismon.status().isHidden()) {
                 if ( null === timer.hidden ) {
                     return;
                 }
@@ -164,8 +159,8 @@
 
 
         function cancelAndReinitialize() {
-            var isHidden = vismon.isHidden();
-            var wasHidden = vismon.wasHidden();
+            var isHidden = vismon.status().isHidden();
+            var wasHidden = vismon.status().wasHidden();
 
             if ( (isHidden && !wasHidden) || (!isHidden && wasHidden) ) {
                 for (var id in _private.timers) {
@@ -175,14 +170,14 @@
             }
         };
 
-        function init() {
+        (function init() {
             self.vismon().onVisible(function() {
               cancelAndReinitialize();
             });
             self.vismon().onHidden(function() {
               cancelAndReinitialize();
             });
-        };
+        }());
     }
 
     function newVisTimer(vissense, config) {

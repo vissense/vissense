@@ -6,7 +6,7 @@
  */
  ;(function(window, VisSenseUtils, Visibility) {
     /*--------------------------------------------------------------------------*/
-    var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
+    var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
 
     function isPageVisibilityAPIAvailable() {
       return !!PageVisibilityAPIAvailable;
@@ -18,9 +18,7 @@
 
     function onPageVisibilityChange(callback) {
         if(PageVisibilityAPIAvailable) {
-            Visibility.change(function (e, state) {
-             callback(e, state);
-            });
+            Visibility.change(callback);
         }
     }
 

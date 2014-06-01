@@ -97,19 +97,19 @@
             stopAndUpdateTimers(vistimer.vismon());
         });
 
-        VisMetrics.prototype.getMetric = function(name) {
+        this.getMetric = function(name) {
             return report.getMetric(name);
         };
 
-        VisMetrics.prototype.summary = function() {
+        this.summary = function() {
             return report.summary();
         };
 
-        VisMetrics.prototype.stopped = function() {
+        this.stopped = function() {
             return stopped;
         };
 
-        VisMetrics.prototype.stop = function() {
+        this.stop = function() {
             updatePercentage();
             stopAndUpdateTimers(vistimer.vismon());
 
@@ -118,11 +118,12 @@
         };
 
         function updatePercentage() {
-            var percentage = vistimer.vismon().status('visibility_percentage');
+            var percentage = vistimer.vismon().status().percentage();
             report.getMetric('percentage').update(percentage);
         }
+
         function updateVisibilityChanges() {
-            var state = vistimer.vismon().status('state');
+            var state = vistimer.vismon().status().state();
 
             report.getMetric('visibility.changes').update(state);
         }
@@ -134,53 +135,29 @@
         }
 
         function stopAndUpdateTimers(vismon) {
-            var timeVisible = watchVisible.stopAndThenRestartIf(vismon.isVisible());
+            var status = vismon.status();
+            var timeVisible = watchVisible.stopAndThenRestartIf(status.isVisible());
 
             fireIfPositive(timeVisible, function(value) {
                 report.getMetric('time.visible').inc(value);
-                report.getMetric('time.relativeVisible').inc(value * vismon.getVisibilityPercentage());
+                report.getMetric('time.relativeVisible').inc(value * status.percentage());
             });
 
-            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(vismon.isFullyVisible()), function(value) {
+            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(status.isFullyVisible()), function(value) {
                 report.getMetric('time.fullyvisible').inc(value);
             });
-            fireIfPositive(watchHidden.stopAndThenRestartIf(vismon.isHidden()), function(value) {
+            fireIfPositive(watchHidden.stopAndThenRestartIf(status.isHidden()), function(value) {
                 report.getMetric('time.hidden').inc(value);
             });
             fireIfPositive(watchDuration.restart(), function(value) {
                 report.getMetric('time.duration').inc(value);
             });
         }
-
-        function stopAndUpdateTimers2(vismon) {
-            var d = watchDuration.stop();
-            var tv = watchVisible.stop();
-            var tfv = watchFullyVisible.stop();
-            var th = watchHidden.stop();
-
-            watchDuration.restart();
-            watchVisible.stopAndThenRestartIf(vismon.isVisible());
-            watchFullyVisible.stopAndThenRestartIf(vismon.isFullyVisible());
-            watchHidden.stopAndThenRestartIf(vismon.isHidden());
-
-            fireIfPositive(tv, function(value) {
-                report.getMetric('time.visible').inc(value);
-                report.getMetric('time.relativeVisible').inc(value * vismon.getVisibilityPercentage());
-            });
-            fireIfPositive(tfv, function(value) {
-                report.getMetric('time.fullyvisible').inc(value);
-            });
-            fireIfPositive(th, function(value) {
-                report.getMetric('time.hidden').inc(value);
-            });
-            fireIfPositive(d, function(value) {
-                report.getMetric('time.duration').inc(value);
-            });
-        }
     }
+
     function newVisMetrics(vissense, config) {
         return new VisMetrics(vissense.timer(), config);
-    };
+    }
 
     VisSense.metrics = newVisMetrics;
     VisSense.prototype.metrics = function(config) {

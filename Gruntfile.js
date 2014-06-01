@@ -32,25 +32,26 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.utils.addevent.js',
+                    'src2/vissense.utils.pagevisibility.js',
+                    'src2/vissense.utils.elementstyling.js',
+                    'src2/vissense.utils.elementposition.js',
+                    'src2/vissense.utils.elementvisibility.js',
+                    'src2/vissense.utils.support.js',
                     'src2/vissense.core.js',
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js'
             },
             monitor: {
                 src: [
-                    'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.utils.js',
-                    'src2/vissense.core.js',
+                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js',
                     'src2/vissense.monitor.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js'
             },
             timers: {
                 src: [
-                    'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.utils.js',
-                    'src2/vissense.core.js',
-                    'src2/vissense.monitor.js',
+                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js',
                     'src2/vissense.timers.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.js'
@@ -58,26 +59,16 @@ module.exports = function (grunt) {
             metrics: {
                 src: [
                     'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
-                    'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.utils.js',
-                    'src2/vissense.core.js',
-                    'src2/vissense.monitor.js',
-                    'src2/vissense.timers.js',
-                    'src2/vissense.stopwatch.js',
+                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.js',
+                    'src2/vissense.utils.stopwatch.js',
                     'src2/vissense.metrics.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js'
             },
             full: {
                 src: [
-                    'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
-                    'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.utils.js',
-                    'src2/vissense.core.js',
-                    'src2/vissense.monitor.js',
-                    'src2/vissense.timers.js',
-                    'src2/vissense.stopwatch.js',
-                    'src2/vissense.metrics.js'
+                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js',
+                    'src2/vissense.client.js'
                 ],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js'
             }

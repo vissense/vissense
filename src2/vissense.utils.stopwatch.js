@@ -7,7 +7,7 @@
 /**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer']
  */
- ;(function(window, VisSense) {
+ ;(function(window, VisSenseUtils) {
 
     var StopWatch = (function(window) {
         function StopWatch(performance) {
@@ -76,6 +76,6 @@
         return new StopWatch();
     };
 
-    VisSense.stopwatch = newStopWatch;
+    VisSenseUtils.newStopWatch = newStopWatch;
 
-}.call(this, this, this.VisSense));
+}.call(this, this, this.VisSenseUtils));

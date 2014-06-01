@@ -27,7 +27,7 @@
  * fireIfVisibilityPercentageChanged(function() { ... });
  *
  */
-;(function(window, Math, VisSense, VisSenseUtils, Visibility) {
+;(function(window, Math, VisSense, VisSenseUtils) {
     /** Used as a safe reference for `undefined` in pre ES5 environments */
     var undefined;
 
@@ -42,19 +42,9 @@
 
     var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
-    var PageVisibilityAPIAvailable = !!Visibility && Visibility.isSupported && Visibility.isSupported();
-
     /*--------------------------------------------------------------------------*/
 
     function _noop() {}
-
-    function onPageVisibilityChange(callback) {
-        if(PageVisibilityAPIAvailable) {
-            Visibility.change(function (e, state) {
-                callback(e, state);
-            });
-        }
-    }
 
     function fireIf(when, callback) {
       return function () {
@@ -147,7 +137,7 @@
 
         (function init() {
             // recognize tab/window changes
-            onPageVisibilityChange(_update);
+            VisSenseUtils.onPageVisibilityChange(_update);
 
             for(var i in updateTriggerEvents) {
                 VisSenseUtils.addEvent(root, updateTriggerEvents[i], _update);
@@ -323,4 +313,4 @@
         return emitEvents[eventName](handler);
     };
 
-}.call(this, this, this.Math, this.VisSense, this.VisSenseUtils, this.Visibility));
+}.call(this, this, this.Math, this.VisSense, this.VisSenseUtils));

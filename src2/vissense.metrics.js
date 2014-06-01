@@ -7,11 +7,11 @@
 /**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
- ;(function(window, VisSense, brwsrfyMetrics) {
+ ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics) {
     if(!brwsrfyMetrics) {
         throw new Error('global Metrics is not available');
     }
-    if(!VisSense || !VisSense.monitor || !VisSense.timer || !VisSense.stopwatch ) {
+    if(!VisSense || !VisSense.monitor || !VisSense.timer || !VisSenseUtils.newStopWatch) {
         throw new Error('VisSense is not available');
     }
 
@@ -51,10 +51,10 @@
         var config = parseConfig(inConfig);
         var report = new brwsrfyMetrics.Report();
 
-        var watchVisible = VisSense.stopwatch();
-        var watchFullyVisible = VisSense.stopwatch();
-        var watchHidden = VisSense.stopwatch();
-        var watchDuration = VisSense.stopwatch();
+        var watchVisible = VisSenseUtils.newStopWatch();
+        var watchFullyVisible = VisSenseUtils.newStopWatch();
+        var watchHidden = VisSenseUtils.newStopWatch();
+        var watchDuration = VisSenseUtils.newStopWatch();
 
         report.addMetric('time.visible', new brwsrfyMetrics.Counter());
         report.addMetric('time.fullyvisible', new brwsrfyMetrics.Counter());
@@ -188,4 +188,4 @@
     };
 
 
-}.call(this, this, this.VisSense, this.brwsrfyMetrics));
+}.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));

@@ -8,6 +8,9 @@
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor']
  */
 ;(function(window, VisSense) {
+    if(!VisSense || !VisSense.monitor) {
+        throw new Error('VisSense is not available');
+    }
     /** Used as a safe reference for `undefined` in pre ES5 environments */
     var undefined;
 

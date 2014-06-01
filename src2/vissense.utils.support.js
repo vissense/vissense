@@ -1,0 +1,72 @@
+/**
+ * @license
+ * Vissense <http://vissense.com/>
+ * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
+ * Available under MIT license <http://opensource.org/licenses/MIT>
+ */
+ ;(function(window, VisSenseUtils) {
+
+    /** Used as a safe reference for `undefined` in pre ES5 environments */
+    var undefined;
+
+    /** Used as a reference to the global object */
+    var root = (typeof window === 'object' && window) || this;
+
+    /**
+     * An object used to flag environments features.
+     */
+    var support = (function(window, document) {
+        /**
+        * Detect IE version
+        */
+        function getIEVersion() {
+          var v = 3, div = document.createElement('div');
+          while (
+            div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
+            div.getElementsByTagName('i')[0]
+          ){}
+          return v > 4 ? v : undefined;
+        }
+
+        /**
+         * Detect IE
+         */
+        function isIE() {
+          return !!getIEVersion();
+        }
+
+        /**
+         * Detect if the DOM is supported.
+         */
+        function isDomPresent() {
+          try {
+           return document.createDocumentFragment().nodeType === 11;
+          } catch(e) {}
+          return false;
+        }
+
+        function canReadStyle() {
+          try {
+           return !!_findEffectiveStyle(document.getElementsByTagName('body')[0]);
+          } catch(e) {}
+          return false;
+        }
+
+        var support = {};
+        support.MinIEVersion = 7;
+        support.PageVisibilityAPIAvailable = VisSenseUtils.isPageVisibilityAPIAvailable();
+        support.IEVersion = getIEVersion();
+        support.DOMPresent = isDomPresent();
+        support.CanReadStyle = canReadStyle();
+        support.BrowserSupported = !(support.IEVersion < support.MinIEVersion);
+
+        support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
+
+        return support;
+    }(root, root.document));
+
+    VisSenseUtils.support = function() {
+        return support;
+    }
+
+}.call(this, this, this.VisSenseUtils));

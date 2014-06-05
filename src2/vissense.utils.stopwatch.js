@@ -8,66 +8,67 @@
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer']
  */
  ;(function(window, VisSenseUtils) {
-
     var StopWatch = (function(window) {
-        function StopWatch(performance) {
+        function StopWatch(p) {
+            var s = this;
+
+            var now = (function(window, p) {
+                var pe = p === false ? false : !!window.performance && !!window.performance.now;
+                return function() {
+                    return pe ? window.performance.now() : new Date().getTime();
+                };
+            } (window, p));
 
             var $ = {
-                startTime : 0,
-                stopTime : 0,
-                running : false
+                ts : 0, // time start
+                te : 0, // time end
+                r : false // currently running
             };
 
-            var performanceEnabled = performance === false ? false : !!window.performance && !!window.performance.now;
-
-            this.start = function() {
-                $.running = true;
-                $.startTime = now();
+            s.start = function() {
+                $.r = true;
+                $.ts = now();
                 return 0;
             };
-            this.restart = function() {
-                return this.stopAndRestartIf(true);
+            s.restart = function() {
+                return s.stopAndRestartIf(true);
             };
-            this.stopAndRestartIf = function(condition) {
-                return !condition ? 0 : this.stopAndThenRestartIf(true);
+            s.stopAndRestartIf = function(condition) {
+                return !condition ? 0 : s.stopAndThenRestartIf(true);
             };
-            this.stopAndThenRestartIf = function(condition) {
-                var r = this.stop();
+            s.stopAndThenRestartIf = function(condition) {
+                var r = s.stop();
                 if(condition) {
-                    this.start();
+                    s.start();
                 }
                 return r;
             };
 
-            this.stop = function () {
-                return this.stopIf($.running);
+            s.stop = function () {
+                return s.stopIf($.r);
             };
-            this.running = function () {
-                return $.running;
+            s.running = function () {
+                return $.r;
             };
 
-            this.stopIf = function (condition) {
-                var t = this.time();
+            s.stopIf = function (condition) {
+                var t = s.time();
                 if(condition) {
-                    $.running = false;
+                    $.r = false;
                 }
                 return t;
             };
 
-            this.time = function () {
-                if (!$.running) {
+            s.time = function () {
+                if (!$.r) {
                     return 0;
                 } else {
-                    $.stopTime = now();
+                    $.te = now();
                 }
 
-                return $.stopTime - $.startTime;
+                return $.te - $.ts;
             };
-
-            function now() {
-                return performanceEnabled ? window.performance.now() : new Date().getTime();
-            };
-        };
+        }
 
         return StopWatch;
     }(window));

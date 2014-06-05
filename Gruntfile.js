@@ -31,7 +31,9 @@ module.exports = function (grunt) {
             core: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
+                    'src2/vissense.polyfill.js',
                     'src2/vissense.utils.js',
+                    'src2/vissense.utils._.js',
                     'src2/vissense.utils.addevent.js',
                     'src2/vissense.utils.pagevisibility.js',
                     'src2/vissense.utils.elementstyling.js',

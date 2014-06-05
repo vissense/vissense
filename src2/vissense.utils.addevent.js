@@ -26,14 +26,11 @@
                     item = listEvents[i];
                     if (item[0].removeEventListener) {
                         item[0].removeEventListener(item[1], item[2], item[3]);
+                    } else if (item[0].detachEvent) {
+                        item[0].detachEvent('on' + item[1], item[2]);
+                        item[0][item[1]+item[2]] = null;
+                        item[0]['e'+item[1]+item[2]] = null;
                     }
-                    if (item[1].substring(0, 2) !== 'on') {
-                        item[1] = 'on' + item[1];
-                    }
-                    if (item[0].detachEvent) {
-                        item[0].detachEvent(item[1], item[2]);
-                    }
-                    item[0][item[1]] = null;
                 }
             }
         };
@@ -47,12 +44,10 @@
         } else if (obj.attachEvent) {
             obj['e' + t + fn] = fn;
             obj[t + fn] = function () {
-                obj['e' + t + fn](window.event);
+                obj['e' + t + fn].call(obj, window.event);
             };
             obj.attachEvent('on' + t, obj[t + fn]);
             EventCache.add(obj, t, fn);
-        } else {
-            obj['on' + t] = obj['e' + t + fn];
         }
     };
 

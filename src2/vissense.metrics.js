@@ -56,16 +56,19 @@
         var watchHidden = VisSenseUtils.newStopWatch();
         var watchDuration = VisSenseUtils.newStopWatch();
 
+        /* Counter */
         report.addMetric('time.visible', new brwsrfyMetrics.Counter());
         report.addMetric('time.fullyvisible', new brwsrfyMetrics.Counter());
         report.addMetric('time.hidden', new brwsrfyMetrics.Counter());
         report.addMetric('time.relativeVisible', new brwsrfyMetrics.Counter());
         report.addMetric('time.duration', new brwsrfyMetrics.Counter());
+
+        /* Timer */
         report.addMetric('visibility.changes', new brwsrfyMetrics.Timer());
+        // percentage histogram (only updates if page is visible)
         report.addMetric('percentage', new brwsrfyMetrics.Timer());
         //self.report.addMetric('ns.histogram', new brwsrfyMetrics.Histogram.createUniformHistogram(10));
         //self.report.addMetric('ns.exphistogram', new brwsrfyMetrics.Histogram.createExponentialDecayHistogram(10, 0.1));
-
 
         updatePercentage();
 
@@ -81,7 +84,7 @@
         });
 
         vistimer.vismon().onVisibilityChange(function() {
-            if(stopped) {
+            if(stopped || !VisSenseUtils.isPageVisible()) {
                 return;
             }
 
@@ -89,7 +92,7 @@
         });
 
         vistimer.every(config.visibleUpdateInterval, config.hiddenUpdateInterval, function() {
-            if(stopped) {
+            if(stopped || !VisSenseUtils.isPageVisible()) {
                 return;
             }
 
@@ -116,8 +119,19 @@
             vistimer.stopAll();
             return stopped = true;
         };
-
+        /**
+        * Updates the percentage metrics (e.g. the ´mean´ visibility percentage)
+        *
+        * Does not update if the page is currently not visible!
+        * This would impact the validity of the result because some
+        * browsers only allow a maximum interval time of 1 second
+        * when the target tab is hidden.
+        */
         function updatePercentage() {
+            if(!VisSenseUtils.isPageVisible()) {
+                return;
+            }
+
             var percentage = vistimer.vismon().status().percentage();
             report.getMetric('percentage').update(percentage);
         }

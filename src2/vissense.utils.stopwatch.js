@@ -2,22 +2,28 @@
  * @license
  * Vissense <http://vissense.com/>
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
- * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 /**
- * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer']
+ * depends on ['vissense.utils']
  */
  ;(function(window, VisSenseUtils) {
-    var StopWatch = (function(window) {
-        function StopWatch(p) {
-            var s = this;
+    var performanceNow = !!window.performance && !!window.performance.now ? window.performance.now : Date.now;
 
-            var now = (function(window, p) {
-                var pe = p === false ? false : !!window.performance && !!window.performance.now;
-                return function() {
-                    return pe ? window.performance.now() : new Date().getTime();
-                };
-            } (window, p));
+    if (!Date.now) {
+       Date.now = function now() {
+         return new Date().getTime();
+       };
+    }
+
+    var StopWatch = (function(window) {
+        var getNow = (function(window) {
+            return function(performance) {
+                  return performance ? performanceNow : Date.now;
+             };
+        } (window));
+
+        function StopWatch(performance) {
+            var s = this;
 
             var $ = {
                 ts : 0, // time start
@@ -25,50 +31,64 @@
                 r : false // currently running
             };
 
-            s.start = function() {
+            var now = s.now = getNow(performance);
+
+            s.start = function(optNow) {
                 $.r = true;
-                $.ts = now();
+                $.ts = +optNow || now();
                 return 0;
             };
-            s.restart = function() {
-                return s.stopAndRestartIf(true);
+            s.restart = function(optNow) {
+                return s.stopAndRestartIf(true, optNow);
             };
-            s.stopAndRestartIf = function(condition) {
-                return !condition ? 0 : s.stopAndThenRestartIf(true);
+
+            /**
+            * Does neither stop nor restart if condition is false
+            */
+            s.stopAndRestartIf = function(condition, optNow) {
+                return !condition ? 0 : s.stopAndThenRestartIf(true, optNow);
             };
-            s.stopAndThenRestartIf = function(condition) {
-                var r = s.stop();
+
+            /**
+            * Definitely stops, but restart only if condition is true
+            */
+            s.stopAndThenRestartIf = function(condition, optNow) {
+                var r = s.stop(optNow);
                 if(condition) {
-                    s.start();
+                    s.start(optNow);
                 }
                 return r;
             };
 
-            s.stop = function () {
-                return s.stopIf($.r);
+            s.stop = function (optNow) {
+                return s.stopIf($.r, optNow);
             };
             s.running = function () {
                 return $.r;
             };
 
-            s.stopIf = function (condition) {
-                var t = s.time();
+            s.stopIf = function (condition, optNow) {
+                var t = s.time(optNow);
                 if(condition) {
                     $.r = false;
                 }
                 return t;
             };
 
-            s.time = function () {
+            s.time = function (optNow) {
                 if (!$.r) {
                     return 0;
                 } else {
-                    $.te = now();
+                    $.te = +optNow || now();
                 }
 
                 return $.te - $.ts;
             };
         }
+
+        StopWatch.now = function(performance) {
+            return getNow(performance)();
+        };
 
         return StopWatch;
     }(window));

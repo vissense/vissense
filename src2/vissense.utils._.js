@@ -27,6 +27,9 @@
   }
 
   function noop() {}
+  function identity(i) {
+    return i;
+  }
 
   function now() {
       return new Date().getTime();
@@ -37,9 +40,26 @@
           callback();
       }, 1);
   }
+  function isObject(obj) {
+    return obj === Object(obj);
+  }
+
+  function defaults(obj, source) {
+    if (!isObject(obj)) {
+        return obj;
+    }
+
+    for (var prop in source) {
+      if (obj[prop] === void 0) obj[prop] = source[prop];
+    }
+    return obj;
+  }
 
   VisSenseUtils = extend(VisSenseUtils, {
     noop:noop,
+    identity:identity,
+    isObject:isObject,
+    defaults:defaults,
     extend:extend,
     now:now,
     defer:defer

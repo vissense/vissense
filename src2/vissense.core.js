@@ -165,4 +165,5 @@
 
   // export Vissense
   root[libName] = runInContext(root);
+
 }.call(this, this, this.Math, this.VisSenseUtils));

@@ -21,23 +21,20 @@
     /** Used as a reference to the global object */
     var root = (typeof window === 'object' && window) || this;
 
+    var DEFAULT_CONFIG = {
+        visibleUpdateInterval: 250,
+        hiddenUpdateInterval: 250,
+        updatePercentageOnPageHidden:false
+    };
+
     var parseConfig = function(config) {
-        var c = {
-            visibleUpdateInterval: 250,
-            hiddenUpdateInterval: 250
-        };
-
         if(!!config) {
-            if(config.visibleUpdateInterval > 0) {
-                c.visibleUpdateInterval = config.visibleUpdateInterval;
-            }
-
-            if(config.hiddenUpdateInterval > 0) {
-                c.hiddenUpdateInterval = config.hiddenUpdateInterval;
+            if(config.visibleUpdateInterval < 1 || config.hiddenUpdateInterval < 1) {
+                throw new Error('InvalidArgument: update interval needs to be positive.');
             }
         }
 
-        return c;
+        return VisSenseUtils.defaults(config, DEFAULT_CONFIG);
     };
 
     /*--------------------------------------------------------------------------*/
@@ -128,7 +125,7 @@
         * when the target tab is hidden.
         */
         function updatePercentage() {
-            if(!VisSenseUtils.isPageVisible()) {
+            if(!config.updatePercentageOnPageHidden && !VisSenseUtils.isPageVisible()) {
                 return;
             }
 

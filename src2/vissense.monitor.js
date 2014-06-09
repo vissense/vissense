@@ -82,7 +82,7 @@
                 return !!prev && prev.isHidden();
             };
             visstate.hasVisibilityChanged = function() {
-                return !prev || state !== prev.state();
+                return !prev || visstate.state() !== prev.state();
             };
             visstate.prev = function() {
                 return prev;
@@ -192,7 +192,7 @@
         VisMon.prototype.update = _update;
 
         (function init() {
-            // recognize tab/window changes
+            // react on tab changes
             VisSenseUtils.onPageVisibilityChange(_update);
 
             for(var i in updateTriggerEvents) {

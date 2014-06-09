@@ -7,18 +7,30 @@
  * depends on ['vissense.utils']
  */
  ;(function(window, VisSenseUtils) {
-    var performanceNow = !!window.performance && !!window.performance.now ? window.performance.now : Date.now;
-
+    // Date.now polyfill
     if (!Date.now) {
        Date.now = function now() {
          return new Date().getTime();
        };
     }
 
+    // performance.now polyfill
+    (function (window) {
+      window.performance = window.performance || {};
+      // handle vendor prefixing
+      performance.now = performance.now ||
+      performance.mozNow ||
+      performance.msNow ||
+      performance.oNow ||
+      performance.webkitNow ||
+      // fallback to Date
+      Date.now;
+    })(window);
+
     var StopWatch = (function(window) {
         var getNow = (function(window) {
             return function(performance) {
-                  return performance ? performanceNow : Date.now;
+                  return performance ? window.performance.now : Date.now;
              };
         } (window));
 

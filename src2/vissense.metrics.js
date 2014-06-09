@@ -8,6 +8,8 @@
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
  ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics) {
+  'use strict';
+
     if(!brwsrfyMetrics) {
         throw new Error('global Metrics is not available');
     }

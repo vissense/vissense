@@ -8,6 +8,8 @@
  * depends on ['vissense.utils']
  */
  ;(function(window, VisSenseUtils) {
+    'use strict';
+
     /** Used as a reference to the global object */
     var root = (typeof window === 'object' && window) || this;
 

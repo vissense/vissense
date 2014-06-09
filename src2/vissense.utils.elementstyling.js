@@ -14,6 +14,8 @@
  * isHiddenInputElement
  */
 ;(function(window, VisSenseUtils) {
+  'use strict';
+
     function isHiddenInputElement(element) {
         if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
             return element.type && String(element.type).toLowerCase() === 'hidden';

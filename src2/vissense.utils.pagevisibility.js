@@ -5,6 +5,8 @@
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
  ;(function(window, VisSenseUtils, Visibility) {
+  'use strict';
+
     /*--------------------------------------------------------------------------*/
     var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
 

@@ -28,6 +28,7 @@
  *
  */
 ;(function(window, Math, VisSense, VisSenseUtils) {
+  'use strict';
     /** Used as a safe reference for `undefined` in pre ES5 environments */
     var undefined;
 

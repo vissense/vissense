@@ -5,6 +5,7 @@
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 ;(function(window, Math, VisSenseUtils) {
+  'use strict';
   /** Used as a safe reference for `undefined` in pre ES5 environments */
   var undefined;
 

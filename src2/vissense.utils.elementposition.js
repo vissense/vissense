@@ -14,6 +14,7 @@
  * _getBoundingClientRect
  */
 ;(function(window, VisSenseUtils) {
+  'use strict';
 
 	function _getBoundingClientRect(element) {
 		var r = element.getBoundingClientRect();

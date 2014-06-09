@@ -7,6 +7,8 @@
  * depends on ['vissense.utils']
  */
  ;(function(window, VisSenseUtils) {
+  'use strict';
+
     // Date.now polyfill
     if (!Date.now) {
        Date.now = function now() {

@@ -15,6 +15,7 @@
  * fireIfVisible
  */
 ;(function(window, Math, VisSenseUtils) {
+  'use strict';
 
 	function getVisibilityPercentage(element) {
 		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {

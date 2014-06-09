@@ -8,6 +8,8 @@
  * depends on ['vissense.core', 'vissense.monitor']
  */
 ;(function(window, VisSense) {
+    'use strict';
+
     if(!VisSense || !VisSense.monitor) {
         throw new Error('VisSense is not available');
     }

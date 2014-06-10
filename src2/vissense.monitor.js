@@ -200,6 +200,12 @@
                 VisSenseUtils.addEvent(root, updateTriggerEvents[i], _update);
             }
 
+            // triggers update if mouse moves over element
+            // this is important if the element is draggable
+            VisSenseUtils.addEvent(visobj._element, 'mousemove', _update);
+
+
+
             _update();
             // reschedule update immediately
             VisSenseUtils.defer(_update);

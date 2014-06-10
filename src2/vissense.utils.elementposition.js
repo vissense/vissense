@@ -34,12 +34,12 @@
 	}
 
 	function viewportHeight(element) {
-		var w = VisSenseUtils.window(element);
+		var w = VisSenseUtils._window(element);
 		return w.innerHeight || w.document.documentElement.clientHeight;
 	};
 
 	function viewportWidth(element) {
-		var w = VisSenseUtils.window(element);
+		var w = VisSenseUtils._window(element);
 		return w.innerWidth || w.document.documentElement.clientWidth;
 	};
 

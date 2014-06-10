@@ -24,7 +24,7 @@
     }
 
 	function findEffectiveStyle(element) {
-		var w = VisSenseUtils.window(element);
+		var w = VisSenseUtils._window(element);
 
 		if (typeof element.style === 'undefined') {
 			return undefined; // not a styled element
@@ -45,6 +45,9 @@
 	};
 	function findEffectiveStyleProperty(element, property) {
 		var effectiveStyle = findEffectiveStyle(element);
+		if(!effectiveStyle) {
+		    return undefined;
+		}
 		var propertyValue = effectiveStyle[property];
 		if (propertyValue === 'inherit' && element.parentNode.style) {
 			return findEffectiveStyleProperty(element.parentNode, property);
@@ -64,7 +67,7 @@
 	};
 
     function isVisibleByStyling(element) {
-        if (element === VisSenseUtils.window(element).document) {
+        if (element === VisSenseUtils._window(element).document) {
             return true;
         }
         if (!element || !element.parentNode){
@@ -84,7 +87,7 @@
             displayed === true);
     };
 
-    (function install(target) {
+    (function(target) {
         target.isHiddenInputElement = isHiddenInputElement;
         target.findEffectiveStyle = findEffectiveStyle;
         target.findEffectiveStyleProperty = findEffectiveStyleProperty;

@@ -22,7 +22,7 @@
 
     (function init(window, libName) {
         window[libName] = {
-            window : _window, //<-- TODO: rename it.. this is illegal in some envs
+            _window : _window,
             fireIf: fireIf
         };
     }(window, 'VisSenseUtils'));

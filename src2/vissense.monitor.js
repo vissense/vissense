@@ -206,20 +206,19 @@
         }());
 
         function _update() {
-            _private.status = nextState( visobj, _private.status);
+            _private.status = nextState(visobj, _private.status);
 
             // notify listeners
             fireListeners(_private.listeners, self);
         }
     }
 
-    function monitor(visobj, config) {
+    VisSense.monitor = function monitor(visobj, config) {
         return new VisMon(visobj, config);
     };
 
-    VisSense.monitor = monitor;
     VisSense.prototype.monitor = function(config) {
-        return monitor(this, config);
+        return VisSense.monitor(this, config);
     };
 
 

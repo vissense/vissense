@@ -4,18 +4,20 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, VisSense) {
+;(function(window, VisSense, VisSenseUtils) {
 
 VisSense.Network = function(config) {
-  var postUrl = config.url + '?cacheBuster='+timestamp();
+  var postUrl = config.url + '?cacheBuster='+VisSenseUtils.now();
   var Network = {
     send: function(data, method) {
-      // Send the data over to Bugsense
+      // Send the data over to Vissense
       var net = new XMLHttpRequest();
-      net.open(method, postUrl, true );
+      net.open(method || 'POST', postUrl, true );
       net.setRequestHeader('X-VisSense-Api-Key', config.apiKey);
       net.setRequestHeader('Content-Type', 'application/json');
+
       var that = this;
+
       net.onerror = function (a) {
         /* cache the report */
         //that.cacheReport(data);
@@ -33,14 +35,13 @@ VisSense.Network = function(config) {
       };
 
       net.onreadystatechange = successHandler;
-      net.send(param({ data: JSON.stringify(data) }));
+      net.send({ data: JSON.stringify(data) });
     }
   };
   return Network;
 };
 
-}.call(this, this, this.VisSense));
-
+}.call(this, this, this.VisSense, this.VisSenseUtils));
 
 /**
  * @license
@@ -55,6 +56,12 @@ VisSense.Network = function(config) {
     /** Used as a reference to the global object */
     var root = (typeof window === 'object' && window) || this;
 
+
+    var network = new VisSense.Network({
+        url: 'http://localhost:9000/vissense'
+    });
+
+
     VisSenseUtils.addEvent(root, 'load', function(e) {
         console.log('VisClient: load');
 
@@ -66,9 +73,12 @@ VisSense.Network = function(config) {
         };
 
         console.log(environment);
+
+        network.send({ hello : "hello"}, 'GET');
     });
     VisSenseUtils.addEvent(root, 'unload', function(e) {
         console.log('VisClient: unload');
+
     });
 
 }.call(this, this, this.Math, this.VisSense, this.VisSenseUtils));

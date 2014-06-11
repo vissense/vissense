@@ -15,6 +15,16 @@
  */
 ;(function(window, VisSenseUtils) {
   'use strict';
+    function _isVisibleByOffsetParentCheck(element) {
+        // http://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
+        if(element.offsetParent === null) {
+            var position = findEffectiveStyleProperty(element, 'position');
+            if(position !== 'fixed') {
+                return false;
+            }
+        }
+        return true;
+    }
 
     function isHiddenInputElement(element) {
         if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
@@ -70,7 +80,27 @@
         if (element === VisSenseUtils._window(element).document) {
             return true;
         }
+
         if (!element || !element.parentNode){
+            return false;
+        }
+
+        if(!_isVisibleByOffsetParentCheck(element)) {
+            return false;
+        }
+
+        var displayed = isDisplayed(element);
+        if(displayed !== true) {
+            return false;
+        }
+
+        var opacity = findEffectiveStyleProperty(element, 'opacity');
+        if(+opacity < 0.01) {
+            return false;
+        }
+
+        var visibility = findEffectiveStyleProperty(element, 'visibility');
+        if(visibility === 'hidden' || visibility === 'collapse') {
             return false;
         }
 
@@ -78,13 +108,7 @@
             return false;
         }
 
-        var visibility = findEffectiveStyleProperty(element, 'visibility');
-        var opacity = findEffectiveStyleProperty(element, 'opacity');
-        var displayed = isDisplayed(element);
-        return (opacity !== '0' &&
-            visibility !== 'hidden' &&
-            visibility !== 'collapse' &&
-            displayed === true);
+        return true;
     };
 
     (function(target) {

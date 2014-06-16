@@ -26,12 +26,18 @@
         return VisSenseUtils.defaults(config, DEFAULT_CONFIG);
     };
 
+    function fireIfPositive(value, callback) {
+        if(value > 0) {
+            callback(value);
+        }
+    }
+
     /*--------------------------------------------------------------------------*/
 
 
     function VisMetrics(vistimer, inConfig) {
-        //VisSense.call(this, element, config);
-        var self = this;
+        //VisSense.call(me, element, config);
+        var me = this;
         var stopped = false;
         var timerIds = [];
         var config = parseConfig(inConfig);
@@ -84,19 +90,19 @@
             stopAndUpdateTimers(vistimer.vismon());
         });
 
-        this.getMetric = function(name) {
+        me.getMetric = function(name) {
             return report.getMetric(name);
         };
 
-        this.summary = function() {
+        me.summary = function() {
             return report.summary();
         };
 
-        this.stopped = function() {
+        me.stopped = function() {
             return stopped;
         };
 
-        this.stop = function() {
+        me.stop = function() {
             updatePercentage();
             stopAndUpdateTimers(vistimer.vismon());
 
@@ -124,12 +130,6 @@
             var state = vistimer.vismon().status().state();
 
             report.getMetric('visibility.changes').update(state);
-        }
-
-        function fireIfPositive(value, callback) {
-            if(value > 0) {
-                callback(value);
-            }
         }
 
         function stopAndUpdateTimers(vismon) {

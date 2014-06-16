@@ -10,10 +10,6 @@
 ;(function(window, VisSense, undefined) {
     'use strict';
 
-    if(!VisSense || !VisSense.monitor) {
-        throw new Error('VisSense is not available');
-    }
-
     // Stop timer from `every` method by it’s ID.
     function cancel(timer) {
         clearInterval(timer.id);
@@ -50,7 +46,7 @@
 
     function VisTimer(vismon, config) {
         //VisSense.call(this, element, config);
-        var self = this;
+        var me = this;
 
         var lastTimerId = -1;
         var _private = {
@@ -58,7 +54,7 @@
             initialized: false
         };
 
-        self.vismon = function() {
+        me.vismon = function() {
             return vismon;
         };
 

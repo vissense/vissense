@@ -36,8 +36,6 @@
         FULLY_VISIBLE: 2
     };
 
-    var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
-
     /*--------------------------------------------------------------------------*/
 
     var VisState = (function() {

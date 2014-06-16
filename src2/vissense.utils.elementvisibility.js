@@ -14,7 +14,7 @@
  * fireIfFullyVisible
  * fireIfVisible
  */
-;(function(window, Math, VisSenseUtils) {
+;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
 	function getVisibilityPercentage(element) {
@@ -29,20 +29,22 @@
 
 		var vh = 0; // visible height
 		var vw = 0; // visible width
+		var viewport = VisSenseUtils.viewport(element);
 
 		if(r.top >= 0) {
-			vh = Math.min(r.height, VisSenseUtils.viewportHeight(element) - r.top);
+			vh = Math.min(r.height, viewport.height - r.top);
 		} else if(r.top < 0 && r.bottom > 0) {
-			vh = Math.min(VisSenseUtils.viewportHeight(element), r.bottom);
+			vh = Math.min(viewport.height, r.bottom);
 		}
 
 		if(r.left >= 0) {
-			vw = Math.min(r.width, VisSenseUtils.viewportWidth(element) - r.left);
+			vw = Math.min(r.width, viewport.width - r.left);
 		} else if(r.left < 0 && r.right > 0) {
-			vw = Math.min(VisSenseUtils.viewportWidth(element), r.right);
+			vw = Math.min(viewport.width, r.right);
 		}
 
 		var area = (vh * vw) / (r.height * r.width);
+
 		return Math.max(area, 0);
 	}
 
@@ -51,14 +53,17 @@
 		VisSenseUtils.isFullyInViewport(element) &&
 		VisSenseUtils.isVisibleByStyling(element);
 	}
+
     function isVisible(element) {
         return VisSenseUtils.isPageVisible() &&
         VisSenseUtils.isInViewport(element) &&
         VisSenseUtils.isVisibleByStyling(element);
     }
+
     function isHidden(element) {
         return !isVisible(element);
     }
+
     /**
     * Returns a function that invokes callback only if element is fully visible
     */
@@ -66,7 +71,8 @@
         return VisSenseUtils.fireIf(function() {
             return isFullyVisible(element);
         }, callback);
-    };
+    }
+
     /**
     * Returns a function that invokes callback only if element is visible
     */
@@ -74,7 +80,8 @@
         return VisSenseUtils.fireIf(function() {
             return isVisible(element);
         }, callback);
-    };
+    }
+
     /**
     * Returns a function that invokes callback only if element is hidden
     */
@@ -82,7 +89,7 @@
         return VisSenseUtils.fireIf(function() {
             return isHidden(element);
         }, callback);
-    };
+    }
 
     (function(target) {
         target.getVisibilityPercentage = getVisibilityPercentage;

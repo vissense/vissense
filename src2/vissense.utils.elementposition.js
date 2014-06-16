@@ -33,14 +33,12 @@
 		return r;
 	}
 
-	function viewportHeight(element) {
+    function viewport(element) {
 		var w = VisSenseUtils._window(element);
-		return w.innerHeight || w.document.documentElement.clientHeight;
-	}
-
-	function viewportWidth(element) {
-		var w = VisSenseUtils._window(element);
-		return w.innerWidth || w.document.documentElement.clientWidth;
+		return {
+		    height: w.innerHeight || w.document.documentElement.clientHeight,
+		    width: w.innerWidth || w.document.documentElement.clientWidth
+		};
 	}
 
 	function isFullyInViewport(element) {
@@ -48,11 +46,13 @@
 		if(r && (r.width <= 0 || r.height <= 0)) {
 			return false;
 		}
+		var view = viewport(element);
+
 		return (!!r &&
 			r.top >= 0 &&
 			r.left >= 0 &&
-			r.bottom < viewportHeight(element) &&
-			r.right < viewportWidth(element)
+			r.bottom < view.height &&
+			r.right < view.width
 		);
 	}
 
@@ -61,20 +61,18 @@
 		if(r && (r.width <= 0 || r.height <= 0)) {
 			return false;
 		}
+		var view = viewport(element);
 		return ( !!r &&
 			r.bottom > 0 &&
 			r.right > 0 &&
-			r.top < viewportHeight(element) &&
-			r.left < viewportWidth(element)
+			r.top < view.height &&
+			r.left < view.width
 		);
-	};
+	}
 
-    (function(target) {
-        target.viewportHeight = viewportHeight;
-        target.viewportWidth = viewportWidth;
-        target.isFullyInViewport = isFullyInViewport;
-        target.isInViewport = isInViewport;
-        target._getBoundingClientRect = _getBoundingClientRect;
-    }(VisSenseUtils));
+    VisSenseUtils.viewport = viewport;
+    VisSenseUtils.isFullyInViewport = isFullyInViewport;
+    VisSenseUtils.isInViewport = isInViewport;
+    VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
 }.call(this, this, this.VisSenseUtils));

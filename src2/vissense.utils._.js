@@ -21,6 +21,7 @@
       var key = props[index];
       object[key] = callback ? callback(object[key], source[key], key, object, source) : source[key];
     }
+
     return object;
   }
 

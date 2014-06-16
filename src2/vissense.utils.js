@@ -20,11 +20,9 @@
       };
     }
 
-    (function init(window, libName) {
-        window[libName] = {
-            _window : _window,
-            fireIf: fireIf
-        };
-    }(window, 'VisSenseUtils'));
+    window.VisSenseUtils = {
+        _window : _window,
+        fireIf: fireIf
+    };
 
 }.call(this, this));

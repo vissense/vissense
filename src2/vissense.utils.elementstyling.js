@@ -13,11 +13,11 @@
  * isVisibleByStyling
  * isHiddenInputElement
  */
-;(function(window, VisSenseUtils) {
+;(function(window, VisSenseUtils, undefined) {
   'use strict';
     function _isVisibleByOffsetParentCheck(element) {
-        // http://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
-        if(element.offsetParent === null) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
+        if(!element.offsetParent) {
             var position = findEffectiveStyleProperty(element, 'position');
             if(position !== 'fixed') {
                 return false;
@@ -52,7 +52,8 @@
 		}
 
 		throw new Error('cannot determine effective stylesheet in this browser');
-	};
+	}
+
 	function findEffectiveStyleProperty(element, property) {
 		var effectiveStyle = findEffectiveStyle(element);
 		if(!effectiveStyle) {
@@ -63,7 +64,7 @@
 			return findEffectiveStyleProperty(element.parentNode, property);
 		}
 		return propertyValue;
-	};
+	}
 
 	function isDisplayed(element) {
 		var display = findEffectiveStyleProperty(element, 'display');
@@ -74,7 +75,7 @@
 			return isDisplayed(element.parentNode);
 		}
 		return true;
-	};
+	}
 
     function isVisibleByStyling(element) {
         if (element === VisSenseUtils._window(element).document) {
@@ -109,7 +110,7 @@
         }
 
         return true;
-    };
+    }
 
     (function(target) {
         target.isHiddenInputElement = isHiddenInputElement;

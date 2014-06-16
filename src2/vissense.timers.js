@@ -198,6 +198,11 @@
                 // reschedule update immediately
                 VisSenseUtils.defer(triggerVisMonUpdate);
             });
+
+            // check for other changes periodically
+            // e.g. if accordion expands on page
+            // or if dynamic content is added
+            me.every(100, 100, triggerVisMonUpdate);
         }());
     }
 

@@ -84,7 +84,7 @@
         }, callback);
     };
 
-    (function install(target) {
+    (function(target) {
         target.getVisibilityPercentage = getVisibilityPercentage;
         target.isFullyVisible = isFullyVisible;
         target.isVisible = isVisible;

@@ -4,14 +4,8 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
- ;(function(window, VisSenseUtils) {
+ ;(function(window, VisSenseUtils, undefined) {
   'use strict';
-
-    /** Used as a safe reference for `undefined` in pre ES5 environments */
-    var undefined;
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
 
     /**
      * An object used to flag environments features.
@@ -64,7 +58,7 @@
         support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
 
         return support;
-    }(root, root.document));
+    }(window, window.document));
 
     VisSenseUtils.support = function() {
         return support;

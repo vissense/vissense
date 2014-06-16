@@ -9,10 +9,6 @@
  */
  ;(function(window, VisSenseUtils) {
     'use strict';
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
-
     /*--------------------------------------------------------------------------*/
     // http://dustindiaz.com/rock-solid-addevent
     var EventCache = (function () {
@@ -64,7 +60,7 @@
     };
 
     // flush all remaining events
-    addEvent(root, 'unload', EventCache.flush);
+    addEvent(window, 'unload', EventCache.flush);
 
     VisSenseUtils.addEvent = addEvent;
 

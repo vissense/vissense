@@ -18,7 +18,7 @@
 
 	function _getBoundingClientRect(element) {
 		var r = element.getBoundingClientRect();
-		// IE<9 wont return height or width
+		// height and width are not standard elements - so lets add them
 		if(typeof r.height === 'undefined' || typeof r.width === 'undefined') {
 			// copying object because attributes cannot be added to 'r'
 			return {
@@ -36,12 +36,12 @@
 	function viewportHeight(element) {
 		var w = VisSenseUtils._window(element);
 		return w.innerHeight || w.document.documentElement.clientHeight;
-	};
+	}
 
 	function viewportWidth(element) {
 		var w = VisSenseUtils._window(element);
 		return w.innerWidth || w.document.documentElement.clientWidth;
-	};
+	}
 
 	function isFullyInViewport(element) {
 		var r = _getBoundingClientRect(element);
@@ -69,11 +69,12 @@
 		);
 	};
 
-    (function install(target) {
+    (function(target) {
         target.viewportHeight = viewportHeight;
         target.viewportWidth = viewportWidth;
         target.isFullyInViewport = isFullyInViewport;
         target.isInViewport = isInViewport;
         target._getBoundingClientRect = _getBoundingClientRect;
     }(VisSenseUtils));
+
 }.call(this, this, this.VisSenseUtils));

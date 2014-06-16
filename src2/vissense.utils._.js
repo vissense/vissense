@@ -10,9 +10,6 @@
  ;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
-  /** Used as a reference to the global object */
-  var root = (typeof window === 'object' && window) || this;
-
   /*--------------------------------------------------------------------------*/
 
   function extend(object, source, callback) {
@@ -27,7 +24,9 @@
     return object;
   }
 
-  function noop() {}
+  function noop() {
+  }
+
   function identity(i) {
     return i;
   }
@@ -37,10 +36,11 @@
   }
 
   function defer(callback) {
-      return root.setTimeout(function() {
+      return window.setTimeout(function() {
           callback();
       }, 1);
   }
+
   function isObject(obj) {
     return obj === Object(obj);
   }

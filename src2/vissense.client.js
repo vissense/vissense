@@ -76,7 +76,7 @@ VisSense.Network = function(config) {
 
         network.send({ hello : "hello"}, 'GET');
     });
-    VisSenseUtils.addEvent(root, 'unload', function(e) {
+    VisSenseUtils.addEvent(root, 'beforeunload', function(e) {
         console.log('VisClient: unload');
 
     });

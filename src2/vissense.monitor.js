@@ -27,13 +27,8 @@
  * fireIfVisibilityPercentageChanged(function() { ... });
  *
  */
-;(function(window, Math, VisSense, VisSenseUtils) {
+;(function(window, Math, VisSense, VisSenseUtils, undefined) {
   'use strict';
-    /** Used as a safe reference for `undefined` in pre ES5 environments */
-    var undefined;
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
 
     var states =  {
         HIDDEN: 0,
@@ -76,18 +71,23 @@
             visstate.wasVisible = function() {
                 return !!prev && prev.isVisible();
             };
+
             visstate.wasFullyVisible = function() {
                 return !!prev && prev.isFullyVisible();
             };
+
             visstate.wasHidden = function() {
                 return !!prev && prev.isHidden();
             };
+
             visstate.hasVisibilityChanged = function() {
                 return !prev || visstate.state() !== prev.state();
             };
+
             visstate.prev = function() {
                 return prev;
             };
+
             return visstate;
         }
 
@@ -107,8 +107,6 @@
 
         var exports = {};
 
-        exports.state = state;
-
         exports.hidden = function(percentage, prev) {
             return state(STATES.HIDDEN, percentage, prev || null);
         };
@@ -125,13 +123,17 @@
 
     function nextState(visobj, visstate) {
         var percentage = visobj.getVisibilityPercentage();
+
         if(visobj.isHidden()) {
             return VisState.hidden(percentage, visstate);
-        } else if (visobj.isFullyVisible()) {
+        }
+        else if (visobj.isFullyVisible()) {
              return VisState.fullyvisible(percentage, visstate);
-        } else if (visobj.isVisible()) {
+        }
+        else if (visobj.isVisible()) {
           return VisState.visible(percentage, visstate);
         }
+
         throw new Error('IllegalState');
     };
 
@@ -139,7 +141,7 @@
 
     function fireListeners(listeners, context) {
         for(var i in listeners) {
-            listeners[i].call(context || root);
+            listeners[i].call(context || window);
         }
     }
     /*--------------------------------------------------------------------------*/
@@ -182,31 +184,29 @@
         //   doSomething();
         // });
         self.register = function(callback) {
-            lastListenerId += 1;
-            _private.listeners[lastListenerId] = callback;
+            _private.listeners[++lastListenerId] = callback;
             return lastListenerId;
         };
 
         /**
         * expose update method
         */
-        VisMon.prototype.update = _update;
+        self.update = _update;
 
         (function init() {
             // react on tab changes
             VisSenseUtils.onPageVisibilityChange(_update);
 
             for(var i in updateTriggerEvents) {
-                VisSenseUtils.addEvent(root, updateTriggerEvents[i], _update);
+                VisSenseUtils.addEvent(window, updateTriggerEvents[i], _update);
             }
 
             // triggers update if mouse moves over element
             // this is important if the element is draggable
             VisSenseUtils.addEvent(visobj._element, 'mousemove', _update);
 
-
-
             _update();
+
             // reschedule update immediately
             VisSenseUtils.defer(_update);
         }());
@@ -334,9 +334,11 @@
             'percentagechange' : this.onVisibilityPercentageChange,
             'visibilitychange' : this.onVisibilityChange
         };
+
         if(!emitEvents[eventName]) {
             throw new Error("VisMon: Event '"+ eventName +"' is not supported");
         }
+
         return emitEvents[eventName](handler);
     };
 

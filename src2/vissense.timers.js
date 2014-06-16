@@ -7,17 +7,12 @@
 /*
  * depends on ['vissense.core', 'vissense.monitor']
  */
-;(function(window, VisSense) {
+;(function(window, VisSense, undefined) {
     'use strict';
 
     if(!VisSense || !VisSense.monitor) {
         throw new Error('VisSense is not available');
     }
-    /** Used as a safe reference for `undefined` in pre ES5 environments */
-    var undefined;
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
 
     // Stop timer from `every` method by it’s ID.
     function cancel(timer) {

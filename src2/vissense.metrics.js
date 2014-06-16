@@ -7,25 +7,12 @@
 /**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
- ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics) {
+ ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics, undefined) {
   'use strict';
 
-    if(!brwsrfyMetrics) {
-        throw new Error('global Metrics is not available');
-    }
-    if(!VisSense || !VisSense.monitor || !VisSense.timer || !VisSenseUtils.newStopWatch) {
-        throw new Error('VisSense is not available');
-    }
-
-    /** Used as a safe reference for `undefined` in pre ES5 environments */
-    var undefined;
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
-
     var DEFAULT_CONFIG = {
-        visibleUpdateInterval: 250,
-        hiddenUpdateInterval: 250,
+        visibleUpdateInterval: 200,
+        hiddenUpdateInterval: 200,
         updatePercentageOnPageHidden:false
     };
 
@@ -66,8 +53,6 @@
         report.addMetric('visibility.changes', new brwsrfyMetrics.Timer());
         // percentage histogram (only updates if page is visible)
         report.addMetric('percentage', new brwsrfyMetrics.Timer());
-        //self.report.addMetric('ns.histogram', new brwsrfyMetrics.Histogram.createUniformHistogram(10));
-        //self.report.addMetric('ns.exphistogram', new brwsrfyMetrics.Histogram.createExponentialDecayHistogram(10, 0.1));
 
         updatePercentage();
 

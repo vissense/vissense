@@ -25,8 +25,7 @@
       performance.msNow ||
       performance.oNow ||
       performance.webkitNow ||
-      // fallback to Date
-      Date.now;
+      Date.now;  // fallback to Date
     })(window);
 
     var StopWatch = (function(window) {
@@ -37,7 +36,7 @@
         } (window));
 
         function StopWatch(performance) {
-            var s = this;
+            var me = this;
 
             var $ = {
                 ts : 0, // time start
@@ -45,51 +44,33 @@
                 r : false // currently running
             };
 
-            var now = s.now = getNow(performance);
+            var now = me.now = getNow(performance);
 
-            s.start = function(optNow) {
+            me.start = function(optNow) {
                 $.r = true;
                 $.ts = +optNow || now();
                 return 0;
             };
-            s.restart = function(optNow) {
-                return s.stopAndRestartIf(true, optNow);
+            me.restart = function(optNow) {
+                return me.stopAndRestartIf(true, optNow);
             };
 
-            /**
-            * Does neither stop nor restart if condition is false
-            */
-            s.stopAndRestartIf = function(condition, optNow) {
-                return !condition ? 0 : s.stopAndThenRestartIf(true, optNow);
+            me.stop = function (optNow) {
+                return me.stopIf($.r, optNow);
             };
-
-            /**
-            * Definitely stops, but restart only if condition is true
-            */
-            s.stopAndThenRestartIf = function(condition, optNow) {
-                var r = s.stop(optNow);
-                if(condition) {
-                    s.start(optNow);
-                }
-                return r;
-            };
-
-            s.stop = function (optNow) {
-                return s.stopIf($.r, optNow);
-            };
-            s.running = function () {
+            me.running = function () {
                 return $.r;
             };
 
-            s.stopIf = function (condition, optNow) {
-                var t = s.time(optNow);
+            me.stopIf = function (condition, optNow) {
+                var t = me.time(optNow);
                 if(condition) {
                     $.r = false;
                 }
                 return t;
             };
 
-            s.time = function (optNow) {
+            me.time = function (optNow) {
                 if (!$.r) {
                     return 0;
                 } else {
@@ -97,6 +78,24 @@
                 }
 
                 return $.te - $.ts;
+            };
+
+            /**
+            * Does neither stop nor restart if condition is false
+            */
+            me.stopAndRestartIf = function(condition, optNow) {
+                return !condition ? 0 : me.stopAndThenRestartIf(true, optNow);
+            };
+
+            /**
+            * Definitely stops, but restart only if condition is true
+            */
+            me.stopAndThenRestartIf = function(condition, optNow) {
+                var r = me.stop(optNow);
+                if(condition) {
+                    me.start(optNow);
+                }
+                return r;
             };
         }
 
@@ -107,10 +106,8 @@
         return StopWatch;
     }(window));
 
-    function newStopWatch() {
+    VisSenseUtils.newStopWatch = function() {
         return new StopWatch();
     };
-
-    VisSenseUtils.newStopWatch = newStopWatch;
 
 }.call(this, this, this.VisSenseUtils));

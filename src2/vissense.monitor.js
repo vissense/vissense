@@ -29,13 +29,6 @@
  */
 ;(function(window, Math, VisSense, VisSenseUtils, undefined) {
   'use strict';
-
-    var states =  {
-        HIDDEN: 0,
-        VISIBLE: 1,
-        FULLY_VISIBLE: 2
-    };
-
     /*--------------------------------------------------------------------------*/
 
     var VisState = (function() {
@@ -133,7 +126,7 @@
         }
 
         throw new Error('IllegalState');
-    };
+    }
 
     /*--------------------------------------------------------------------------*/
 

@@ -148,7 +148,7 @@
 
 
     function VisMon(visobj, config) {
-        var self = this;
+        var me = this;
 
         var lastListenerId = -1;
         var _private = {
@@ -157,25 +157,25 @@
         };
 
         // read-only access to VisSense instance
-        self.visobj = function() {
+        me.visobj = function() {
             return visobj;
         };
 
         /**
         * read-only access to status
         */
-        self.status = function(prop) {
+        me.status = function(prop) {
             return _private.status;
         };
 
-        self.getVisibilityPercentage = function() {
-            return self.status().percentage();
+        me.getVisibilityPercentage = function() {
+            return me.status().percentage();
         }
         /**
         * read-only access to status
         */
-        self.prev = function(prop) {
-            return self.status().prev();
+        me.prev = function(prop) {
+            return me.status().prev();
         };
 
         // Adds a listener.
@@ -183,7 +183,7 @@
         // var id = visobj.monitor().register(function() {
         //   doSomething();
         // });
-        self.register = function(callback) {
+        me.register = function(callback) {
             _private.listeners[++lastListenerId] = callback;
             return lastListenerId;
         };
@@ -191,32 +191,12 @@
         /**
         * expose update method
         */
-        self.update = _update;
-
-        (function init() {
-            // react on tab changes
-            VisSenseUtils.onPageVisibilityChange(_update);
-
-            for(var i in updateTriggerEvents) {
-                VisSenseUtils.addEvent(window, updateTriggerEvents[i], _update);
-            }
-
-            // triggers update if mouse moves over element
-            // this is important if the element is draggable
-            VisSenseUtils.addEvent(visobj._element, 'mousemove', _update);
-
-            _update();
-
-            // reschedule update immediately
-            VisSenseUtils.defer(_update);
-        }());
-
-        function _update() {
+        me.update = function() {
             _private.status = nextState(visobj, _private.status);
 
             // notify listeners
-            fireListeners(_private.listeners, self);
-        }
+            fireListeners(_private.listeners, me);
+        };
     }
 
     VisSense.monitor = function monitor(visobj, config) {
@@ -239,9 +219,9 @@
     * visobj.fireIfVisibilityChanged(callback)
     */
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
-        var self = this;
+        var me = this;
         return VisSenseUtils.fireIf(function() {
-            return self.status().hasVisibilityChanged();
+            return me.status().hasVisibilityChanged();
         }, callback);
     };
 
@@ -253,9 +233,9 @@
     * `VISIBLE` and (depending on the config) `FULLY_VISIBLE`
     */
     VisMon.prototype.fireIfVisibilityPercentageChanged = function(callback) {
-        var self = this;
+        var me = this;
         return VisSenseUtils.fireIf(function() {
-            return self.status().hasVisibilityPercentageChanged();
+            return me.status().hasVisibilityPercentageChanged();
         }, callback);
     };
 
@@ -286,15 +266,15 @@
     * });
     */
     VisMon.prototype.onVisible = function (callback) {
-        var self = this;
+        var me = this;
 
         var fireIfVisible =  VisSenseUtils.fireIf(function() {
-            return self.status().isVisible();
+            return me.status().isVisible();
         }, callback);
 
         // only fire when coming from state hidden or no previous state is present
         var handler = this.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
-            return !self.status().prev() || self.status().wasHidden();
+            return !me.status().prev() || me.status().wasHidden();
         }, fireIfVisible));
         return this.register(handler);
     };
@@ -303,9 +283,9 @@
     * Fires when visibility changes and element becomes fully visible
     */
     VisMon.prototype.onFullyVisible = function (callback) {
-        var self = this;
+        var me = this;
         var fireIfFullyVisible =  VisSenseUtils.fireIf(function() {
-            return self.status().isFullyVisible();
+            return me.status().isFullyVisible();
         }, callback);
 
         var handler = this.fireIfVisibilityChanged(fireIfFullyVisible);
@@ -316,10 +296,10 @@
     * Fires when visibility changes and element becomes hidden
     */
     VisMon.prototype.onHidden = function (callback) {
-        var self = this;
+        var me = this;
 
         var fireIfHidden =  VisSenseUtils.fireIf(function() {
-            return self.status().isHidden();
+            return me.status().isHidden();
         }, callback);
 
         var handler = this.fireIfVisibilityChanged(fireIfHidden);

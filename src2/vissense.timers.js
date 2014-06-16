@@ -168,11 +168,39 @@
         };
 
         (function init() {
-            self.vismon().onVisible(function() {
+            var triggerVisMonUpdate = function() {
+                vismon.update();
+            };
+
+            (function initVisMonUpdateStrategy() {
+                var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
+
+                // react on tab changes
+                VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
+
+                for(var i in updateTriggerEvents) {
+                    VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
+                }
+
+                // triggers update if mouse moves over element
+                // this is important if the element is draggable
+                VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
+            }());
+
+            vismon.onVisible(function() {
               cancelAndReinitialize();
             });
-            self.vismon().onHidden(function() {
+
+            vismon.onHidden(function() {
               cancelAndReinitialize();
+            });
+
+            vismon.update();
+
+            VisSenseUtils.defer(function() {
+                cancelAndReinitialize();
+                // reschedule update immediately
+                VisSenseUtils.defer(triggerVisMonUpdate);
             });
         }());
     }

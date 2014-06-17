@@ -2345,7 +2345,8 @@ UniformSample.prototype.update = function(val) {
             stopAndUpdateTimers(vistimer.vismon());
 
             vistimer.stopAll();
-            return stopped = true;
+            stopped = true;
+            return stopped;
         };
 
         /**

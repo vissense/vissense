@@ -136,19 +136,21 @@ module.exports = function (grunt) {
                 maxdepth: 3,
                 maxcomplexity:11,
                 maxlen:140,
-                node: true,
-                sub: true,
-                eqnull: true,
-                browser: true,
-                white: true,
-                globals: {
-                    Window: true,
-                    HTMLDocument: true,
-                    Element: true,
-                    Event: true,
-                    jQuery: false 
-                },
-                boss: true
+                /* Relaxing options */
+                boss: false,
+                debug: false,
+                eqnull: false,
+                esnext: false,
+                evil: false,
+                expr: false,
+                funcscope: false,
+                globalstrict: false,
+                gcl: true,
+                maxerr: 10,
+                sub: false,
+                /* Environment options */
+                node: true, /* only for Gruntfile */
+                browser: true
             },
             gruntfile: {
                 src: 'Gruntfile.js'

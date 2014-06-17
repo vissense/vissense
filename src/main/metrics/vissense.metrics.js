@@ -105,7 +105,8 @@
             stopAndUpdateTimers(vistimer.vismon());
 
             vistimer.stopAll();
-            return stopped = true;
+            stopped = true;
+            return stopped;
         };
 
         /**

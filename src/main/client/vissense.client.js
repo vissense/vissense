@@ -16,23 +16,23 @@ VisSense.Network = function(config) {
       net.setRequestHeader('X-VisSense-Api-Key', config.apiKey);
       net.setRequestHeader('Content-Type', 'application/json');
 
-      var that = this;
+      //var me = this;
 
-      net.onerror = function (a) {
+      net.onerror = function () {
         /* cache the report */
         //that.cacheReport(data);
       };
 
       function successHandler() {
-        if (net && net.readyState != 4) { return; }
-        if (net && net.status != 200) {
+        if (net && net.readyState !== 4) { return; }
+        if (net && net.status !== 200) {
           return false;
         }
         // some console.log implementations don't support multiple parameters, guess it's okay in this case to concatenate
         if ('console' in window) {
           console.log('vissense report sent: ' + net.responseText);
         }
-      };
+      }
 
       net.onreadystatechange = successHandler;
       net.send({ data: JSON.stringify(data) });
@@ -49,35 +49,29 @@ VisSense.Network = function(config) {
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, Math, VisSense, VisSenseUtils) {
-    /** Used as a safe reference for `undefined` in pre ES5 environments */
-    var undefined;
-
-    /** Used as a reference to the global object */
-    var root = (typeof window === 'object' && window) || this;
-
+;(function(window, Math, VisSense, VisSenseUtils, undefined) {
 
     var network = new VisSense.Network({
         url: 'http://localhost:9000/vissense'
     });
 
 
-    VisSenseUtils.addEvent(root, 'load', function(e) {
-        console.log('VisClient: load');
+    VisSenseUtils.addEvent(window, 'load', function(e) {
+        console.log('VisClient: ' + e);
 
-        var ua = root.navigator.userAgent;
+        var ua = window.navigator.userAgent;
         var environment = {
-            'osver' : ( typeof root.device !== 'undefined' )
-                    ? root.device.version
+            'osver' : ( typeof window.device !== 'undefined' ) ? window.device.version
                     : ua.substr(ua.indexOf('; ')+2,ua.length).replace(')',';').split(';')[0] || 'unknown'
         };
 
         console.log(environment);
 
-        network.send({ hello : "hello"}, 'GET');
+        network.send({ hello : 'hello'}, 'GET');
     });
-    VisSenseUtils.addEvent(root, 'beforeunload', function(e) {
-        console.log('VisClient: unload');
+
+    VisSenseUtils.addEvent(window, 'beforeunload', function(e) {
+        console.log('VisClient: ' + e);
 
     });
 

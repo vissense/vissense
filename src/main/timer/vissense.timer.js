@@ -7,7 +7,7 @@
 /*
  * depends on ['vissense.core', 'vissense.monitor']
  */
-;(function(window, VisSense, undefined) {
+;(function(window, VisSense, VisSenseUtils, undefined) {
     'use strict';
 
     // Stop timer from `every` method by it’s ID.
@@ -16,7 +16,7 @@
         clearTimeout(timer.delay);
         delete timer.id;
         delete timer.delay;
-    };
+    }
 
     function run(timer, interval, runNow) {
         var runner = function () {
@@ -41,11 +41,10 @@
         } else {
           timer.id = setInterval(runner, interval);
         }
-     }
+    }
     /*--------------------------------------------------------------------------*/
 
-    function VisTimer(vismon, config) {
-        //VisSense.call(this, element, config);
+    function VisTimer(vismon) {
         var me = this;
 
         var lastTimerId = -1;
@@ -119,7 +118,9 @@
 
         VisTimer.prototype.stopAll = function() {
             for (var id in _private.timers) {
-                _cancel(id);
+                if(_private.timers.hasOwnProperty(id)) {
+                    _cancel(id);
+                }
             }
             _private.timers = [];
         };
@@ -143,12 +144,12 @@
             }
 
             run(timer, interval, runNow);
-        };
+        }
 
 
         function _cancel(id) {
             cancel(_private.timers[id]);
-        };
+        }
 
 
         function cancelAndReinitialize() {
@@ -157,11 +158,15 @@
 
             if ( (isHidden && !wasHidden) || (!isHidden && wasHidden) ) {
                 for (var id in _private.timers) {
-                    _cancel(id);
-                    _run(id, true);
+                    if(_private.timers.hasOwnProperty(id)) {
+                        _cancel(id);
+
+                        var reinitializeImmediatelyOnHidden = true;
+                        _run(id, !isHidden ? true : reinitializeImmediatelyOnHidden);
+                    }
                 }
             }
-        };
+        }
 
         (function init() {
             var triggerVisMonUpdate = function() {
@@ -175,7 +180,9 @@
                 VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
 
                 for(var i in updateTriggerEvents) {
-                    VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
+                    if(updateTriggerEvents.hasOwnProperty(i)) {
+                        VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
+                    }
                 }
 
                 // triggers update if mouse moves over element
@@ -207,12 +214,13 @@
     }
 
     function newVisTimer(vissense, config) {
-        return new VisTimer(vissense.monitor(), config);
-    };
+        return new VisTimer(vissense.monitor(), config || {});
+    }
 
     VisSense.timer = newVisTimer;
+
     VisSense.prototype.timer = function(config) {
         return newVisTimer(this, config);
     };
 
-}.call(this, this, this.VisSense, this.Math));
+}.call(this, this, this.VisSense, this.VisSenseUtils));

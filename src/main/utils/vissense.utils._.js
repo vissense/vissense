@@ -51,8 +51,10 @@
         return obj;
     }
 
-    for (var prop in source) {
-      if (obj[prop] === void 0) obj[prop] = source[prop];
+    for (var prop in Object.keys(source)) {
+      if (obj[prop] === void 0) {
+        obj[prop] = source[prop];
+      }
     }
     return obj;
   }

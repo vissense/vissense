@@ -20,11 +20,11 @@
     (function (window) {
       window.performance = window.performance || {};
       // handle vendor prefixing
-      performance.now = performance.now ||
-      performance.mozNow ||
-      performance.msNow ||
-      performance.oNow ||
-      performance.webkitNow ||
+      window.performance.now = window.performance.now ||
+      window.performance.mozNow ||
+      window.performance.msNow ||
+      window.performance.oNow ||
+      window.performance.webkitNow ||
       Date.now;  // fallback to Date
     })(window);
 

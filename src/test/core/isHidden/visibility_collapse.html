@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>vissense tests</title>
+  <link rel="stylesheet" href="http://localhost:3000/bower_components/qunit/qunit/qunit.css">
+  
+  <script src="http://localhost:3000/bower_components/qunit/qunit/qunit.js"></script>
+  <script src="http://localhost:3000/dist/vissense.min.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+  <div id="testNode1" 
+    style="height: 300px; width: 300px; visibility:collapse;">
+  </div>
+
+  <div style="visibility: collapse;">
+    <div id="testNode2" 
+      style="height: 300px; width: 300px; display:block; background-color: green;">
+    </div>
+  </div>
+
+  <div style="visibility: collapse;">
+    <div>
+      <div id="testNode3" style="position: fixed; top: -100px; width:100px; height: 200px;">
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  var element1 = document.getElementById('testNode1');
+  var element2 = document.getElementById('testNode2');
+  var element3 = document.getElementById('testNode3');
+  
+  var vis1 = new VisSense(element1);
+  var vis2 = VisSense(element2);
+  var vis3 = VisSense(element3);
+  
+  test( "if element1 is hidden", function() {
+    ok( true === vis1.isHidden(), "Passed: element1 is hidden" );
+  });
+
+  test( "if element2 is hidden", function() {
+    ok( true === vis2.isHidden(), "Passed: element2 is hidden" );
+  });
+
+  test( "if element3 is hidden", function() {
+    ok( true === vis3.isHidden(), "Passed: element3 is hidden" );
+  });
+
+  </script>
+
+</body>
+</html>

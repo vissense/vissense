@@ -25,10 +25,10 @@
 
         /**
          * Detect IE
-         */
+         
         function isIE() {
           return !!getIEVersion();
-        }
+        }*/
 
         /**
          * Detect if the DOM is supported.
@@ -53,7 +53,7 @@
         support.IEVersion = getIEVersion();
         support.DOMPresent = isDomPresent();
         support.CanReadStyle = canReadStyle();
-        support.BrowserSupported = !(support.IEVersion < support.MinIEVersion);
+        support.BrowserSupported = support.IEVersion >= support.MinIEVersion;
 
         support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
 
@@ -62,6 +62,6 @@
 
     VisSenseUtils.support = function() {
         return support;
-    }
+    };
 
 }.call(this, this, this.VisSenseUtils));

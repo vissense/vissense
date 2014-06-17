@@ -132,13 +132,15 @@
 
     function fireListeners(listeners, context) {
         for(var i in listeners) {
-            listeners[i].call(context || window);
+            if(listeners.hasOwnProperty(i)) {
+                listeners[i].call(context || window);
+            }
         }
     }
     /*--------------------------------------------------------------------------*/
 
 
-    function VisMon(visobj, config) {
+    function VisMon(visobj) {
         var me = this;
 
         var lastListenerId = -1;
@@ -155,17 +157,17 @@
         /**
         * read-only access to status
         */
-        me.status = function(prop) {
+        me.status = function() {
             return _private.status;
         };
 
         me.getVisibilityPercentage = function() {
             return me.status().percentage();
-        }
+        };
         /**
         * read-only access to status
         */
-        me.prev = function(prop) {
+        me.prev = function() {
             return me.status().prev();
         };
 
@@ -175,6 +177,8 @@
         //   doSomething();
         // });
         me.register = function(callback) {
+            //var lastListenerId = lastListenerId + 1;
+            //_private.listeners[lastListenerId] = callback;
             _private.listeners[++lastListenerId] = callback;
             return lastListenerId;
         };
@@ -191,7 +195,7 @@
     }
 
     VisSense.monitor = function monitor(visobj, config) {
-        return new VisMon(visobj, config);
+        return new VisMon(visobj, config || {});
     };
 
     VisSense.prototype.monitor = function(config) {

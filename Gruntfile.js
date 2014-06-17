@@ -16,62 +16,66 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
                 stripBanners: true
             },
-            dist: {
+            'dist-deprecated': {
                 src: [
-                    'src/core/events.js',
-                    'src/core/ie.js', 
-                    'src/core/visibility_styling.js', 
-                    'src/core/visibility_position.js', 
-                    'src/core/vissense.core.js', 
-                    'src/vissense.listeners.js', 
-                    'src/vissense.timers.js'
+                    'DEPRECATED_VISCHECK/src/core/events.js',
+                    'DEPRECATED_VISCHECK/src/core/ie.js', 
+                    'DEPRECATED_VISCHECK/src/core/visibility_styling.js', 
+                    'DEPRECATED_VISCHECK/src/core/visibility_position.js', 
+                    'DEPRECATED_VISCHECK/src/core/vissense.core.js', 
+                    'DEPRECATED_VISCHECK/src/vissense.listeners.js', 
+                    'DEPRECATED_VISCHECK/src/vissense.timers.js'
                 ],
-                dest: 'dist/vissense.js'
+                dest: 'DEPRECATED_VISCHECK/dist/vissense.js'
             },
             core: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src2/vissense.polyfill.js',
-                    'src2/vissense.utils.js',
-                    'src2/vissense.utils._.js',
-                    'src2/vissense.utils.addevent.js',
-                    'src2/vissense.utils.pagevisibility.js',
-                    'src2/vissense.utils.elementstyling.js',
-                    'src2/vissense.utils.elementposition.js',
-                    'src2/vissense.utils.elementvisibility.js',
-                    'src2/vissense.utils.support.js',
-                    'src2/vissense.core.js',
+                    'src/main/vissense.polyfill.js',
+                    'src/main/utils/vissense.utils.js',
+                    'src/main/utils/vissense.utils._.js',
+                    'src/main/utils/vissense.utils.addevent.js',
+                    'src/main/utils/vissense.utils.pagevisibility.js',
+                    'src/main/utils/vissense.utils.elementstyling.js',
+                    'src/main/utils/vissense.utils.elementposition.js',
+                    'src/main/utils/vissense.utils.elementvisibility.js',
+                    'src/main/utils/vissense.utils.support.js',
+                    'src/main/core/vissense.core.js'
                 ],
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js'
+                dest: 'dist/vissense.core.js'
             },
             monitor: {
                 src: [
-                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js',
-                    'src2/vissense.monitor.js'
+                    '<%= concat.core.dest %>',
+                    'src/main/monitor/vissense.monitor.js'
                 ],
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js'
+                dest: 'dist/vissense.monitor.js'
             },
-            timers: {
+            timer: {
                 src: [
-                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js',
-                    'src2/vissense.timers.js'
+                    '<%= concat.monitor.dest %>',
+                    'src/main/timer/vissense.timer.js'
                 ],
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.js'
+                dest: 'dist/vissense.timer.js'
             },
             metrics: {
                 src: [
                     'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
-                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.js',
-                    'src2/vissense.utils.stopwatch.js',
-                    'src2/vissense.metrics.js'
+                    '<%= concat.timer.dest %>',
+                    'src/main/utils/vissense.utils.stopwatch.js',
+                    'src/main/metrics/vissense.metrics.js'
                 ],
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js'
+                dest: 'dist/vissense.metrics.js'
             },
-            full: {
+            dist: {
                 src: [
-                    '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js',
-                    'src2/vissense.client.js'
+                    '<%= concat.metrics.dest %>',
+                    'src/main/client/vissense.client.js'
                 ],
+                dest: 'dist/vissense.js'
+            },
+            'copy-to-playground': {
+                src: ['<%= concat.dist.dest %>'],
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js'
             }
         },
@@ -79,34 +83,39 @@ module.exports = function (grunt) {
             options: {
                 banner: '<%= banner %>'
             },
+            'dist-deprecated': {
+                src: '<%= concat["dist-deprecated"].dest %>',
+                dest: 'DEPRECATED_VISCHECK/dist/vissense.min.js'
+            },
+            core: {
+                src: '<%= concat.core.dest %>',
+                dest: 'dist/vissense2.core.min.js'
+            },
+            monitor: {
+                src: '<%= concat.monitor.dest %>',
+                dest: 'dist/vissense2.monitor.min.js'
+            },
+            timer: {
+                src: '<%= concat.timer.dest %>',
+                dest: 'dist/vissense2.timer.min.js'
+            },
+            metrics: {
+                src: '<%= concat.metrics.dest %>',
+                dest: 'dist/vissense2.metrics.min.js'
+            },
             dist: {
                 src: '<%= concat.dist.dest %>',
                 dest: 'dist/vissense.min.js'
             },
-
-            full: {
-                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js',
+            'copy-to-playground': {
+                src: '<%= concat.dist.dest %>',
                 dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.min.js'
-            },
-            core: {
-                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.js',
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.core.min.js'
-            },
-            monitor: {
-                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.js',
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.monitor.min.js'
-            },
-            timers: {
-                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.js',
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.timers.min.js'
-            },
-            metrics: {
-                src: '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.js',
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.metrics.min.js'
             }
         },
         jshint: {
             options: {
+                es3:true,
+                forin: true,
                 node: true,
                 curly: true,
                 eqeqeq: true,
@@ -119,6 +128,7 @@ module.exports = function (grunt) {
                 unused: true,
                 eqnull: true,
                 browser: true,
+                white:true,
                 globals: {
                     Window: true,
                     HTMLDocument: true,
@@ -137,7 +147,7 @@ module.exports = function (grunt) {
         },
         qunit: {
             files: [
-                'test/**/*.html'
+                'src/test/**/*.html'
             ]
         },
         connect: {
@@ -173,6 +183,6 @@ module.exports = function (grunt) {
     // Default task
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test']);
     grunt.registerTask('serve', ['default', 'connect','watch']);
-    grunt.registerTask('test', ['qunit']);
+    grunt.registerTask('test', ['connect', 'qunit']);
 };
 

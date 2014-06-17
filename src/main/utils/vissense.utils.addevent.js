@@ -15,7 +15,6 @@
         var listEvents = [];
         var remove = function(i) {
             var item = listEvents[i];
-            var node
             if(!!item[0] && !!item[1] && !!item[2]) {
                 if (item[0].removeEventListener) {
                     item[0].removeEventListener(item[1], item[2], item[3]);
@@ -35,7 +34,7 @@
             },
             remove: remove,
             flush: function() {
-                var i, item;
+                var i;
                 for (i = listEvents.length - 1; i >= 0; i = i - 1) {
                     remove(i);
                 }
@@ -57,7 +56,7 @@
             return EventCache.add(obj, t, fn);
         }
         return -1;
-    };
+    }
 
     // flush all remaining events
     addEvent(window, 'unload', EventCache.flush);

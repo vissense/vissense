@@ -177,9 +177,9 @@
         //   doSomething();
         // });
         me.register = function(callback) {
-            //var lastListenerId = lastListenerId + 1;
-            //_private.listeners[lastListenerId] = callback;
-            _private.listeners[++lastListenerId] = callback;
+            lastListenerId += 1;
+            _private.listeners[lastListenerId] = callback;
+            //_private.listeners[++lastListenerId] = callback;
             return lastListenerId;
         };
 

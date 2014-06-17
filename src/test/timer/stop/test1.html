@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>vissense tests</title>
+  <link rel="stylesheet" href="http://localhost:3000/bower_components/qunit/qunit/qunit.css">
+  
+  <script src="http://localhost:3000/bower_components/qunit/qunit/qunit.js"></script>
+  <script src="http://localhost:3000/dist/vissense.min.js"></script>
+</head>
+<body>
+
+  <div id="testNode1" style="height: 1px; width: 1px; background-color: red;"></div>
+
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+  <div id="testNode1" style="position: absolute; top: 0; left:1px; height: 2px; width: 2px; background-color: red;"></div>
+
+  <script>
+    var element1 = document.getElementById('testNode1');
+    var vis1 = new VisSense(element1);
+    var vistimer = vis1.timer();
+
+    asyncTest( "if handler can be deregistered from VisTimer", function() {
+        expect(2);
+
+        var invocations = 0;
+
+        var timerId = vistimer.every(10, 10, function() {
+            invocations = invocations + 1;
+
+            var stopped = vistimer.stop(timerId);
+            ok( stopped === true, "Timer is stopped correctly");
+        });
+
+        setTimeout(function () {
+            ok( 1 === invocations, "Deregistering timer handler" + invocations);
+
+            start(); // <- last timeout must call ´start´
+        }, 100);
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1040,9 +1040,9 @@
         //   doSomething();
         // });
         me.register = function(callback) {
-            //var lastListenerId = lastListenerId + 1;
-            //_private.listeners[lastListenerId] = callback;
-            _private.listeners[++lastListenerId] = callback;
+            lastListenerId += 1;
+            _private.listeners[lastListenerId] = callback;
+            //_private.listeners[++lastListenerId] = callback;
             return lastListenerId;
         };
 
@@ -1237,14 +1237,14 @@
         // Run callback every `interval` milliseconds if page is visible and
         // every `hiddenInterval` milliseconds if page is hidden.
         //
-        //   Vissense.every(60 * 1000, 5 * 60 * 1000, function () {
+        //   visobj.timer().every(60 * 1000, 5 * 60 * 1000, function () {
         //       doSomeStuff();
         //   });
         //
         // You can skip `hiddenInterval` and callback will be called only if
         // page is visible.
         //
-        //   Vissense.every(1000, function () {
+        //   visobj.timer().every(1000, function () {
         //       doSomethingKewl();
         //   });
         //
@@ -1255,9 +1255,7 @@
         // timer (`clearInterval` analog).
         // Warning: timer ID is different from interval ID from `setInterval`,
         // so don’t use it in `clearInterval`.
-        //
-        // On change state from hidden to visible timers will be execute.
-        VisTimer.prototype.every = function (interval, hiddenInterval, callback, runNow) {
+        VisTimer.prototype.every = function (interval, hiddenInterval, callback) {
             if (!callback) {
                 callback = hiddenInterval;
                 hiddenInterval = null;
@@ -1271,7 +1269,7 @@
                 hidden:   hiddenInterval,
                 callback: callback
             };
-            _run(number, !runNow);
+            _run(number, false);
 
             return number;
         };

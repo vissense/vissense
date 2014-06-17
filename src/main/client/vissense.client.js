@@ -4,52 +4,45 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, VisSense, VisSenseUtils) {
+;(function(window, VisSense, VisSenseUtils, undefined) {
+  'use strict';
 
-VisSense.Network = function(config) {
-  var postUrl = config.url + '?cacheBuster='+VisSenseUtils.now();
-  var Network = {
-    send: function(data, method) {
-      // Send the data over to Vissense
-      var net = new XMLHttpRequest();
-      net.open(method || 'POST', postUrl, true );
-      net.setRequestHeader('X-VisSense-Api-Key', config.apiKey);
-      net.setRequestHeader('Content-Type', 'application/json');
+  VisSense.Network = function(config) {
+    var postUrl = config.url + '?cacheBuster='+VisSenseUtils.now();
+    var Network = {
+      send: function(data, method) {
+        // Send the data over to Vissense
+        var net = new XMLHttpRequest();
+        net.open(method || 'POST', postUrl, true );
+        net.setRequestHeader('X-VisSense-Api-Key', config.apiKey);
+        net.setRequestHeader('Content-Type', 'application/json');
 
-      //var me = this;
+        //var me = this;
 
-      net.onerror = function () {
-        /* cache the report */
-        //that.cacheReport(data);
-      };
+        net.onerror = function () {
+          /* cache the report */
+          //that.cacheReport(data);
+        };
 
-      function successHandler() {
-        if (net && net.readyState !== 4) { return; }
-        if (net && net.status !== 200) {
-          return false;
+        function successHandler() {
+          if (net && net.readyState !== 4) { return; }
+          if (net && net.status !== 200) {
+            return false;
+          }
+          // some console.log implementations don't support multiple parameters, guess it's okay in this case to concatenate
+          if ('console' in window) {
+            console.log('vissense report sent: ' + net.responseText);
+          }
         }
-        // some console.log implementations don't support multiple parameters, guess it's okay in this case to concatenate
-        if ('console' in window) {
-          console.log('vissense report sent: ' + net.responseText);
-        }
+
+        net.onreadystatechange = successHandler;
+        net.send({ data: JSON.stringify(data) });
       }
-
-      net.onreadystatechange = successHandler;
-      net.send({ data: JSON.stringify(data) });
-    }
+    };
+    return Network;
   };
-  return Network;
-};
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
-
-/**
- * @license
- * Vissense <http://vissense.com/>
- * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
- * Available under MIT license <http://opensource.org/licenses/MIT>
- */
-;(function(window, Math, VisSense, VisSenseUtils, undefined) {
+  (function() {
 
     var network = new VisSense.Network({
         url: 'http://localhost:9000/vissense'
@@ -75,4 +68,6 @@ VisSense.Network = function(config) {
 
     });
 
-}.call(this, this, this.Math, this.VisSense, this.VisSenseUtils));
+  } ());
+
+}.call(this, this, this.VisSense, this.VisSenseUtils));

@@ -1,4 +1,4 @@
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
@@ -733,11 +733,11 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -1452,11 +1452,13 @@ UniformSample.prototype.update = function(val) {
         * Detect IE version
         */
         function getIEVersion() {
-          var v = 3, div = document.createElement('div');
+          var v = 4, div = document.createElement('div');
           while (
-            div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
+            div.innerHTML = '<!--[if gt IE '+v+']><i></i><![endif]-->',
             div.getElementsByTagName('i')[0]
-          ){}
+          ){
+            v++;
+          }
           return v > 4 ? v : undefined;
         }
 
@@ -1907,7 +1909,7 @@ UniformSample.prototype.update = function(val) {
         };
 
         if(!emitEvents[eventName]) {
-            throw new Error("VisMon: Event '"+ eventName +"' is not supported");
+            throw new Error('VisMon: Event "'+ eventName +'" is not supported');
         }
 
         return emitEvents[eventName](handler);
@@ -2295,50 +2297,6 @@ UniformSample.prototype.update = function(val) {
         report.addMetric('visibility.changes', new brwsrfyMetrics.Timer());
         // percentage histogram (only updates if page is visible)
         report.addMetric('percentage', new brwsrfyMetrics.Timer());
-
-
-        /**
-        * Updates the percentage metrics (e.g. the ´mean´ visibility percentage)
-        *
-        * Does not update if the page is currently not visible!
-        * This would impact the validity of the result because some
-        * browsers only allow a maximum interval time of 1 second
-        * when the target tab is hidden.
-        */
-        function updatePercentage() {
-            if(!config.updatePercentageOnPageHidden && !VisSenseUtils.isPageVisible()) {
-                return;
-            }
-
-            var percentage = vistimer.vismon().status().percentage();
-            report.getMetric('percentage').update(percentage);
-        }
-
-        function updateVisibilityChanges() {
-            var state = vistimer.vismon().status().state();
-
-            report.getMetric('visibility.changes').update(state);
-        }
-
-        function stopAndUpdateTimers(vismon) {
-            var status = vismon.status();
-            var timeVisible = watchVisible.stopAndThenRestartIf(status.isVisible());
-
-            fireIfPositive(timeVisible, function(value) {
-                report.getMetric('time.visible').inc(value);
-                report.getMetric('time.relativeVisible').inc(value * status.percentage());
-            });
-
-            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(status.isFullyVisible()), function(value) {
-                report.getMetric('time.fullyvisible').inc(value);
-            });
-            fireIfPositive(watchHidden.stopAndThenRestartIf(status.isHidden()), function(value) {
-                report.getMetric('time.hidden').inc(value);
-            });
-            fireIfPositive(watchDuration.restart(), function(value) {
-                report.getMetric('time.duration').inc(value);
-            });
-        }
         
         updatePercentage();
 
@@ -2389,6 +2347,49 @@ UniformSample.prototype.update = function(val) {
             vistimer.stopAll();
             return stopped = true;
         };
+
+        /**
+        * Updates the percentage metrics (e.g. the ´mean´ visibility percentage)
+        *
+        * Does not update if the page is currently not visible!
+        * This would impact the validity of the result because some
+        * browsers only allow a maximum interval time of 1 second
+        * when the target tab is hidden.
+        */
+        function updatePercentage() {
+            if(!config.updatePercentageOnPageHidden && !VisSenseUtils.isPageVisible()) {
+                return;
+            }
+
+            var percentage = vistimer.vismon().status().percentage();
+            report.getMetric('percentage').update(percentage);
+        }
+
+        function updateVisibilityChanges() {
+            var state = vistimer.vismon().status().state();
+
+            report.getMetric('visibility.changes').update(state);
+        }
+
+        function stopAndUpdateTimers(vismon) {
+            var status = vismon.status();
+            var timeVisible = watchVisible.stopAndThenRestartIf(status.isVisible());
+
+            fireIfPositive(timeVisible, function(value) {
+                report.getMetric('time.visible').inc(value);
+                report.getMetric('time.relativeVisible').inc(value * status.percentage());
+            });
+
+            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(status.isFullyVisible()), function(value) {
+                report.getMetric('time.fullyvisible').inc(value);
+            });
+            fireIfPositive(watchHidden.stopAndThenRestartIf(status.isHidden()), function(value) {
+                report.getMetric('time.hidden').inc(value);
+            });
+            fireIfPositive(watchDuration.restart(), function(value) {
+                report.getMetric('time.duration').inc(value);
+            });
+        }
     }
 
     function newVisMetrics(vissense, config) {

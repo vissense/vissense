@@ -1,6 +1,6 @@
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-17
+/*! vissense - v0.0.1 - 2014-06-18
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -715,11 +715,13 @@
         * Detect IE version
         */
         function getIEVersion() {
-          var v = 3, div = document.createElement('div');
+          var v = 4, div = document.createElement('div');
           while (
-            div.innerHTML = '<!--[if gt IE '+(++v)+']><i></i><![endif]-->',
+            div.innerHTML = '<!--[if gt IE '+v+']><i></i><![endif]-->',
             div.getElementsByTagName('i')[0]
-          ){}
+          ){
+            v++;
+          }
           return v > 4 ? v : undefined;
         }
 
@@ -1170,7 +1172,7 @@
         };
 
         if(!emitEvents[eventName]) {
-            throw new Error("VisMon: Event '"+ eventName +"' is not supported");
+            throw new Error('VisMon: Event "'+ eventName +'" is not supported');
         }
 
         return emitEvents[eventName](handler);

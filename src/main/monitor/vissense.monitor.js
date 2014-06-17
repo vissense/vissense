@@ -311,7 +311,7 @@
         };
 
         if(!emitEvents[eventName]) {
-            throw new Error("VisMon: Event '"+ eventName +"' is not supported");
+            throw new Error('VisMon: Event "'+ eventName +'" is not supported');
         }
 
         return emitEvents[eventName](handler);

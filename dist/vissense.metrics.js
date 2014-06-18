@@ -2149,14 +2149,16 @@ UniformSample.prototype.update = function(val) {
 
     // performance.now polyfill
     (function (window) {
-      window.performance = window.performance || {};
-      // handle vendor prefixing
-      window.performance.now = window.performance.now ||
-      window.performance.mozNow ||
-      window.performance.msNow ||
-      window.performance.oNow ||
-      window.performance.webkitNow ||
-      Date.now;  // fallback to Date
+        if(!window.performance) {
+            window.performance = window.performance || {};
+            // handle vendor prefixing
+            window.performance.now = window.performance.now ||
+            window.performance.mozNow ||
+            window.performance.msNow ||
+            window.performance.oNow ||
+            window.performance.webkitNow ||
+            Date.now;  // fallback to Date
+        }
     })(window);
 
     var StopWatch = (function(window) {

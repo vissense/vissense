@@ -12,11 +12,12 @@
 		return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
 	}
 
-    function fireIf (when, callback) {
-      return function () {
-        if (when()) {
-          return callback();
-        }
+    /**
+    * Returns a function that invokes callback only if call to when() is true
+    */
+    function fireIf(when, callback) {
+      return function() {
+        return when() ? callback() : undefined;
       };
     }
 

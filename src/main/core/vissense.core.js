@@ -37,35 +37,9 @@
         this._config = config || {};
     }
 
-    /* @category Position -------------------------------------------------------*/
-
-    VisSense.prototype.isInViewport = function() {
-      return VisSenseUtils.isInViewport(this._element);
-    };
-
-    VisSense.prototype.isFullyInViewport = function() {
-      return VisSenseUtils.isFullyInViewport(this._element);
-    };
-
     VisSense.prototype.getVisibilityPercentage = function() {
       return VisSenseUtils.getVisibilityPercentage(this._element);
     };
-
-    VisSense.prototype.viewport = function() {
-      return VisSenseUtils.viewport(this._element);
-    };
-
-    /*--------------------------------------------------------------------------*/
-
-    VisSense.prototype.isDisplayed = function() {
-      return VisSenseUtils.isDisplayed(this._element);
-    };
-
-    VisSense.prototype.isVisibleByStyling = function() {
-      return VisSenseUtils.isVisibleByStyling(this._element);
-    };
-
-    /*--------------------------------------------------------------------------*/
 
     VisSense.prototype.isFullyVisible = function() {
       return VisSenseUtils.isFullyVisible(this._element);
@@ -81,21 +55,39 @@
 
     /*--------------------------------------------------------------------------*/
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfFullyVisible = function(callback) {
-      return VisSenseUtils.fireIfElementFullyVisible(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isFullyVisible();
+        }, callback);
     };
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfVisible = function(callback) {
-      return VisSenseUtils.fireIfVisible(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isVisible();
+        }, callback);
     };
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfHidden = function (callback) {
-        return VisSenseUtils.fireIfHidden(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isHidden();
+        }, callback);
     };
 
     /*--------------------------------------------------------------------------*/
 
-	VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
+    VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
   /*--------------------------------------------------------------------------*/
 

@@ -64,41 +64,11 @@
         return !isVisible(element);
     }
 
-    /**
-    * Returns a function that invokes callback only if element is fully visible
-    */
-    function fireIfFullyVisible(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isFullyVisible(element);
-        }, callback);
-    }
-
-    /**
-    * Returns a function that invokes callback only if element is visible
-    */
-    function fireIfVisible(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isVisible(element);
-        }, callback);
-    }
-
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    function fireIfHidden(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isHidden(element);
-        }, callback);
-    }
-
     (function(target) {
         target.getVisibilityPercentage = getVisibilityPercentage;
         target.isFullyVisible = isFullyVisible;
         target.isVisible = isVisible;
         target.isHidden = isHidden;
-        target.fireIfFullyVisible = fireIfFullyVisible;
-        target.fireIfVisible = fireIfVisible;
-        target.fireIfHidden = fireIfHidden;
     }(VisSenseUtils));
 
 }.call(this, this, this.Math, this.VisSenseUtils));

@@ -253,11 +253,12 @@
 		return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
 	}
 
+    /**
+    * Returns a function that invokes callback only if call to when() is true
+    */
     function fireIf (when, callback) {
       return function () {
-        if (when()) {
-          return callback();
-        }
+        return when() ? callback() : undefined;
       };
     }
 
@@ -666,41 +667,11 @@
         return !isVisible(element);
     }
 
-    /**
-    * Returns a function that invokes callback only if element is fully visible
-    */
-    function fireIfFullyVisible(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isFullyVisible(element);
-        }, callback);
-    }
-
-    /**
-    * Returns a function that invokes callback only if element is visible
-    */
-    function fireIfVisible(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isVisible(element);
-        }, callback);
-    }
-
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    function fireIfHidden(element, callback) {
-        return VisSenseUtils.fireIf(function() {
-            return isHidden(element);
-        }, callback);
-    }
-
     (function(target) {
         target.getVisibilityPercentage = getVisibilityPercentage;
         target.isFullyVisible = isFullyVisible;
         target.isVisible = isVisible;
         target.isHidden = isHidden;
-        target.fireIfFullyVisible = fireIfFullyVisible;
-        target.fireIfVisible = fireIfVisible;
-        target.fireIfHidden = fireIfHidden;
     }(VisSenseUtils));
 
 }.call(this, this, this.Math, this.VisSenseUtils));
@@ -800,35 +771,9 @@
         this._config = config || {};
     }
 
-    /* @category Position -------------------------------------------------------*/
-
-    VisSense.prototype.isInViewport = function() {
-      return VisSenseUtils.isInViewport(this._element);
-    };
-
-    VisSense.prototype.isFullyInViewport = function() {
-      return VisSenseUtils.isFullyInViewport(this._element);
-    };
-
     VisSense.prototype.getVisibilityPercentage = function() {
       return VisSenseUtils.getVisibilityPercentage(this._element);
     };
-
-    VisSense.prototype.viewport = function() {
-      return VisSenseUtils.viewport(this._element);
-    };
-
-    /*--------------------------------------------------------------------------*/
-
-    VisSense.prototype.isDisplayed = function() {
-      return VisSenseUtils.isDisplayed(this._element);
-    };
-
-    VisSense.prototype.isVisibleByStyling = function() {
-      return VisSenseUtils.isVisibleByStyling(this._element);
-    };
-
-    /*--------------------------------------------------------------------------*/
 
     VisSense.prototype.isFullyVisible = function() {
       return VisSenseUtils.isFullyVisible(this._element);
@@ -844,21 +789,39 @@
 
     /*--------------------------------------------------------------------------*/
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfFullyVisible = function(callback) {
-      return VisSenseUtils.fireIfElementFullyVisible(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isFullyVisible();
+        }, callback);
     };
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfVisible = function(callback) {
-      return VisSenseUtils.fireIfVisible(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isVisible();
+        }, callback);
     };
 
+    /**
+    * Returns a function that invokes callback only if element is hidden
+    */
     VisSense.prototype.fireIfHidden = function (callback) {
-        return VisSenseUtils.fireIfHidden(this._element, callback);
+        var me = this;
+        return VisSenseUtils.fireIf(function() {
+            return me.isHidden();
+        }, callback);
     };
 
     /*--------------------------------------------------------------------------*/
 
-	VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
+    VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
   /*--------------------------------------------------------------------------*/
 

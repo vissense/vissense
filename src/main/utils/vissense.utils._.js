@@ -39,7 +39,7 @@
   function defer(callback) {
       return window.setTimeout(function() {
           callback();
-      }, 1);
+      }, 0 /*1*/);
   }
 
   function isObject(obj) {

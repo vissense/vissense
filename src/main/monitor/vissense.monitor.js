@@ -57,60 +57,57 @@
     }
     /*--------------------------------------------------------------------------*/
 
-
     function VisMon(visobj) {
         var me = this;
 
-        var lastListenerId = -1;
-        var _private = {
-          status: null,
-          listeners: []
-        };
-
-        // read-only access to VisSense instance
-        me.visobj = function() {
-            return visobj;
-        };
-
-        /**
-        * read-only access to status
-        */
-        me.status = function() {
-            return _private.status;
-        };
-
-        me.percentage = function() {
-            return me.status().percentage();
-        };
-        /**
-        * read-only access to status
-        */
-        me.prev = function() {
-            return me.status().prev();
-        };
-
-        // Adds a listener.
-        //
-        // var id = visobj.monitor().register(function() {
-        //   doSomething();
-        // });
-        me.register = function(callback) {
-            lastListenerId += 1;
-            _private.listeners[lastListenerId] = callback;
-            //_private.listeners[++lastListenerId] = callback;
-            return lastListenerId;
-        };
-
-        /**
-        * expose update method
-        */
-        me.update = function() {
-            _private.status = nextState(visobj, _private.status);
-
-            // notify listeners
-            fireListeners(_private.listeners, me);
-        };
+        me._$$visobj = visobj;
+        me._$$lastListenerId = -1;
+        me._$$status = null;
+        me._$$listeners = [];
     }
+
+    // "read-only" access to VisSense instance
+    VisMon.prototype.visobj = function() {
+        return this._$$visobj;
+    };
+
+    /**
+    * "read-only" access to status
+    */
+    VisMon.prototype.status = function() {
+        return this._$$status;
+    };
+
+    VisMon.prototype.percentage = function() {
+        return this._$$status.percentage();
+    };
+    /**
+    * read-only access to status
+    */
+    VisMon.prototype.prev = function() {
+        return this._$$status.prev();
+    };
+
+    // Adds a listener.
+    //
+    // var id = visobj.monitor().register(function() {
+    //   doSomething();
+    // });
+    VisMon.prototype.register = function(callback) {
+        this._$$lastListenerId += 1;
+        this._$$listeners[this._$$lastListenerId] = callback;
+        return this._$$lastListenerId;
+    };
+
+    /**
+    * expose update method
+    */
+    VisMon.prototype.update = function() {
+        // update status
+        this._$$status = nextState(this._$$visobj, this._$$status);
+        // notify listeners
+        fireListeners(this._$$listeners, this);
+    };
 
     VisSense.monitor = function monitor(visobj, config) {
         return new VisMon(visobj, config || {});
@@ -137,6 +134,7 @@
     */
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
         var me = this;
+        
         return VisSenseUtils.fireIf(function() {
             return me.status().hasVisibilityChanged();
         }, callback);
@@ -151,6 +149,7 @@
     */
     VisMon.prototype.fireIfVisibilityPercentageChanged = function(callback) {
         var me = this;
+
         return VisSenseUtils.fireIf(function() {
             return me.status().hasVisibilityPercentageChanged();
         }, callback);
@@ -201,6 +200,7 @@
     */
     VisMon.prototype.onFullyVisible = function (callback) {
         var me = this;
+
         var fireIfFullyVisible =  VisSenseUtils.fireIf(function() {
             return me.status().isFullyVisible();
         }, callback);

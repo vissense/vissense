@@ -258,8 +258,8 @@
     /**
     * Returns a function that invokes callback only if call to when() is true
     */
-    function fireIf (when, callback) {
-      return function () {
+    function fireIf(when, callback) {
+      return function() {
         return when() ? callback() : undefined;
       };
     }
@@ -611,7 +611,7 @@
 }.call(this, this, this.VisSenseUtils));
 /*
  *
- * getVisibilityPercentage
+ * percentage
  * isVisible
  * isFullyVisible
  * isHidden
@@ -622,7 +622,7 @@
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
-	function getVisibilityPercentage(element) {
+	function percentage(element) {
 		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {
 			return 0;
 		}
@@ -670,7 +670,7 @@
     }
 
     (function(target) {
-        target.getVisibilityPercentage = getVisibilityPercentage;
+        target.percentage = percentage;
         target.isFullyVisible = isFullyVisible;
         target.isVisible = isVisible;
         target.isHidden = isHidden;
@@ -754,7 +754,7 @@
      * visElement.isVisible();
      * // => true
      *
-     * visElement.getVisibilityPercentage();
+     * visElement.percentage();
      * // => 0.93
      *
      */
@@ -773,8 +773,8 @@
         this._config = config || {};
     }
 
-    VisSense.prototype.getVisibilityPercentage = function() {
-      return VisSenseUtils.getVisibilityPercentage(this._element);
+    VisSense.prototype.percentage = function() {
+      return VisSenseUtils.percentage(this._element);
     };
 
     VisSense.prototype.isFullyVisible = function() {
@@ -939,7 +939,7 @@
     }());
 
     function nextState(visobj, visstate) {
-        var percentage = visobj.getVisibilityPercentage();
+        var percentage = visobj.percentage();
 
         if(visobj.isHidden()) {
             return VisState.hidden(percentage, visstate);
@@ -987,7 +987,7 @@
             return _private.status;
         };
 
-        me.getVisibilityPercentage = function() {
+        me.percentage = function() {
             return me.status().percentage();
         };
         /**

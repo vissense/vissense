@@ -76,7 +76,7 @@ module.exports = function (grunt) {
             },
             'copy-to-playground': {
                 src: ['<%= concat.dist.dest %>'],
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.js'
+                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense.js'
             }
         },
         uglify: {
@@ -89,19 +89,19 @@ module.exports = function (grunt) {
             },
             core: {
                 src: '<%= concat.core.dest %>',
-                dest: 'dist/vissense2.core.min.js'
+                dest: 'dist/vissense.core.min.js'
             },
             monitor: {
                 src: '<%= concat.monitor.dest %>',
-                dest: 'dist/vissense2.monitor.min.js'
+                dest: 'dist/vissense.monitor.min.js'
             },
             timer: {
                 src: '<%= concat.timer.dest %>',
-                dest: 'dist/vissense2.timer.min.js'
+                dest: 'dist/vissense.timer.min.js'
             },
             metrics: {
                 src: '<%= concat.metrics.dest %>',
-                dest: 'dist/vissense2.metrics.min.js'
+                dest: 'dist/vissense.metrics.min.js'
             },
             dist: {
                 src: '<%= concat.dist.dest %>',
@@ -109,7 +109,7 @@ module.exports = function (grunt) {
             },
             'copy-to-playground': {
                 src: '<%= concat.dist.dest %>',
-                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense2.min.js'
+                dest: '../vissense-plygrnd/app/bower_components/vissense/vissense.min.js'
             }
         },
         jshint: {
@@ -196,7 +196,7 @@ module.exports = function (grunt) {
 
     // Default task
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test']);
-    grunt.registerTask('serve', ['default', 'connect','watch']);
+    grunt.registerTask('serve', ['default', 'watch']);
     grunt.registerTask('test', ['connect', 'qunit']);
 };
 

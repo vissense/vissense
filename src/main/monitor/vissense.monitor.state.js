@@ -14,17 +14,17 @@
  * var vismon = visobj.monitor();
  *
  * vismon.onVisibilityChange(function() { ... });
- * vismon.onVisibilityPercentageChange(function() { ... });
+ * vismon.onPercentageChange(function() { ... });
  * vismon.onVisible(function() { ... });
  * vismon.onFullyVisible(function() { ... });
  * vismon.onHidden(function() { ... });
  *
  *
  * hasVisibilityChanged() // => true
- * hasVisibilityPercentageChanged // => true
+ * hasPercentageChanged // => true
  *
  * fireIfVisibilityChanged(function() { ... });
- * fireIfVisibilityPercentageChanged(function() { ... });
+ * fireIfPercentageChanged(function() { ... });
  *
  */
 ;(function(window, VisSense, VisSenseUtils, undefined) {
@@ -78,7 +78,7 @@
         return this._$$prev;
     };
 
-    VisState.prototype.hasVisibilityPercentageChanged = function() {
+    VisState.prototype.hasPercentageChanged = function() {
         return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
     };
 

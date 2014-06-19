@@ -62,7 +62,7 @@
 
         updateVisibilityChanges();
 
-        vistimer.vismon().onVisibilityPercentageChange(function() {
+        vistimer.vismon().onPercentageChange(function() {
             if(stopped) {
                 return;
             }

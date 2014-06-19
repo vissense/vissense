@@ -1554,17 +1554,17 @@ UniformSample.prototype.update = function(val) {
  * var vismon = visobj.monitor();
  *
  * vismon.onVisibilityChange(function() { ... });
- * vismon.onVisibilityPercentageChange(function() { ... });
+ * vismon.onPercentageChange(function() { ... });
  * vismon.onVisible(function() { ... });
  * vismon.onFullyVisible(function() { ... });
  * vismon.onHidden(function() { ... });
  *
  *
  * hasVisibilityChanged() // => true
- * hasVisibilityPercentageChanged // => true
+ * hasPercentageChanged // => true
  *
  * fireIfVisibilityChanged(function() { ... });
- * fireIfVisibilityPercentageChanged(function() { ... });
+ * fireIfPercentageChanged(function() { ... });
  *
  */
 ;(function(window, VisSense, VisSenseUtils, undefined) {
@@ -1618,7 +1618,7 @@ UniformSample.prototype.update = function(val) {
         return this._$$prev;
     };
 
-    VisState.prototype.hasVisibilityPercentageChanged = function() {
+    VisState.prototype.hasPercentageChanged = function() {
         return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
     };
 
@@ -1661,7 +1661,7 @@ UniformSample.prototype.update = function(val) {
  * var vismon = visobj.monitor();
  *
  * vismon.onVisibilityChange(function() { ... });
- * vismon.onVisibilityPercentageChange(function() { ... });
+ * vismon.onPercentageChange(function() { ... });
  * vismon.onVisible(function() { ... });
  * vismon.onFullyVisible(function() { ... });
  * vismon.onHidden(function() { ... });
@@ -1671,23 +1671,30 @@ UniformSample.prototype.update = function(val) {
  * hasVisibilityPercentageChanged // => true
  *
  * fireIfVisibilityChanged(function() { ... });
- * fireIfVisibilityPercentageChanged(function() { ... });
+ * fireIfPercentageChanged(function() { ... });
  *
  */
 ;(function(window, VisSense, VisSenseUtils, undefined) {
   'use strict';
 
-    function nextState(visobj, visstate) {
+    function nextState(visobj, previousState) {
         var percentage = visobj.percentage();
 
+        // check if nothing changed
+        if(!!previousState && percentage === previousState.percentage()) {
+          if(!previousState.hasPercentageChanged()) {
+            return previousState;
+          }
+        }
+
         if(visobj.isHidden()) {
-            return VisSenseUtils.VisState.hidden(percentage, visstate);
+            return VisSenseUtils.VisState.hidden(percentage, previousState);
         }
         else if (visobj.isFullyVisible()) {
-             return VisSenseUtils.VisState.fullyvisible(percentage, visstate);
+             return VisSenseUtils.VisState.fullyvisible(percentage, previousState);
         }
         else if (visobj.isVisible()) {
-          return VisSenseUtils.VisState.visible(percentage, visstate);
+          return VisSenseUtils.VisState.visible(percentage, previousState);
         }
 
         throw new Error('IllegalState');
@@ -1781,11 +1788,11 @@ UniformSample.prototype.update = function(val) {
     * be called multiple times if element is in state
     * `VISIBLE` and (depending on the config) `FULLY_VISIBLE`
     */
-    VisMon.prototype.fireIfVisibilityPercentageChanged = function(callback) {
+    VisMon.prototype.fireIfPercentageChanged = function(callback) {
         var me = this;
 
         return VisSenseUtils.fireIf(function() {
-            return me.status().hasVisibilityPercentageChanged();
+            return me.status().hasPercentageChanged();
         }, callback);
     };
 
@@ -1799,8 +1806,8 @@ UniformSample.prototype.update = function(val) {
     /**
     * Fires when visibility percentage changes
     */
-    VisMon.prototype.onVisibilityPercentageChange = function (callback) {
-        return this.register(this.fireIfVisibilityPercentageChanged(callback));
+    VisMon.prototype.onPercentageChange = function (callback) {
+        return this.register(this.fireIfPercentageChanged(callback));
     };
 
     /**
@@ -1862,7 +1869,7 @@ UniformSample.prototype.update = function(val) {
             'hidden' : this.onHidden,
             'visible' : this.onVisible,
             'fullyvisible' : this.onFullyVisible,
-            'percentagechange' : this.onVisibilityPercentageChange,
+            'percentagechange' : this.onPercentageChange,
             'visibilitychange' : this.onVisibilityChange
         };
 
@@ -2259,7 +2266,7 @@ UniformSample.prototype.update = function(val) {
 
         updateVisibilityChanges();
 
-        vistimer.vismon().onVisibilityPercentageChange(function() {
+        vistimer.vismon().onPercentageChange(function() {
             if(stopped) {
                 return;
             }

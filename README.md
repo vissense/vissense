@@ -4,7 +4,6 @@
 
 A utility library for detecting visibility of DOM element
 
-
 ## utils
 ### What it does
  * provides methods for detecting visibility of DOM elements
@@ -13,7 +12,6 @@ A utility library for detecting visibility of DOM element
  * detect if an element is overlapped by others
  * detect if element is a hidden input element
    you can really do that yourself. e.g.:
-
 
 ```
 #!javascript
@@ -26,11 +24,15 @@ function isHiddenInputElement(element) {
 }
 ```
 
+
+
 ## core
 ### What it does
  * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
 
 ### What it does *not*
+
+
 
 
 ## vismon
@@ -47,9 +49,6 @@ function isHiddenInputElement(element) {
 (function initVisMonUpdateStrategy() {
     var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
-    // react on tab changes
-    VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
-
     for(var i in updateTriggerEvents) {
         if(updateTriggerEvents.hasOwnProperty(i)) {
             VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
@@ -57,7 +56,7 @@ function isHiddenInputElement(element) {
     }
 
     // triggers update if mouse moves over element
-    // this is important if the element is draggable
+    // this is important for example if the element is draggable
     VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
 }());
 ```

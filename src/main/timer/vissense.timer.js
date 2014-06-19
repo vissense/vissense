@@ -171,6 +171,9 @@
                 vismon.update();
             };
 
+            // react on tab changes
+            VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
+
             vismon.onVisible(function() {
               cancelAndReinitialize();
             });

@@ -425,16 +425,6 @@
  */
 ;(function(window, VisSenseUtils, undefined) {
   'use strict';
-  
-    /*
-    // TODO: would someone ever need that?
-    function _isHiddenInputElement(element) {
-        if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
-            return element.type && String(element.type).toLowerCase() === 'hidden';
-        }
-        return false;
-    }
-    */
 
     function _isVisibleByOffsetParentCheck(element) {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
@@ -518,10 +508,6 @@
         if(visibility === 'hidden' || visibility === 'collapse') {
             return false;
         }
-
-        /*if(isHiddenInputElement(element)) {
-            return false;
-        }*/
 
         return true;
     }

@@ -1,4 +1,3 @@
-
 [![Build Status](https://api.travis-ci.org/theborakompanioni/vissense.png?branch=master)](https://api.travis-ci.org/theborakompanioni/vissense)
 
 # VisSense.js
@@ -14,14 +13,18 @@ A utility library for detecting visibility of DOM element
  * detect if an element is overlapped by others
  * detect if element is a hidden input element
    you can really do that yourself. e.g.:
-   ```js
-   function isHiddenInputElement(element) {
-       if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
-           return element.type && String(element.type).toLowerCase() === 'hidden';
-       }
-       return false;
+
+
+```
+#!javascript
+
+function isHiddenInputElement(element) {
+   if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
+       return element.type && String(element.type).toLowerCase() === 'hidden';
    }
-   ```
+   return false;
+}
+```
 
 ## core
 ### What it does
@@ -38,24 +41,27 @@ A utility library for detecting visibility of DOM element
 ### What it does *not*
  * update automatically. this is up to you - therefor giving you the freedom to decide when
    to trigger updates. here is what this could look like:
-   ```js
-            (function initVisMonUpdateStrategy() {
-                var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
-                // react on tab changes
-                VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
+```
+#!javascript
+(function initVisMonUpdateStrategy() {
+    var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
-                for(var i in updateTriggerEvents) {
-                    if(updateTriggerEvents.hasOwnProperty(i)) {
-                        VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
-                    }
-                }
+    // react on tab changes
+    VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
 
-                // triggers update if mouse moves over element
-                // this is important if the element is draggable
-                VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
-            }());
-    ```
+    for(var i in updateTriggerEvents) {
+        if(updateTriggerEvents.hasOwnProperty(i)) {
+            VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
+        }
+    }
+
+    // triggers update if mouse moves over element
+    // this is important if the element is draggable
+    VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
+}());
+```
+
 
 
 ## vistimer

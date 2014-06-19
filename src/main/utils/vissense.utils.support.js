@@ -44,7 +44,7 @@
 
         function canReadStyle() {
           try {
-           return !!VisSenseUtils.findEffectiveStyle(document.getElementsByTagName('body')[0]);
+           return !!VisSenseUtils._findEffectiveStyle(document.getElementsByTagName('body')[0]);
           } catch(e) {}
           return false;
         }

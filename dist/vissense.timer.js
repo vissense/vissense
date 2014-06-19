@@ -424,18 +424,26 @@
 /**
  * Exports following functions to VisSenseUtils
  *
- * findEffectiveStyle
- * findEffectiveStyleProperty
- * isDisplayed
- * isVisibleByStyling
- * isHiddenInputElement
+ * - isVisibleByStyling
+ *
  */
 ;(function(window, VisSenseUtils, undefined) {
   'use strict';
+  
+    /*
+    // TODO: would someone ever need that?
+    function _isHiddenInputElement(element) {
+        if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
+            return element.type && String(element.type).toLowerCase() === 'hidden';
+        }
+        return false;
+    }
+    */
+
     function _isVisibleByOffsetParentCheck(element) {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
         if(!element.offsetParent) {
-            var position = findEffectiveStyleProperty(element, 'position');
+            var position = _findEffectiveStyleProperty(element, 'position');
             if(position !== 'fixed') {
                 return false;
             }
@@ -443,14 +451,7 @@
         return true;
     }
 
-    function isHiddenInputElement(element) {
-        if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
-            return element.type && String(element.type).toLowerCase() === 'hidden';
-        }
-        return false;
-    }
-
-	function findEffectiveStyle(element) {
+	function _findEffectiveStyle(element) {
 		var w = VisSenseUtils._window(element);
 
 		if (typeof element.style === 'undefined') {
@@ -471,25 +472,25 @@
 		throw new Error('cannot determine effective stylesheet in this browser');
 	}
 
-	function findEffectiveStyleProperty(element, property) {
-		var effectiveStyle = findEffectiveStyle(element);
+	function _findEffectiveStyleProperty(element, property) {
+		var effectiveStyle = _findEffectiveStyle(element);
 		if(!effectiveStyle) {
 		    return undefined;
 		}
 		var propertyValue = effectiveStyle[property];
 		if (propertyValue === 'inherit' && element.parentNode.style) {
-			return findEffectiveStyleProperty(element.parentNode, property);
+			return _findEffectiveStyleProperty(element.parentNode, property);
 		}
 		return propertyValue;
 	}
 
-	function isDisplayed(element) {
-		var display = findEffectiveStyleProperty(element, 'display');
+	function _isDisplayed(element) {
+		var display = _findEffectiveStyleProperty(element, 'display');
 		if (display === 'none') {
 			return false;
 		}
 		if (element.parentNode.style) {
-			return isDisplayed(element.parentNode);
+			return _isDisplayed(element.parentNode);
 		}
 		return true;
 	}
@@ -507,35 +508,32 @@
             return false;
         }
 
-        var displayed = isDisplayed(element);
+        var displayed = _isDisplayed(element);
         if(displayed !== true) {
             return false;
         }
 
-        var opacity = findEffectiveStyleProperty(element, 'opacity');
+        var opacity = _findEffectiveStyleProperty(element, 'opacity');
         if(+opacity < 0.01) {
             return false;
         }
 
-        var visibility = findEffectiveStyleProperty(element, 'visibility');
+        var visibility = _findEffectiveStyleProperty(element, 'visibility');
         if(visibility === 'hidden' || visibility === 'collapse') {
             return false;
         }
 
-        if(isHiddenInputElement(element)) {
+        /*if(isHiddenInputElement(element)) {
             return false;
-        }
+        }*/
 
         return true;
     }
 
-    (function(target) {
-        target.isHiddenInputElement = isHiddenInputElement;
-        target.findEffectiveStyle = findEffectiveStyle;
-        target.findEffectiveStyleProperty = findEffectiveStyleProperty;
-        target.isDisplayed = isDisplayed;
-        target.isVisibleByStyling = isVisibleByStyling;
-    }(VisSenseUtils));
+    VisSenseUtils._isDisplayed = _isDisplayed;
+    VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
+    VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
+
 }.call(this, this, this.VisSenseUtils));
 /**
  * Exports following functions to VisSenseUtils
@@ -611,13 +609,10 @@
 }.call(this, this, this.VisSenseUtils));
 /*
  *
- * percentage
- * isVisible
- * isFullyVisible
- * isHidden
- * fireIfHidden
- * fireIfFullyVisible
- * fireIfVisible
+ * - percentage
+ * - isVisible
+ * - isFullyVisible
+ * - isHidden
  */
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
@@ -669,12 +664,10 @@
         return !isVisible(element);
     }
 
-    (function(target) {
-        target.percentage = percentage;
-        target.isFullyVisible = isFullyVisible;
-        target.isVisible = isVisible;
-        target.isHidden = isHidden;
-    }(VisSenseUtils));
+    VisSenseUtils.percentage = percentage;
+    VisSenseUtils.isFullyVisible = isFullyVisible;
+    VisSenseUtils.isVisible = isVisible;
+    VisSenseUtils.isHidden = isHidden;
 
 }.call(this, this, this.Math, this.VisSenseUtils));
 ;(function(window, VisSenseUtils, undefined) {
@@ -717,7 +710,7 @@
 
         function canReadStyle() {
           try {
-           return !!VisSenseUtils.findEffectiveStyle(document.getElementsByTagName('body')[0]);
+           return !!VisSenseUtils._findEffectiveStyle(document.getElementsByTagName('body')[0]);
           } catch(e) {}
           return false;
         }
@@ -1310,23 +1303,6 @@
             var triggerVisMonUpdate = function() {
                 vismon.update();
             };
-
-            (function initVisMonUpdateStrategy() {
-                var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
-
-                // react on tab changes
-                VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
-
-                for(var i in updateTriggerEvents) {
-                    if(updateTriggerEvents.hasOwnProperty(i)) {
-                        VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
-                    }
-                }
-
-                // triggers update if mouse moves over element
-                // this is important if the element is draggable
-                VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
-            }());
 
             vismon.onVisible(function() {
               cancelAndReinitialize();

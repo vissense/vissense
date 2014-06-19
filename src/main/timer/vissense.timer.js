@@ -171,23 +171,6 @@
                 vismon.update();
             };
 
-            (function initVisMonUpdateStrategy() {
-                var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
-
-                // react on tab changes
-                VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
-
-                for(var i in updateTriggerEvents) {
-                    if(updateTriggerEvents.hasOwnProperty(i)) {
-                        VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
-                    }
-                }
-
-                // triggers update if mouse moves over element
-                // this is important if the element is draggable
-                VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
-            }());
-
             vismon.onVisible(function() {
               cancelAndReinitialize();
             });

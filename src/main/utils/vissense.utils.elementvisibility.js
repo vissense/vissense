@@ -6,13 +6,10 @@
  */
  /*
  *
- * percentage
- * isVisible
- * isFullyVisible
- * isHidden
- * fireIfHidden
- * fireIfFullyVisible
- * fireIfVisible
+ * - percentage
+ * - isVisible
+ * - isFullyVisible
+ * - isHidden
  */
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
@@ -64,11 +61,9 @@
         return !isVisible(element);
     }
 
-    (function(target) {
-        target.percentage = percentage;
-        target.isFullyVisible = isFullyVisible;
-        target.isVisible = isVisible;
-        target.isHidden = isHidden;
-    }(VisSenseUtils));
+    VisSenseUtils.percentage = percentage;
+    VisSenseUtils.isFullyVisible = isFullyVisible;
+    VisSenseUtils.isVisible = isVisible;
+    VisSenseUtils.isHidden = isHidden;
 
 }.call(this, this, this.Math, this.VisSenseUtils));

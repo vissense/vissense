@@ -1567,102 +1567,127 @@ UniformSample.prototype.update = function(val) {
  * fireIfVisibilityPercentageChanged(function() { ... });
  *
  */
-;(function(window, Math, VisSense, VisSenseUtils, undefined) {
+;(function(window, VisSense, VisSenseUtils, undefined) {
   'use strict';
-    /*--------------------------------------------------------------------------*/
 
-    var VisState = (function() {
-        var STATES = {
-            HIDDEN: 0,
-            VISIBLE: 1,
-            FULLY_VISIBLE: 2
-        };
+    var STATES = {
+        HIDDEN: 0,
+        VISIBLE: 1,
+        FULLY_VISIBLE: 2
+    };
 
-        function VisState(state) {
-            this.isVisible = function() {
-                return state ===  STATES.VISIBLE || this.isFullyVisible();
-            };
-            this.isFullyVisible = function() {
-                return state ===  STATES.FULLY_VISIBLE;
-            };
-            this.isHidden = function() {
-                return state ===  STATES.HIDDEN;
-            };
-            this.state = function() {
-                return state;
-            };
+    function VisState(state, percentage, prev) {
+        this._$$state = state;
+        this._$$percentage = percentage;
+        this._$$prev = prev;
+    }
+
+    VisState.prototype.isVisible = function() {
+        return this._$$state ===  STATES.VISIBLE || this.isFullyVisible();
+    };
+
+    VisState.prototype.isFullyVisible = function() {
+        return this._$$state ===  STATES.FULLY_VISIBLE;
+    };
+
+    VisState.prototype.isHidden = function() {
+        return this._$$state ===  STATES.HIDDEN;
+    };
+
+    VisState.prototype.state = function() {
+        return this._$$state;
+    };
+
+    VisState.prototype.wasVisible = function() {
+        return !!this._$$prev && this._$$prev.isVisible();
+    };
+
+    VisState.prototype.wasFullyVisible = function() {
+        return !!this._$$prev && this._$$prev.isFullyVisible();
+    };
+
+    VisState.prototype.wasHidden = function() {
+        return !!this._$$prev && this._$$prev.isHidden();
+    };
+
+    VisState.prototype.hasVisibilityChanged = function() {
+        return !this._$$prev || this._$$state !== this._$$prev._$$state;
+    };
+
+    VisState.prototype.prev = function() {
+        return this._$$prev;
+    };
+
+    VisState.prototype.hasVisibilityPercentageChanged = function() {
+        return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
+    };
+
+    VisState.prototype.percentage = function() {
+        return this._$$percentage;
+    };
+
+    function state(status, percentage, prev) {
+        if(!!prev) {
+            // disable getting previous state from prev
+            prev.prev = VisSenseUtils.noop;
         }
 
-        function withPrevious(visstate, prev) {
-            if(!!prev) {
-                // disable getting previous state from prev
-                prev.prev = VisSenseUtils.noop;
-            }
+        return new VisState(status, percentage, prev);
+    }
 
-            visstate.wasVisible = function() {
-                return !!prev && prev.isVisible();
-            };
+    var exports = {};
 
-            visstate.wasFullyVisible = function() {
-                return !!prev && prev.isFullyVisible();
-            };
+    exports.hidden = function(percentage, prev) {
+        return state(STATES.HIDDEN, percentage, prev || null);
+    };
 
-            visstate.wasHidden = function() {
-                return !!prev && prev.isHidden();
-            };
+    exports.visible = function(percentage, prev) {
+        return state(STATES.VISIBLE, percentage, prev || null);
+    };
 
-            visstate.hasVisibilityChanged = function() {
-                return !prev || visstate.state() !== prev.state();
-            };
+    exports.fullyvisible = function(percentage, prev) {
+        return state(STATES.FULLY_VISIBLE, percentage, prev || null);
+    };
 
-            visstate.prev = function() {
-                return prev;
-            };
+    VisSenseUtils.VisState = exports;
 
-            return visstate;
-        }
-
-        function withPercentage(visstate, percentage) {
-            visstate.hasVisibilityPercentageChanged = function() {
-                return !this.prev() || percentage !== this.prev().percentage();
-            };
-            visstate.percentage = function() {
-                return percentage;
-            };
-            return visstate;
-        }
-
-        function state(status, percentage, prev) {
-            return withPrevious(withPercentage(new VisState(status), percentage), prev);
-        }
-
-        var exports = {};
-
-        exports.hidden = function(percentage, prev) {
-            return state(STATES.HIDDEN, percentage, prev || null);
-        };
-
-        exports.visible = function(percentage, prev) {
-            return state(STATES.VISIBLE, percentage, prev || null);
-        };
-        exports.fullyvisible = function(percentage, prev) {
-            return state(STATES.FULLY_VISIBLE, percentage, prev || null);
-        };
-
-        return exports;
-    }());
+}.call(this, this, this.VisSense, this.VisSenseUtils));
+/**
+ * detects visibility changes of an element.
+ *
+ * example:
+ * var elem = document.getElementById('myElement');
+ * var visobj = VisSense(eleme):
+ * var vismon = visobj.monitor();
+ *
+ * vismon.onVisibilityChange(function() { ... });
+ * vismon.onVisibilityPercentageChange(function() { ... });
+ * vismon.onVisible(function() { ... });
+ * vismon.onFullyVisible(function() { ... });
+ * vismon.onHidden(function() { ... });
+ *
+ *
+ * hasVisibilityChanged() // => true
+ * hasVisibilityPercentageChanged // => true
+ *
+ * fireIfVisibilityChanged(function() { ... });
+ * fireIfVisibilityPercentageChanged(function() { ... });
+ *
+ */
+;(function(window, VisSense, VisSenseUtils, undefined) {
+  'use strict';
 
     function nextState(visobj, visstate) {
         var percentage = visobj.percentage();
 
         if(visobj.isHidden()) {
-            return VisState.hidden(percentage, visstate);
+            return VisSenseUtils.VisState.hidden(percentage, visstate);
         }
         else if (visobj.isFullyVisible()) {
-             return VisState.fullyvisible(percentage, visstate);
+             return VisSenseUtils.VisState.fullyvisible(percentage, visstate);
         }
         else if (visobj.isVisible()) {
-          return VisState.visible(percentage, visstate);
+          return VisSenseUtils.VisState.visible(percentage, visstate);
         }
 
         throw new Error('IllegalState');
@@ -1739,7 +1764,11 @@ UniformSample.prototype.update = function(val) {
     };
 
     VisSense.prototype.monitor = function(config) {
-        return VisSense.monitor(this, config);
+        if(this._$$monitor) {
+            return this._$$monitor;
+        }
+        this._$$monitor = VisSense.monitor(this, config);
+        return this._$$monitor;
     };
 
 
@@ -1808,10 +1837,10 @@ UniformSample.prototype.update = function(val) {
         }, callback);
 
         // only fire when coming from state hidden or no previous state is present
-        var handler = this.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
+        var handler = me.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
             return !me.status().prev() || me.status().wasHidden();
         }, fireIfVisible));
-        return this.register(handler);
+        return me.register(handler);
     };
 
     /**
@@ -1823,8 +1852,8 @@ UniformSample.prototype.update = function(val) {
             return me.status().isFullyVisible();
         }, callback);
 
-        var handler = this.fireIfVisibilityChanged(fireIfFullyVisible);
-        return this.register(handler);
+        var handler = me.fireIfVisibilityChanged(fireIfFullyVisible);
+        return me.register(handler);
     };
 
     /**
@@ -1837,8 +1866,8 @@ UniformSample.prototype.update = function(val) {
             return me.status().isHidden();
         }, callback);
 
-        var handler = this.fireIfVisibilityChanged(fireIfHidden);
-        return this.register(handler);
+        var handler = me.fireIfVisibilityChanged(fireIfHidden);
+        return me.register(handler);
     };
 
     VisMon.prototype.on = function(eventName, handler) {
@@ -1857,7 +1886,7 @@ UniformSample.prototype.update = function(val) {
         return emitEvents[eventName](handler);
     };
 
-}.call(this, this, this.Math, this.VisSense, this.VisSenseUtils));
+}.call(this, this, this.VisSense, this.VisSenseUtils));
 /*
  * depends on ['vissense.core', 'vissense.monitor']
  */
@@ -2025,6 +2054,9 @@ UniformSample.prototype.update = function(val) {
                 vismon.update();
             };
 
+            // react on tab changes
+            VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
+
             vismon.onVisible(function() {
               cancelAndReinitialize();
             });
@@ -2055,7 +2087,11 @@ UniformSample.prototype.update = function(val) {
     VisSense.timer = newVisTimer;
 
     VisSense.prototype.timer = function(config) {
-        return newVisTimer(this, config);
+        if(this._$$timer) {
+            return this._$$timer;
+        }
+        this._$$timer = newVisTimer(this, config);
+        return this._$$timer;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

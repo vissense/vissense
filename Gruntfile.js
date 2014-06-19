@@ -35,6 +35,7 @@ module.exports = function (grunt) {
             monitor: {
                 src: [
                     '<%= concat.core.dest %>',
+                    'src/main/monitor/vissense.monitor.state.js',
                     'src/main/monitor/vissense.monitor.js'
                 ],
                 dest: 'dist/vissense.monitor.js'

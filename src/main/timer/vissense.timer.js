@@ -204,7 +204,11 @@
     VisSense.timer = newVisTimer;
 
     VisSense.prototype.timer = function(config) {
-        return newVisTimer(this, config);
+        if(this._$$timer) {
+            return this._$$timer;
+        }
+        this._$$timer = newVisTimer(this, config);
+        return this._$$timer;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

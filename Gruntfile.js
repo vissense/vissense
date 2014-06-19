@@ -16,18 +16,6 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
                 stripBanners: true
             },
-            'dist-deprecated': {
-                src: [
-                    'DEPRECATED_VISCHECK/src/core/events.js',
-                    'DEPRECATED_VISCHECK/src/core/ie.js', 
-                    'DEPRECATED_VISCHECK/src/core/visibility_styling.js', 
-                    'DEPRECATED_VISCHECK/src/core/visibility_position.js', 
-                    'DEPRECATED_VISCHECK/src/core/vissense.core.js', 
-                    'DEPRECATED_VISCHECK/src/vissense.listeners.js', 
-                    'DEPRECATED_VISCHECK/src/vissense.timers.js'
-                ],
-                dest: 'DEPRECATED_VISCHECK/dist/vissense.js'
-            },
             core: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
@@ -82,10 +70,6 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 banner: '<%= banner %>'
-            },
-            'dist-deprecated': {
-                src: '<%= concat["dist-deprecated"].dest %>',
-                dest: 'DEPRECATED_VISCHECK/dist/vissense.min.js'
             },
             core: {
                 src: '<%= concat.core.dest %>',

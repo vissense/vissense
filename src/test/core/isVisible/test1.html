@@ -7,25 +7,39 @@
   
   <script src="http://localhost:3000/bower_components/qunit/qunit/qunit.js"></script>
   <script src="http://localhost:3000/dist/vissense.min.js"></script>
+
+  <style>
+      #testNode1 {
+          height: 1px; width: 1px; background-color: red;
+      }
+      #testNode2 {
+          position: absolute; top: 0; left:-1px; height: 2px; width: 2px; background-color: red;
+      }
+      #testNode3 {
+          position: absolute; left:-1px; top: -1px; height: 2px; width: 2px; background-color: red;;
+      }
+      #testNode4 {
+          position: absolute; top: 0; left:-9px; height: 1px; width: 10px; background-color: red;
+      }
+  </style>
 </head>
 <body>
 
-  <div id="testNode1" style="height: 1px; width: 1px; background-color: red;"></div>
+    <div id="testNode1"></div>
 
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
 
-  <div id="testNode2" style="position: absolute; top: 0; left:-1px; height: 2px; width: 2px; background-color: red;"></div>
-
-  <div id="testNode3" style="position: absolute; left:-1px; top: -1px; height: 2px; width: 2px; background-color: red;"></div>
-
-<div id="testNode4" style="position: absolute; top: 0; left:-9px; height: 1px; width: 10px; background-color: red;"></div>
+  <div id="testNode2"></div>
+  <div id="testNode3"></div>
+  <div id="testNode4"></div>
 
   <script>
   var element1 = document.getElementById('testNode1');
   var element2 = document.getElementById('testNode2');
   var element3 = document.getElementById('testNode3');
   var element4 = document.getElementById('testNode4');
+
   var vis1 = new VisSense(element1);
   var vis2 = new VisSense(element2);
   var vis3 = VisSense(element3);
@@ -33,7 +47,7 @@
 
   test( "if element1 is visible", function() {
     ok( true === vis1.isVisible(), "Passed: element1 is visible" );
-    ok( 1 === vis1.getVisibilityPercentage(), "Passed: element3 is 100% visible");
+    ok( 1 === vis1.getVisibilityPercentage(), "Passed: element1 is 100% visible");
   });
   test( "if element2 is visible", function() {
     ok( true === vis2.isVisible(), "Passed: element2 is visible" );
@@ -48,7 +62,7 @@
   test( "if element4 is visible", function() {
     ok( true === vis4.isVisible(), "Passed: element4 is visible" );
     ok( true === !vis4.isFullyVisible(), "Passed: element4 is NOT fully visible" );
-    ok( 0.1 === vis4.getVisibilityPercentage(), "Passed: element4 is 25% visible" );
+    ok( 0.1 === vis4.getVisibilityPercentage(), "Passed: element4 is 1% visible" );
   });
 
   </script>

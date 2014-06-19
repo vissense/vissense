@@ -1756,19 +1756,6 @@ UniformSample.prototype.update = function(val) {
         fireListeners(this._$$listeners, this);
     };
 
-    VisSense.monitor = function monitor(visobj, config) {
-        return new VisMon(visobj, config || {});
-    };
-
-    VisSense.prototype.monitor = function(config) {
-        if(this._$$monitor) {
-            return this._$$monitor;
-        }
-        this._$$monitor = VisSense.monitor(this, config);
-        return this._$$monitor;
-    };
-
-
     /**
     * Returns a function that invokes callback only
     * if the visibility state changes.
@@ -1781,7 +1768,7 @@ UniformSample.prototype.update = function(val) {
     */
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
         var me = this;
-        
+
         return VisSenseUtils.fireIf(function() {
             return me.status().hasVisibilityChanged();
         }, callback);
@@ -1884,6 +1871,18 @@ UniformSample.prototype.update = function(val) {
         }
 
         return emitEvents[eventName](handler);
+    };
+
+    VisSense.monitor = function monitor(visobj, config) {
+        return new VisMon(visobj, config || {});
+    };
+
+    VisSense.prototype.monitor = function(config) {
+        if(this._$$monitor) {
+            return this._$$monitor;
+        }
+        this._$$monitor = VisSense.monitor(this, config);
+        return this._$$monitor;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
@@ -2359,9 +2358,14 @@ UniformSample.prototype.update = function(val) {
     }
 
     VisSense.metrics = newVisMetrics;
-    VisSense.prototype.metrics = function(config) {
-        return newVisMetrics(this, config);
-    };
 
+    VisSense.prototype.metrics = function(config) {
+        if(this._$$metrics) {
+            return this._$$metrics;
+        }
+        this._$$metrics = VisSense.metrics(this, config);
+        return this._$$metrics;
+
+    };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));

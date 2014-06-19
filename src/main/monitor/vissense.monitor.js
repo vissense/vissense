@@ -109,19 +109,6 @@
         fireListeners(this._$$listeners, this);
     };
 
-    VisSense.monitor = function monitor(visobj, config) {
-        return new VisMon(visobj, config || {});
-    };
-
-    VisSense.prototype.monitor = function(config) {
-        if(this._$$monitor) {
-            return this._$$monitor;
-        }
-        this._$$monitor = VisSense.monitor(this, config);
-        return this._$$monitor;
-    };
-
-
     /**
     * Returns a function that invokes callback only
     * if the visibility state changes.
@@ -134,7 +121,7 @@
     */
     VisMon.prototype.fireIfVisibilityChanged = function(callback) {
         var me = this;
-        
+
         return VisSenseUtils.fireIf(function() {
             return me.status().hasVisibilityChanged();
         }, callback);
@@ -237,6 +224,18 @@
         }
 
         return emitEvents[eventName](handler);
+    };
+
+    VisSense.monitor = function monitor(visobj, config) {
+        return new VisMon(visobj, config || {});
+    };
+
+    VisSense.prototype.monitor = function(config) {
+        if(this._$$monitor) {
+            return this._$$monitor;
+        }
+        this._$$monitor = VisSense.monitor(this, config);
+        return this._$$monitor;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

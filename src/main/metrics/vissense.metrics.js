@@ -158,9 +158,14 @@
     }
 
     VisSense.metrics = newVisMetrics;
-    VisSense.prototype.metrics = function(config) {
-        return newVisMetrics(this, config);
-    };
 
+    VisSense.prototype.metrics = function(config) {
+        if(this._$$metrics) {
+            return this._$$metrics;
+        }
+        this._$$metrics = VisSense.metrics(this, config);
+        return this._$$metrics;
+
+    };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));

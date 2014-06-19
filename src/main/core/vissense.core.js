@@ -18,7 +18,7 @@
      * visElement.isVisible();
      * // => true
      *
-     * visElement.getVisibilityPercentage();
+     * visElement.percentage();
      * // => 0.93
      *
      */
@@ -37,8 +37,8 @@
         this._config = config || {};
     }
 
-    VisSense.prototype.getVisibilityPercentage = function() {
-      return VisSenseUtils.getVisibilityPercentage(this._element);
+    VisSense.prototype.percentage = function() {
+      return VisSenseUtils.percentage(this._element);
     };
 
     VisSense.prototype.isFullyVisible = function() {

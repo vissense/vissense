@@ -113,7 +113,7 @@
     }());
 
     function nextState(visobj, visstate) {
-        var percentage = visobj.getVisibilityPercentage();
+        var percentage = visobj.percentage();
 
         if(visobj.isHidden()) {
             return VisState.hidden(percentage, visstate);
@@ -161,7 +161,7 @@
             return _private.status;
         };
 
-        me.getVisibilityPercentage = function() {
+        me.percentage = function() {
             return me.status().percentage();
         };
         /**

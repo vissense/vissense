@@ -6,7 +6,7 @@
  */
  /*
  *
- * getVisibilityPercentage
+ * percentage
  * isVisible
  * isFullyVisible
  * isHidden
@@ -17,7 +17,7 @@
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
-	function getVisibilityPercentage(element) {
+	function percentage(element) {
 		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {
 			return 0;
 		}
@@ -65,7 +65,7 @@
     }
 
     (function(target) {
-        target.getVisibilityPercentage = getVisibilityPercentage;
+        target.percentage = percentage;
         target.isFullyVisible = isFullyVisible;
         target.isVisible = isVisible;
         target.isHidden = isHidden;

@@ -7,25 +7,37 @@
   
   <script src="http://localhost:3000/bower_components/qunit/qunit/qunit.js"></script>
   <script src="http://localhost:3000/dist/vissense.min.js"></script>
+  <style>
+      .display-none-container {
+        display:none;
+      }
+
+      #testNode1 {
+        height: 300px; width: 300px; display:none;
+      }
+
+      #testNode2 {
+        height: 300px; width: 300px; display:block; background-color: green;
+      }
+
+      #testNode3 {
+        position: fixed; top: -100px; width:100px; height: 200px;
+      }
+  </style>
 </head>
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
 
-  <div id="testNode1" 
-    style="height: 300px; width: 300px; display:none;">
+  <div id="testNode1"></div>
+
+  <div class="display-none-container">
+    <div id="testNode2"></div>
   </div>
 
-  <div style="display:none;">
-    <div id="testNode2" 
-      style="height: 300px; width: 300px; display:block; background-color: green;">
-    </div>
-  </div>
-
-  <div style="display:none;">
+  <div class="display-none-container">
     <div>
-      <div id="testNode3" style="position: fixed; top: -100px; width:100px; height: 200px;">
-      </div>
+      <div id="testNode3"></div>
     </div>
   </div>
   
@@ -39,16 +51,19 @@
   var vis3 = VisSense(element3);
   
   test( "if element1 is hidden", function() {
+    ok( false === VisSenseUtils.isVisibleByStyling(element1), "Passed: element1 is not displayed" );
     ok( true === vis1.isHidden(), "Passed: element1 is hidden" );
     ok( 0 === vis1.percentage(), "Passed: element1 is 0% visible");
   });
 
   test( "if element2 is hidden", function() {
+    ok( false === VisSenseUtils.isDisplayed(element2), "Passed: element2 is not displayed" );
     ok( true === vis2.isHidden(), "Passed: element2 is hidden" );
     ok( 0 === vis2.percentage(), "Passed: element2 is 0% visible");
   });
 
   test( "if element3 is hidden", function() {
+    ok( false === VisSenseUtils.isDisplayed(element3), "Passed: element3 is not displayed" );
     ok( true === vis3.isHidden(), "Passed: element3 is hidden" );
     ok( 0 === vis3.percentage(), "Passed: element3 is 0% visible");
   });

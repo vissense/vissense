@@ -9,26 +9,28 @@
   <script src="http://localhost:3000/dist/vissense.min.js"></script>
 
   <style>
-        #testNode1 {
-        height: 1px; width: 1px; background-color: red;
-        }
+      #testNode1 {
+          height: 1px; width: 1px; background-color: red;
+      }
   </style>
 </head>
 <body>
+
+    <div id="testNode1"></div>
+
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
 
-  <div id="testNode1"></div>
-  
   <script>
-	var element1 = document.getElementById('testNode1');
-	var vis1 = new VisSense(element1);
+  var element1 = document.getElementById('testNode1');
 
-	test( "if element1 is fully visible", function() {
+  var vis1 = new VisSense(element1);
+
+  test( "if element1 is 100% visible", function() {
     ok( true === vis1.isVisible(), "Passed: element1 is visible" );
     ok( true === vis1.isFullyVisible(), "Passed: element1 is fully visible" );
     ok( 1 === vis1.percentage(), "Passed: element1 is 100% visible");
-	});
+  });
   </script>
 
 </body>

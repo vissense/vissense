@@ -10,6 +10,7 @@ A utility library for detecting visibility of DOM element
 
 ### What it does *not*
  * detect if an element is overlapped by others
+ * detect if the active browser window is off screen
  * detect if element is a hidden input element
    you can really do that yourself. e.g.:
 

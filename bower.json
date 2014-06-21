@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "visibilityjs": "~1.2.1",
-    "brwsrfy-metrics": "*"
+    "brwsrfy-metrics": "*",
+    "againjs": "theborakompanioni/againjs"
   }
 }

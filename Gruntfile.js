@@ -43,6 +43,7 @@ module.exports = function (grunt) {
             timer: {
                 src: [
                     '<%= concat.monitor.dest %>',
+                    'bower_components/againjs/dist/again.min.js',
                     'src/main/timer/vissense.timer.js'
                 ],
                 dest: 'dist/vissense.timer.js'
@@ -99,43 +100,7 @@ module.exports = function (grunt) {
         },
         jshint: {
             options: {
-                curly: true,
-                eqeqeq: true,
-                es3: true,
-                forin: true,
-                freeze: true,
-                immed: true,
-                latedef: 'nofunc',
-                newcap: true,
-                noarg: true,
-                noempty: true,
-                nonbsp: true,
-                nonew: true,
-                plusplus: false,
-                quotmark: 'single',
-                undef: true,
-                unused: true,
-                strict: true,
-                trailing:true,
-                maxparams:5,
-                maxdepth: 3,
-                maxcomplexity:11,
-                maxlen:140,
-                /* Relaxing options */
-                boss: false,
-                debug: false,
-                eqnull: false,
-                esnext: false,
-                evil: false,
-                expr: false,
-                funcscope: false,
-                globalstrict: false,
-                gcl: true,
-                maxerr: 10,
-                sub: false,
-                /* Environment options */
-                node: true, /* only for Gruntfile */
-                browser: true
+                jshintrc:true
             },
             gruntfile: {
                 src: 'Gruntfile.js'

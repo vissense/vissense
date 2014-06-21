@@ -1,6 +1,6 @@
-/*! vissense - v0.0.1 - 2014-06-19
+/*! vissense - v0.0.1 - 2014-06-21
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-19
+/*! vissense - v0.0.1 - 2014-06-21
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
@@ -735,11 +735,11 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
-/*! vissense - v0.0.1 - 2014-06-19
+/*! vissense - v0.0.1 - 2014-06-21
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-19
+/*! vissense - v0.0.1 - 2014-06-21
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-19
+/*! vissense - v0.0.1 - 2014-06-21
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -1895,77 +1895,53 @@ UniformSample.prototype.update = function(val) {
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,runNow){var runner=function(){timer.last=new Date,timer.callback.call(window)};if(runNow){var now=new Date,last=now-timer.last;interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeImmediatelyOn=this._$$config.reinitializeImmediatelyOn||{}}var version="0.0.9";Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!1),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeImmediatelyOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
 /*
- * depends on ['vissense.core', 'vissense.monitor']
+ * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */
-;(function(window, VisSense, VisSenseUtils, undefined) {
+;(function(window, Again, VisSense, VisSenseUtils, undefined) {
     'use strict';
-
-    // Stop timer from `every` method by it’s ID.
-    function cancel(timer) {
-        clearInterval(timer.id);
-        clearTimeout(timer.delay);
-        delete timer.id;
-        delete timer.delay;
-    }
-
-    function run(timer, interval, runNow) {
-        var runner = function () {
-            timer.last = new Date();
-            timer.callback.call(window);
-        };
-
-        if ( runNow ) {
-            var now  = new Date();
-            var last = now - timer.last;
-
-            if ( interval > last ) {
-                timer.delay = setTimeout(function () {
-                    runner();
-                    timer.id = setInterval(runner, interval);
-                }, interval - last);
-            } else {
-                runner();
-                timer.id = setInterval(runner, interval);
-            }
-
-        } else {
-          timer.id = setInterval(runner, interval);
-        }
-    }
-    /*--------------------------------------------------------------------------*/
 
     function VisTimer(vismon, config) {
         var me = this;
 
-        me._$$lastTimerId = -1;
-        me._$$timers = {};
-        me._$$initialized = false;
         me._$$vismon = vismon;
-        me._$$config = config || {};
+        me._config = config || {};
 
-        me._$$config.reinitializeImmediatelyOnHidden = true;
+        me._config.reinitializeImmediatelyOnHidden = true;
+
+        me._$$again = Again.create({
+            reinitializeImmediatelyOn: {
+                'hidden': false,
+                'visible': true
+            }
+        });
 
         (function init(me) {
             var triggerVisMonUpdate = function() {
                 me._$$vismon.update();
             };
 
+            var triggerSelfUpdate = function() {
+                var hasPrev = !!me._$$vismon.status().prev();
+                var isHidden = me._$$vismon.status().isHidden();
+                var wasHidden = me._$$vismon.status().wasHidden();
+
+                if (isHidden !== wasHidden || !hasPrev) {
+                    me._$$again.update(!!isHidden ? 'hidden' : 'visible');
+                }
+            };
+
+            me._$$vismon.onHidden(triggerSelfUpdate);
+            me._$$vismon.onVisible(triggerSelfUpdate);
+
             // react on tab changes
             VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
-
-            vismon.onVisible(function() {
-              me._cancelAndReinitialize();
-            });
-
-            vismon.onHidden(function() {
-              me._cancelAndReinitialize();
-            });
 
             triggerVisMonUpdate();
 
             VisSenseUtils.defer(function() {
-                me._cancelAndReinitialize();
+                triggerSelfUpdate();
                 // reschedule update immediately
                 VisSenseUtils.defer(triggerVisMonUpdate);
             });
@@ -1982,107 +1958,27 @@ UniformSample.prototype.update = function(val) {
         return this._$$vismon;
     };
 
-    // Run callback every `interval` milliseconds if page is visible and
-    // every `hiddenInterval` milliseconds if page is hidden.
-    //
-    //   visobj.timer().every(60 * 1000, 5 * 60 * 1000, function () {
-    //       doSomeStuff();
-    //   });
-    //
-    // You can skip `hiddenInterval` and callback will be called only if
-    // page is visible.
-    //
-    //   visobj.timer().every(1000, function () {
-    //       doSomethingKewl();
-    //   });
-    //
-    // It is analog of `setInterval(callback, interval)` but use visibility
-    // state.
-    //
-    // It return timer ID, that you can use in `Vissense.stop(id)` to stop
-    // timer (`clearInterval` analog).
-    // Warning: timer ID is different from interval ID from `setInterval`,
-    // so don’t use it in `clearInterval`.
+    /*
+    * Run callback every `interval` milliseconds if element is visible and
+    * every `hiddenInterval` milliseconds if element is hidden.
+    */
     VisTimer.prototype.every = function (interval, hiddenInterval, callback) {
         if (!callback) {
             callback = hiddenInterval;
-            hiddenInterval = null;
+            hiddenInterval = 0;
         }
-
-        this._$$lastTimerId += 1;
-        var id = this._$$lastTimerId;
-
-        this._$$timers[id] = {
-            visible:  interval,
-            hidden:   hiddenInterval,
-            callback: callback
-        };
-        this._run(id, false);
-
-        return id;
+        return this._$$again.every(callback, {
+            'visible': interval,
+            'hidden': hiddenInterval
+        });
     };
 
-    // Stop timer from `every` method by ID.
-    //
-    //   slideshow = Vissense.every(5 * 1000, function () {
-    //       changeSlide();
-    //   });
-    //   $('.stopSlideshow').click(function () {
-    //       Vissense.stop(slideshow);
-    //   });
     VisTimer.prototype.stop = function(id) {
-        if ( !this._$$timers[id] ) {
-            return false;
-        }
-        cancel(this._$$timers[id]);
-        delete this._$$timers[id];
-        return true;
+        return this._$$again.stop(id);
     };
 
     VisTimer.prototype.stopAll = function() {
-        for (var id in this._$$timers) {
-            if(this._$$timers.hasOwnProperty(id)) {
-              cancel(this._$$timers[id]);
-            }
-        }
-        this._$$timers = {};
-    };
-
-    // Try to run timer from every method by it’s ID. It will be use
-    // `interval` or `hiddenInterval` depending on visibility state.
-    // If page is hidden and `hiddenInterval` is null,
-    // it will not run timer.
-    //
-    // Argument `runNow` say, that timers must be execute now too.
-    VisTimer.prototype._run = function(id, runNow) {
-        var interval, timer = this._$$timers[id];
-
-        if (this._$$vismon.status().isHidden()) {
-            if ( null === timer.hidden ) {
-                return;
-            }
-            interval = timer.hidden;
-        } else {
-            interval = timer.visible;
-        }
-
-        run(timer, interval, runNow);
-    };
-
-
-    VisTimer.prototype._cancelAndReinitialize = function() {
-        var isHidden = this._$$vismon.status().isHidden();
-        var wasHidden = this._$$vismon.status().wasHidden();
-
-        if (isHidden !== wasHidden) {
-            for (var id in this._$$timers) {
-                if(this._$$timers.hasOwnProperty(id)) {
-                    cancel(this._$$timers[id]);
-
-                    this._run(id, !isHidden ? true : this._$$config.reinitializeImmediatelyOnHidden);
-                }
-            }
-        }
+        return this._$$again.stopAll();
     };
 
     function newVisTimer(vissense, config) {
@@ -2099,7 +1995,7 @@ UniformSample.prototype.update = function(val) {
         return this._$$timer;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(this, this.Again, this.VisSense, this.VisSenseUtils));
 /**
  * depends on ['vissense.utils']
  */

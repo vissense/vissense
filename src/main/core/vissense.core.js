@@ -91,6 +91,8 @@
 
   /*--------------------------------------------------------------------------*/
 
+  VisSense.fn = VisSense.prototype;
+
   // export VisSense
   window.VisSense = VisSense;
 

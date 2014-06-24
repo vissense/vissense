@@ -17,6 +17,8 @@
         me._config = config || {};
 
         me._config.reinitializeImmediatelyOnHidden = true;
+        me._config.checkIntervalVisible = 100;
+        me._config.checkIntervalHidden = 100;
 
         me._$$again = Again.create({
             reinitializeOn: {
@@ -25,7 +27,18 @@
             }
         });
 
+        me.start(me._config.checkIntervalVisible, me._config.checkIntervalHidden);
+    }
+
+    VisTimer.prototype.start = function(checkIntervalVisible, checkIntervalHidden) {
+        if(!!this._$$started) {
+            return false;
+        }
+
         (function init(me) {
+            me._config.checkIntervalVisible = checkIntervalVisible || me._config.checkIntervalVisible;
+            me._config.checkIntervalHidden = checkIntervalHidden || me._config.checkIntervalHidden;
+
             var triggerVisMonUpdate = function() {
                 me._$$vismon.update();
             };
@@ -57,10 +70,11 @@
             // check for other changes periodically
             // e.g. if accordion expands on page
             // or if dynamic content is added
-            // TODO: make these values configureable!
-            me.every(100, 100, triggerVisMonUpdate);
+            me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
-    }
+
+        return true;
+    };
 
     VisTimer.prototype.vismon = function() {
         return this._$$vismon;
@@ -75,7 +89,10 @@
             callback = hiddenInterval;
             hiddenInterval = 0;
         }
-        return this._$$again.every(callback, {
+        var me = this;
+        return this._$$again.every(function() {
+            callback(me._$$vismon);
+        }, {
             'visible': interval,
             'hidden': hiddenInterval
         });
@@ -85,21 +102,22 @@
         return this._$$again.stop(id);
     };
 
-    VisTimer.prototype.stopAll = function() {
+    /**
+    *
+    * As this also stops the interval updating the state
+    * the object is unusable after this call.
+    */
+    VisTimer.prototype.destroy = function() {
         return this._$$again.stopAll();
     };
 
-    function newVisTimer(vissense, config) {
-        return new VisTimer(vissense.monitor(), config || {});
-    }
-
-    VisSense.timer = newVisTimer;
-
-    VisSense.prototype.timer = function(config) {
+    VisSense.fn.timer = function(config) {
         if(this._$$timer) {
             return this._$$timer;
         }
-        this._$$timer = newVisTimer(this, config);
+
+        this._$$timer = new VisTimer(this.monitor(), config || {});
+
         return this._$$timer;
     };
 

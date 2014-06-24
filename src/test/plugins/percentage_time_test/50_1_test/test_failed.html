@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="http://localhost:3000/bower_components/qunit/qunit/qunit.css">
   
   <script src="http://localhost:3000/bower_components/qunit/qunit/qunit.js"></script>
-  <script src="http://localhost:3000/dist/vissense.js"></script>
+  <script src="http://localhost:3000/dist/vissense.min.js"></script>
 
   <style>
-    #testNode1 {
-      position: absolute; top: 0; left:1px; height: 2px; width: 2px; background-color: red;
-    }
+      #testNode1 {
+          position: absolute; top: 0; left:-2px; height: 3px; width: 3px; background-color: red;
+      }
   </style>
 </head>
 <body>
@@ -24,27 +24,21 @@
   <script>
     var element1 = document.getElementById('testNode1');
     var vis1 = new VisSense(element1);
-    var vistimer = vis1.timer();
 
-    asyncTest( "if handler can be deregistered from VisTimer", function() {
-        expect(2);
-
+    asyncTest( "test if 50/1 rule passed", function() {
+        expect(1);
         var invocations = 0;
 
-        var timerId = vistimer.every(10, 10, function() {
+        vis1.on50_1TestPassed(function() {
             invocations = invocations + 1;
-
-            var stopped = vistimer.stop(timerId);
-            ok( stopped === true, "Timer is stopped correctly");
         });
 
         setTimeout(function () {
-            ok( 1 === invocations, "Deregistering timer handler : 1 === " + invocations);
+            ok( 0 === invocations, "50/1 rule has NOT been passed");
 
             start(); // <- last timeout must call ´start´
-        }, 100);
+        }, 3500);
     });
-
   </script>
 
 </body>

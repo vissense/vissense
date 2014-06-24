@@ -95,20 +95,17 @@
         return new VisState(status, percentage, prev);
     }
 
-    var exports = {};
-
-    exports.hidden = function(percentage, prev) {
-        return state(STATES.HIDDEN, percentage, prev || null);
+    // export
+    VisSenseUtils.VisState = {
+        hidden: function(percentage, prev) {
+            return state(STATES.HIDDEN, percentage, prev || null);
+        },
+        visible:function(percentage, prev) {
+            return state(STATES.VISIBLE, percentage, prev || null);
+        },
+        fullyvisible: function(percentage, prev) {
+            return state(STATES.FULLY_VISIBLE, percentage, prev || null);
+        }
     };
-
-    exports.visible = function(percentage, prev) {
-        return state(STATES.VISIBLE, percentage, prev || null);
-    };
-
-    exports.fullyvisible = function(percentage, prev) {
-        return state(STATES.FULLY_VISIBLE, percentage, prev || null);
-    };
-
-    VisSenseUtils.VisState = exports;
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

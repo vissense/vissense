@@ -153,17 +153,11 @@
         }
     }
 
-    function newVisMetrics(vissense, config) {
-        return new VisMetrics(vissense.timer(), config);
-    }
-
-    VisSense.metrics = newVisMetrics;
-
-    VisSense.prototype.metrics = function(config) {
+    VisSense.fn.metrics = function(config) {
         if(this._$$metrics) {
             return this._$$metrics;
         }
-        this._$$metrics = VisSense.metrics(this, config);
+        this._$$metrics = new VisMetrics(this.timer(), config);
         return this._$$metrics;
 
     };

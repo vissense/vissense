@@ -59,6 +59,8 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     '<%= concat.metrics.dest %>',
+                    'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
+                    'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js',
                     'src/main/utils/vissense.utils.addevent.js',
                     'src/main/client/vissense.client.js'
                 ],

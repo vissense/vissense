@@ -74,9 +74,7 @@
         return new VisClient(/*visobj.monitor()*/ null, config || {});
     }
 
-    VisSense.client = newVisClient;
-
-    VisSense.prototype.client = function(config) {
+    VisSense.fn.client = function(config) {
         if(this._$$client) {
             return this._$$client;
         }
@@ -84,6 +82,7 @@
         return this._$$client;
     };
 
+    VisSense.client = newVisClient;
     VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

@@ -739,6 +739,8 @@
 
   /*--------------------------------------------------------------------------*/
 
+  VisSense.fn = VisSense.prototype;
+
   // export VisSense
   window.VisSense = VisSense;
 
@@ -833,21 +835,18 @@
         return new VisState(status, percentage, prev);
     }
 
-    var exports = {};
-
-    exports.hidden = function(percentage, prev) {
-        return state(STATES.HIDDEN, percentage, prev || null);
+    // export
+    VisSenseUtils.VisState = {
+        hidden: function(percentage, prev) {
+            return state(STATES.HIDDEN, percentage, prev || null);
+        },
+        visible:function(percentage, prev) {
+            return state(STATES.VISIBLE, percentage, prev || null);
+        },
+        fullyvisible: function(percentage, prev) {
+            return state(STATES.FULLY_VISIBLE, percentage, prev || null);
+        }
     };
-
-    exports.visible = function(percentage, prev) {
-        return state(STATES.VISIBLE, percentage, prev || null);
-    };
-
-    exports.fullyvisible = function(percentage, prev) {
-        return state(STATES.FULLY_VISIBLE, percentage, prev || null);
-    };
-
-    VisSenseUtils.VisState = exports;
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
 /**
@@ -915,7 +914,7 @@
         me._$$visobj = visobj;
         me._$$lastListenerId = -1;
         me._$$status = null;
-        me._$$listeners = [];
+        me._$$listeners = {};
     }
 
     // "read-only" access to VisSense instance
@@ -940,15 +939,20 @@
         return this._$$status.prev();
     };
 
-    // Adds a listener.
+    // Adds a listener that will be called on update().
     //
-    // var id = visobj.monitor().register(function() {
+    // var id = visobj.monitor()._bind(function() {
     //   doSomething();
     // });
-    VisMon.prototype.register = function(callback) {
+    VisMon.prototype._bind = function(callback) {
         this._$$lastListenerId += 1;
         this._$$listeners[this._$$lastListenerId] = callback;
         return this._$$lastListenerId;
+    };
+
+    VisMon.prototype.off = function(listenerId) {
+        delete this._$$listeners[listenerId];
+        return true;
     };
 
     /**
@@ -998,14 +1002,18 @@
     * Fires when visibility state changes
     */
     VisMon.prototype.onVisibilityChange = function (callback) {
-        return this.register(this.fireIfVisibilityChanged(callback));
+        return this._bind(this.fireIfVisibilityChanged(callback));
     };
 
     /**
     * Fires when visibility percentage changes
     */
     VisMon.prototype.onPercentageChange = function (callback) {
-        return this.register(this.fireIfPercentageChanged(callback));
+        var me = this;
+        return this._bind(this.fireIfPercentageChanged(function() {
+            var prev = me.status().prev();
+            callback(me.percentage(), prev && prev.percentage());
+        }));
     };
 
     /**
@@ -1031,7 +1039,7 @@
         var handler = me.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
             return !me.status().prev() || me.status().wasHidden();
         }, fireIfVisible));
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     /**
@@ -1045,7 +1053,7 @@
         }, callback);
 
         var handler = me.fireIfVisibilityChanged(fireIfFullyVisible);
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     /**
@@ -1059,7 +1067,7 @@
         }, callback);
 
         var handler = me.fireIfVisibilityChanged(fireIfHidden);
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     VisMon.prototype.on = function(eventName, handler) {
@@ -1078,15 +1086,11 @@
         return emitEvents[eventName](handler);
     };
 
-    VisSense.monitor = function monitor(visobj, config) {
-        return new VisMon(visobj, config || {});
-    };
-
-    VisSense.prototype.monitor = function(config) {
+    VisSense.fn.monitor = function(config) {
         if(this._$$monitor) {
             return this._$$monitor;
         }
-        this._$$monitor = VisSense.monitor(this, config);
+        this._$$monitor = new VisMon(this, config || {});
         return this._$$monitor;
     };
 

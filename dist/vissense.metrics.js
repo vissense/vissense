@@ -1476,6 +1476,8 @@ UniformSample.prototype.update = function(val) {
 
   /*--------------------------------------------------------------------------*/
 
+  VisSense.fn = VisSense.prototype;
+
   // export VisSense
   window.VisSense = VisSense;
 
@@ -1570,21 +1572,18 @@ UniformSample.prototype.update = function(val) {
         return new VisState(status, percentage, prev);
     }
 
-    var exports = {};
-
-    exports.hidden = function(percentage, prev) {
-        return state(STATES.HIDDEN, percentage, prev || null);
+    // export
+    VisSenseUtils.VisState = {
+        hidden: function(percentage, prev) {
+            return state(STATES.HIDDEN, percentage, prev || null);
+        },
+        visible:function(percentage, prev) {
+            return state(STATES.VISIBLE, percentage, prev || null);
+        },
+        fullyvisible: function(percentage, prev) {
+            return state(STATES.FULLY_VISIBLE, percentage, prev || null);
+        }
     };
-
-    exports.visible = function(percentage, prev) {
-        return state(STATES.VISIBLE, percentage, prev || null);
-    };
-
-    exports.fullyvisible = function(percentage, prev) {
-        return state(STATES.FULLY_VISIBLE, percentage, prev || null);
-    };
-
-    VisSenseUtils.VisState = exports;
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
 /**
@@ -1652,7 +1651,7 @@ UniformSample.prototype.update = function(val) {
         me._$$visobj = visobj;
         me._$$lastListenerId = -1;
         me._$$status = null;
-        me._$$listeners = [];
+        me._$$listeners = {};
     }
 
     // "read-only" access to VisSense instance
@@ -1677,15 +1676,20 @@ UniformSample.prototype.update = function(val) {
         return this._$$status.prev();
     };
 
-    // Adds a listener.
+    // Adds a listener that will be called on update().
     //
-    // var id = visobj.monitor().register(function() {
+    // var id = visobj.monitor()._bind(function() {
     //   doSomething();
     // });
-    VisMon.prototype.register = function(callback) {
+    VisMon.prototype._bind = function(callback) {
         this._$$lastListenerId += 1;
         this._$$listeners[this._$$lastListenerId] = callback;
         return this._$$lastListenerId;
+    };
+
+    VisMon.prototype.off = function(listenerId) {
+        delete this._$$listeners[listenerId];
+        return true;
     };
 
     /**
@@ -1735,14 +1739,18 @@ UniformSample.prototype.update = function(val) {
     * Fires when visibility state changes
     */
     VisMon.prototype.onVisibilityChange = function (callback) {
-        return this.register(this.fireIfVisibilityChanged(callback));
+        return this._bind(this.fireIfVisibilityChanged(callback));
     };
 
     /**
     * Fires when visibility percentage changes
     */
     VisMon.prototype.onPercentageChange = function (callback) {
-        return this.register(this.fireIfPercentageChanged(callback));
+        var me = this;
+        return this._bind(this.fireIfPercentageChanged(function() {
+            var prev = me.status().prev();
+            callback(me.percentage(), prev && prev.percentage());
+        }));
     };
 
     /**
@@ -1768,7 +1776,7 @@ UniformSample.prototype.update = function(val) {
         var handler = me.fireIfVisibilityChanged(VisSenseUtils.fireIf(function() {
             return !me.status().prev() || me.status().wasHidden();
         }, fireIfVisible));
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     /**
@@ -1782,7 +1790,7 @@ UniformSample.prototype.update = function(val) {
         }, callback);
 
         var handler = me.fireIfVisibilityChanged(fireIfFullyVisible);
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     /**
@@ -1796,7 +1804,7 @@ UniformSample.prototype.update = function(val) {
         }, callback);
 
         var handler = me.fireIfVisibilityChanged(fireIfHidden);
-        return me.register(handler);
+        return me._bind(handler);
     };
 
     VisMon.prototype.on = function(eventName, handler) {
@@ -1815,15 +1823,11 @@ UniformSample.prototype.update = function(val) {
         return emitEvents[eventName](handler);
     };
 
-    VisSense.monitor = function monitor(visobj, config) {
-        return new VisMon(visobj, config || {});
-    };
-
-    VisSense.prototype.monitor = function(config) {
+    VisSense.fn.monitor = function(config) {
         if(this._$$monitor) {
             return this._$$monitor;
         }
-        this._$$monitor = VisSense.monitor(this, config);
+        this._$$monitor = new VisMon(this, config || {});
         return this._$$monitor;
     };
 
@@ -1842,6 +1846,8 @@ UniformSample.prototype.update = function(val) {
         me._config = config || {};
 
         me._config.reinitializeImmediatelyOnHidden = true;
+        me._config.checkIntervalVisible = 100;
+        me._config.checkIntervalHidden = 100;
 
         me._$$again = Again.create({
             reinitializeOn: {
@@ -1850,7 +1856,18 @@ UniformSample.prototype.update = function(val) {
             }
         });
 
+        me.start(me._config.checkIntervalVisible, me._config.checkIntervalHidden);
+    }
+
+    VisTimer.prototype.start = function(checkIntervalVisible, checkIntervalHidden) {
+        if(!!this._$$started) {
+            return false;
+        }
+
         (function init(me) {
+            me._config.checkIntervalVisible = checkIntervalVisible || me._config.checkIntervalVisible;
+            me._config.checkIntervalHidden = checkIntervalHidden || me._config.checkIntervalHidden;
+
             var triggerVisMonUpdate = function() {
                 me._$$vismon.update();
             };
@@ -1882,10 +1899,11 @@ UniformSample.prototype.update = function(val) {
             // check for other changes periodically
             // e.g. if accordion expands on page
             // or if dynamic content is added
-            // TODO: make these values configureable!
-            me.every(100, 100, triggerVisMonUpdate);
+            me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
-    }
+
+        return true;
+    };
 
     VisTimer.prototype.vismon = function() {
         return this._$$vismon;
@@ -1900,7 +1918,10 @@ UniformSample.prototype.update = function(val) {
             callback = hiddenInterval;
             hiddenInterval = 0;
         }
-        return this._$$again.every(callback, {
+        var me = this;
+        return this._$$again.every(function() {
+            callback(me._$$vismon);
+        }, {
             'visible': interval,
             'hidden': hiddenInterval
         });
@@ -1910,21 +1931,22 @@ UniformSample.prototype.update = function(val) {
         return this._$$again.stop(id);
     };
 
-    VisTimer.prototype.stopAll = function() {
+    /**
+    *
+    * As this also stops the interval updating the state
+    * the object is unusable after this call.
+    */
+    VisTimer.prototype.destroy = function() {
         return this._$$again.stopAll();
     };
 
-    function newVisTimer(vissense, config) {
-        return new VisTimer(vissense.monitor(), config || {});
-    }
-
-    VisSense.timer = newVisTimer;
-
-    VisSense.prototype.timer = function(config) {
+    VisSense.fn.timer = function(config) {
         if(this._$$timer) {
             return this._$$timer;
         }
-        this._$$timer = newVisTimer(this, config);
+
+        this._$$timer = new VisTimer(this.monitor(), config || {});
+
         return this._$$timer;
     };
 
@@ -2046,8 +2068,8 @@ UniformSample.prototype.update = function(val) {
   'use strict';
 
     var DEFAULT_CONFIG = {
-        visibleUpdateInterval: 200,
-        hiddenUpdateInterval: 200,
+        visibleUpdateInterval: 100,
+        hiddenUpdateInterval: 100,
         updatePercentageOnPageHidden:false
     };
 
@@ -2188,17 +2210,11 @@ UniformSample.prototype.update = function(val) {
         }
     }
 
-    function newVisMetrics(vissense, config) {
-        return new VisMetrics(vissense.timer(), config);
-    }
-
-    VisSense.metrics = newVisMetrics;
-
-    VisSense.prototype.metrics = function(config) {
+    VisSense.fn.metrics = function(config) {
         if(this._$$metrics) {
             return this._$$metrics;
         }
-        this._$$metrics = VisSense.metrics(this, config);
+        this._$$metrics = new VisMetrics(this.timer(), config);
         return this._$$metrics;
 
     };

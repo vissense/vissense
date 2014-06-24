@@ -7,7 +7,7 @@
 ;(function(window, VisSense, VisSenseUtils, undefined) {
   'use strict';
 
-  VisSense.Network = function(config) {
+  VisSense.newNetwork = function(config) {
     var postUrl = config.url + '?cacheBuster='+VisSenseUtils.now();
     var Network = {
       send: function(data, method) {
@@ -25,49 +25,65 @@
         };
 
         function successHandler() {
-          if (net && net.readyState !== 4) { return; }
-          if (net && net.status !== 200) {
+          if (net.readyState !== 4) { return; }
+          if (net.status !== 200) {
             return false;
           }
-          // some console.log implementations don't support multiple parameters, guess it's okay in this case to concatenate
-          if ('console' in window) {
-            console.log('vissense report sent: ' + net.responseText);
-          }
+
+          console.log('vissense report sent: ' + net.responseText);
         }
 
         net.onreadystatechange = successHandler;
-        net.send({ data: JSON.stringify(data) });
+        net.send(JSON.stringify(data));
       }
     };
     return Network;
   };
 
-  (function() {
+  /*jshint unused:false*/
+  function VisClient(visobj, config) {
 
-    var network = new VisSense.Network({
+    var network = VisSense.newNetwork({
         url: 'http://localhost:9000/vissense'
     });
 
 
-    VisSenseUtils.addEvent(window, 'load', function(e) {
-        console.log('VisClient: ' + e);
-
+    VisSenseUtils.addEvent(window, 'load', function(e/*jshint unused:false*/) {
         var ua = window.navigator.userAgent;
         var environment = {
-            'osver' : ( typeof window.device !== 'undefined' ) ? window.device.version
+            osver : ( typeof window.device !== 'undefined' ) ? window.device.version
                     : ua.substr(ua.indexOf('; ')+2,ua.length).replace(')',';').split(';')[0] || 'unknown'
         };
 
-        console.log(environment);
+        //console.log(ua);
+        //console.log(environment.osver);
+        //console.log(environment.platform);
 
-        network.send({ hello : 'hello'}, 'GET');
+        network.send('load', 'POST');
     });
 
-    VisSenseUtils.addEvent(window, 'beforeunload', function(e) {
-        console.log('VisClient: ' + e);
+    VisSenseUtils.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
+        //console.log('VisClient: ' + e);
 
+        network.send('beforeunload', 'POST');
     });
 
-  } ());
+  }
+
+    function newVisClient(visobj, config) {
+        return new VisClient(/*visobj.monitor()*/ null, config || {});
+    }
+
+    VisSense.client = newVisClient;
+
+    VisSense.prototype.client = function(config) {
+        if(this._$$client) {
+            return this._$$client;
+        }
+        this._$$client = newVisClient(this, config);
+        return this._$$client;
+    };
+
+    VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

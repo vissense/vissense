@@ -42,23 +42,25 @@ function isHiddenInputElement(element) {
  * memoizes current and previous computed results
 
 ### What it does *not*
- * update automatically. this is up to you - therefor giving you the freedom to decide when
+ * update automatically. this is up to you - hence giving you the freedom to decide when
    to trigger updates. here is what this could look like:
 
 ```
 #!javascript
+var vismon = VisSense(element).monitor();
+
 (function initVisMonUpdateStrategy() {
     var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
 
     for(var i in updateTriggerEvents) {
         if(updateTriggerEvents.hasOwnProperty(i)) {
-            VisSenseUtils.addEvent(window, updateTriggerEvents[i], triggerVisMonUpdate);
+            VisSenseUtils.addEvent(window, updateTriggerEvents[i], vismon.update);
         }
     }
 
     // triggers update if mouse moves over element
     // this is important for example if the element is draggable
-    VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', triggerVisMonUpdate);
+    VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', vismon.update);
 }());
 ```
 
@@ -71,5 +73,5 @@ function isHiddenInputElement(element) {
 
 ### What it does *not*
  * being a hundred percent accurate timer. since it updates a vismon object every X milliseconds
-   it can callback your handler X milliseconds "to late". if you want an other strategy you must
+   it can callback your handler X milliseconds "too late". if you want an other strategy you must
    provide it yourself (like updating the vismon instance yourself based on user events).

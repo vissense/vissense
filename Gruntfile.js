@@ -22,7 +22,6 @@ module.exports = function (grunt) {
                     'src/main/vissense.polyfill.js',
                     'src/main/utils/vissense.utils.js',
                     'src/main/utils/vissense.utils._.js',
-                    'src/main/utils/vissense.utils.addevent.js',
                     'src/main/utils/vissense.utils.pagevisibility.js',
                     'src/main/utils/vissense.utils.elementstyling.js',
                     'src/main/utils/vissense.utils.elementposition.js',
@@ -60,6 +59,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     '<%= concat.metrics.dest %>',
+                    'src/main/utils/vissense.utils.addevent.js',
                     'src/main/client/vissense.client.js'
                 ],
                 dest: 'dist/vissense.js'

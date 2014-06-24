@@ -19,7 +19,7 @@
         me._config.reinitializeImmediatelyOnHidden = true;
 
         me._$$again = Again.create({
-            reinitializeImmediatelyOn: {
+            reinitializeOn: {
                 'hidden': false,
                 'visible': true
             }

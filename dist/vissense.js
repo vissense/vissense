@@ -1,6 +1,6 @@
-/*! vissense - v0.0.1 - 2014-06-21
+/*! vissense - v0.0.1 - 2014-06-24
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-21
+/*! vissense - v0.0.1 - 2014-06-24
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
@@ -735,11 +735,11 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
-/*! vissense - v0.0.1 - 2014-06-21
+/*! vissense - v0.0.1 - 2014-06-24
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-21
+/*! vissense - v0.0.1 - 2014-06-24
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-21
+/*! vissense - v0.0.1 - 2014-06-24
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -935,12 +935,7 @@ UniformSample.prototype.update = function(val) {
 
 ;(function(/*window*/) {
   'use strict';
-    // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
-    if (!Date.now) {
-       Date.now = function now() {
-         return new Date().getTime();
-       };
-    }
+  // Date.now is polyfilled by againjs!
 
     // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
     if (!Object.keys) {
@@ -1071,66 +1066,6 @@ UniformSample.prototype.update = function(val) {
     now:now,
     defer:defer
   });
-
-}.call(this, this, this.VisSenseUtils));
-/**
- * depends on ['vissense.utils']
- */
- ;(function(window, VisSenseUtils) {
-    'use strict';
-    /*--------------------------------------------------------------------------*/
-    // http://dustindiaz.com/rock-solid-addevent
-    var EventCache = (function () {
-        var listEvents = [];
-        var remove = function(i) {
-            var item = listEvents[i];
-            if(!!item[0] && !!item[1] && !!item[2]) {
-                if (item[0].removeEventListener) {
-                    item[0].removeEventListener(item[1], item[2], item[3]);
-                } else if (item[0].detachEvent) {
-                    item[0].detachEvent('on' + item[1], item[2]);
-                    item[0][item[1]+item[2]] = null;
-                    item[0]['e'+item[1]+item[2]] = null;
-                }
-            }
-            return item;
-        };
-        return {
-            listEvents: listEvents,
-            add: function(/*node, sEventName, fHandler*/) {
-                listEvents.push(arguments);
-                return listEvents.length - 1;
-            },
-            remove: remove,
-            flush: function() {
-                var i;
-                for (i = listEvents.length - 1; i >= 0; i = i - 1) {
-                    remove(i);
-                }
-            }
-        };
-    })();
-
-    function addEvent(obj, type, fn) {
-        var t = (type === 'DOMContentLoaded') ? 'readystatechange' : type;
-        if (obj.addEventListener) {
-            obj.addEventListener(type, fn, false);
-            return EventCache.add(obj, type, fn);
-        } else if (obj.attachEvent) {
-            obj['e' + t + fn] = fn;
-            obj[t + fn] = function () {
-                obj['e' + t + fn].call(obj, window.event);
-            };
-            obj.attachEvent('on' + t, obj[t + fn]);
-            return EventCache.add(obj, t, fn);
-        }
-        return -1;
-    }
-
-    // flush all remaining events
-    addEvent(window, 'unload', EventCache.flush);
-
-    VisSenseUtils.addEvent = addEvent;
 
 }.call(this, this, this.VisSenseUtils));
 ;(function(window, VisSenseUtils, Visibility) {
@@ -1895,7 +1830,7 @@ UniformSample.prototype.update = function(val) {
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
-!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,runNow){var runner=function(){timer.last=new Date,timer.callback.call(window)};if(runNow){var now=new Date,last=now-timer.last;interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeImmediatelyOn=this._$$config.reinitializeImmediatelyOn||{}}var version="0.0.9";Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!1),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeImmediatelyOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeOn=this._$$config.reinitializeOn||{}}var version="0.0.9";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!1),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */
@@ -1911,7 +1846,7 @@ UniformSample.prototype.update = function(val) {
         me._config.reinitializeImmediatelyOnHidden = true;
 
         me._$$again = Again.create({
-            reinitializeImmediatelyOn: {
+            reinitializeOn: {
                 'hidden': false,
                 'visible': true
             }
@@ -2271,10 +2206,70 @@ UniformSample.prototype.update = function(val) {
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));
+/**
+ * depends on ['vissense.utils']
+ */
+ ;(function(window, VisSenseUtils) {
+    'use strict';
+    /*--------------------------------------------------------------------------*/
+    // http://dustindiaz.com/rock-solid-addevent
+    var EventCache = (function () {
+        var listEvents = [];
+        var remove = function(i) {
+            var item = listEvents[i];
+            if(!!item[0] && !!item[1] && !!item[2]) {
+                if (item[0].removeEventListener) {
+                    item[0].removeEventListener(item[1], item[2], item[3]);
+                } else if (item[0].detachEvent) {
+                    item[0].detachEvent('on' + item[1], item[2]);
+                    item[0][item[1]+item[2]] = null;
+                    item[0]['e'+item[1]+item[2]] = null;
+                }
+            }
+            return item;
+        };
+        return {
+            listEvents: listEvents,
+            add: function(/*node, sEventName, fHandler*/) {
+                listEvents.push(arguments);
+                return listEvents.length - 1;
+            },
+            remove: remove,
+            flush: function() {
+                var i;
+                for (i = listEvents.length - 1; i >= 0; i = i - 1) {
+                    remove(i);
+                }
+            }
+        };
+    })();
+
+    function addEvent(obj, type, fn) {
+        var t = (type === 'DOMContentLoaded') ? 'readystatechange' : type;
+        if (obj.addEventListener) {
+            obj.addEventListener(type, fn, false);
+            return EventCache.add(obj, type, fn);
+        } else if (obj.attachEvent) {
+            obj['e' + t + fn] = fn;
+            obj[t + fn] = function () {
+                obj['e' + t + fn].call(obj, window.event);
+            };
+            obj.attachEvent('on' + t, obj[t + fn]);
+            return EventCache.add(obj, t, fn);
+        }
+        return -1;
+    }
+
+    // flush all remaining events
+    addEvent(window, 'unload', EventCache.flush);
+
+    VisSenseUtils.addEvent = addEvent;
+
+}.call(this, this, this.VisSenseUtils));
 ;(function(window, VisSense, VisSenseUtils, undefined) {
   'use strict';
 
-  VisSense.Network = function(config) {
+  VisSense.newNetwork = function(config) {
     var postUrl = config.url + '?cacheBuster='+VisSenseUtils.now();
     var Network = {
       send: function(data, method) {
@@ -2292,49 +2287,65 @@ UniformSample.prototype.update = function(val) {
         };
 
         function successHandler() {
-          if (net && net.readyState !== 4) { return; }
-          if (net && net.status !== 200) {
+          if (net.readyState !== 4) { return; }
+          if (net.status !== 200) {
             return false;
           }
-          // some console.log implementations don't support multiple parameters, guess it's okay in this case to concatenate
-          if ('console' in window) {
-            console.log('vissense report sent: ' + net.responseText);
-          }
+
+          console.log('vissense report sent: ' + net.responseText);
         }
 
         net.onreadystatechange = successHandler;
-        net.send({ data: JSON.stringify(data) });
+        net.send(JSON.stringify(data));
       }
     };
     return Network;
   };
 
-  (function() {
+  /*jshint unused:false*/
+  function VisClient(visobj, config) {
 
-    var network = new VisSense.Network({
+    var network = VisSense.newNetwork({
         url: 'http://localhost:9000/vissense'
     });
 
 
-    VisSenseUtils.addEvent(window, 'load', function(e) {
-        console.log('VisClient: ' + e);
-
+    VisSenseUtils.addEvent(window, 'load', function(e/*jshint unused:false*/) {
         var ua = window.navigator.userAgent;
         var environment = {
-            'osver' : ( typeof window.device !== 'undefined' ) ? window.device.version
+            osver : ( typeof window.device !== 'undefined' ) ? window.device.version
                     : ua.substr(ua.indexOf('; ')+2,ua.length).replace(')',';').split(';')[0] || 'unknown'
         };
 
-        console.log(environment);
+        //console.log(ua);
+        //console.log(environment.osver);
+        //console.log(environment.platform);
 
-        network.send({ hello : 'hello'}, 'GET');
+        network.send('load', 'POST');
     });
 
-    VisSenseUtils.addEvent(window, 'beforeunload', function(e) {
-        console.log('VisClient: ' + e);
+    VisSenseUtils.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
+        //console.log('VisClient: ' + e);
 
+        network.send('beforeunload', 'POST');
     });
 
-  } ());
+  }
+
+    function newVisClient(visobj, config) {
+        return new VisClient(/*visobj.monitor()*/ null, config || {});
+    }
+
+    VisSense.client = newVisClient;
+
+    VisSense.prototype.client = function(config) {
+        if(this._$$client) {
+            return this._$$client;
+        }
+        this._$$client = newVisClient(this, config);
+        return this._$$client;
+    };
+
+    VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));

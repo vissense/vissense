@@ -242,11 +242,19 @@
         return emitEvents[eventName](handler);
     };
 
-    VisSense.fn.monitor = function(config) {
+    VisSense.fn.monitor = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisMon(this, config);
+        }
+
         if(this._$$monitor) {
             return this._$$monitor;
         }
-        this._$$monitor = new VisMon(this, config || {});
+
+        this._$$monitor = new VisMon(this, config);
+
         return this._$$monitor;
     };
 

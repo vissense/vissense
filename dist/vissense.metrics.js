@@ -1823,11 +1823,19 @@ UniformSample.prototype.update = function(val) {
         return emitEvents[eventName](handler);
     };
 
-    VisSense.fn.monitor = function(config) {
+    VisSense.fn.monitor = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisMon(this, config);
+        }
+
         if(this._$$monitor) {
             return this._$$monitor;
         }
-        this._$$monitor = new VisMon(this, config || {});
+
+        this._$$monitor = new VisMon(this, config);
+
         return this._$$monitor;
     };
 
@@ -1939,12 +1947,18 @@ UniformSample.prototype.update = function(val) {
         return this._$$again.stopAll();
     };
 
-    VisSense.fn.timer = function(config) {
+    VisSense.fn.timer = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisTimer(this.monitor({ detached : true }), config);
+        }
+
         if(this._$$timer) {
             return this._$$timer;
         }
 
-        this._$$timer = new VisTimer(this.monitor(), config || {});
+        this._$$timer = new VisTimer(this.monitor(), config);
 
         return this._$$timer;
     };
@@ -2160,7 +2174,7 @@ UniformSample.prototype.update = function(val) {
             updatePercentage();
             stopAndUpdateTimers(vistimer.vismon());
 
-            vistimer.stopAll();
+            vistimer.destroy();
             stopped = true;
             return stopped;
         };
@@ -2209,13 +2223,20 @@ UniformSample.prototype.update = function(val) {
         }
     }
 
-    VisSense.fn.metrics = function(config) {
+    VisSense.fn.metrics = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisMetrics(this.timer({ detached : true }), config);
+        }
+
         if(this._$$metrics) {
             return this._$$metrics;
         }
-        this._$$metrics = new VisMetrics(this.timer(), config);
-        return this._$$metrics;
 
+        this._$$metrics = new VisMetrics(this.timer(), config);
+
+        return this._$$metrics;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));

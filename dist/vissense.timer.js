@@ -1088,11 +1088,19 @@
         return emitEvents[eventName](handler);
     };
 
-    VisSense.fn.monitor = function(config) {
+    VisSense.fn.monitor = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisMon(this, config);
+        }
+
         if(this._$$monitor) {
             return this._$$monitor;
         }
-        this._$$monitor = new VisMon(this, config || {});
+
+        this._$$monitor = new VisMon(this, config);
+
         return this._$$monitor;
     };
 
@@ -1204,12 +1212,18 @@
         return this._$$again.stopAll();
     };
 
-    VisSense.fn.timer = function(config) {
+    VisSense.fn.timer = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisTimer(this.monitor({ detached : true }), config);
+        }
+
         if(this._$$timer) {
             return this._$$timer;
         }
 
-        this._$$timer = new VisTimer(this.monitor(), config || {});
+        this._$$timer = new VisTimer(this.monitor(), config);
 
         return this._$$timer;
     };

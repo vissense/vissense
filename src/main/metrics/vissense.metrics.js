@@ -104,7 +104,7 @@
             updatePercentage();
             stopAndUpdateTimers(vistimer.vismon());
 
-            vistimer.stopAll();
+            vistimer.destroy();
             stopped = true;
             return stopped;
         };
@@ -153,13 +153,20 @@
         }
     }
 
-    VisSense.fn.metrics = function(config) {
+    VisSense.fn.metrics = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisMetrics(this.timer({ detached : true }), config);
+        }
+
         if(this._$$metrics) {
             return this._$$metrics;
         }
-        this._$$metrics = new VisMetrics(this.timer(), config);
-        return this._$$metrics;
 
+        this._$$metrics = new VisMetrics(this.timer(), config);
+
+        return this._$$metrics;
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));

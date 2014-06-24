@@ -110,12 +110,18 @@
         return this._$$again.stopAll();
     };
 
-    VisSense.fn.timer = function(config) {
+    VisSense.fn.timer = function(incomingConfig) {
+        var config = incomingConfig || {};
+
+        if(!!config.detached) {
+            return new VisTimer(this.monitor({ detached : true }), config);
+        }
+
         if(this._$$timer) {
             return this._$$timer;
         }
 
-        this._$$timer = new VisTimer(this.monitor(), config || {});
+        this._$$timer = new VisTimer(this.monitor(), config);
 
         return this._$$timer;
     };

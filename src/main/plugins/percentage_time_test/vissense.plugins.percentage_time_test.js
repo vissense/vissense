@@ -42,7 +42,7 @@
                     });
                 }
             }
-        });
+        }, true);
     };
 
 }(this, this.VisSense, this.VisSenseUtils));

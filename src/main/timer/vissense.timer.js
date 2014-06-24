@@ -67,9 +67,8 @@
                 VisSenseUtils.defer(triggerVisMonUpdate);
             });
 
-            // check for other changes periodically
-            // e.g. if accordion expands on page
-            // or if dynamic content is added
+            // check for other changes periodically. this is needed for example
+            // an accordion expands on the page or dynamic content has been added
             me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
 
@@ -84,7 +83,7 @@
     * Run callback every `interval` milliseconds if element is visible and
     * every `hiddenInterval` milliseconds if element is hidden.
     */
-    VisTimer.prototype.every = function (interval, hiddenInterval, callback) {
+    VisTimer.prototype.every = function (interval, hiddenInterval, callback, runNow) {
         if (!callback) {
             callback = hiddenInterval;
             hiddenInterval = 0;
@@ -95,7 +94,7 @@
         }, {
             'visible': interval,
             'hidden': hiddenInterval
-        });
+        }, runNow);
     };
 
     VisTimer.prototype.stop = function(id) {

@@ -1834,7 +1834,7 @@ UniformSample.prototype.update = function(val) {
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
-!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeOn=this._$$config.reinitializeOn||{}}var version="0.0.9";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!1),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeOn=this._$$config.reinitializeOn||{}}var version="0.0.9";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals, runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */
@@ -1898,9 +1898,8 @@ UniformSample.prototype.update = function(val) {
                 VisSenseUtils.defer(triggerVisMonUpdate);
             });
 
-            // check for other changes periodically
-            // e.g. if accordion expands on page
-            // or if dynamic content is added
+            // check for other changes periodically. this is needed for example
+            // an accordion expands on the page or dynamic content has been added
             me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
 
@@ -1915,7 +1914,7 @@ UniformSample.prototype.update = function(val) {
     * Run callback every `interval` milliseconds if element is visible and
     * every `hiddenInterval` milliseconds if element is hidden.
     */
-    VisTimer.prototype.every = function (interval, hiddenInterval, callback) {
+    VisTimer.prototype.every = function (interval, hiddenInterval, callback, runNow) {
         if (!callback) {
             callback = hiddenInterval;
             hiddenInterval = 0;
@@ -1926,7 +1925,7 @@ UniformSample.prototype.update = function(val) {
         }, {
             'visible': interval,
             'hidden': hiddenInterval
-        });
+        }, runNow);
     };
 
     VisTimer.prototype.stop = function(id) {
@@ -2070,8 +2069,8 @@ UniformSample.prototype.update = function(val) {
   'use strict';
 
     var DEFAULT_CONFIG = {
-        visibleUpdateInterval: 100,
-        hiddenUpdateInterval: 100,
+        visibleUpdateInterval: 200,
+        hiddenUpdateInterval: 200,
         updatePercentageOnPageHidden:false
     };
 
@@ -2266,7 +2265,7 @@ UniformSample.prototype.update = function(val) {
                     });
                 }
             }
-        });
+        }, true);
     };
 
 }(this, this.VisSense, this.VisSenseUtils));

@@ -26,4 +26,4 @@
         fireIf: fireIf
     };
 
-}.call(this, this));
+}(window));

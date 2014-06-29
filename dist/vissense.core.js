@@ -237,7 +237,7 @@
       }());
     }
 
-}.call(this, this));
+}(window));
 ;(function(window, undefined) {
   'use strict';
 
@@ -260,7 +260,7 @@
         fireIf: fireIf
     };
 
-}.call(this, this));
+}(window));
 /**
  * depends on ['vissense.utils']
  */
@@ -326,7 +326,7 @@
     defer:defer
   });
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, Visibility) {
   'use strict';
 
@@ -351,7 +351,8 @@
     VisSenseUtils.isPageVisible = isPageVisible;
     VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
 
-}.call(this, this, this.VisSenseUtils, this.Visibility));
+
+}(window, window.VisSenseUtils, window.Visibility));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -451,7 +452,7 @@
     VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
     VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -523,7 +524,7 @@
     VisSenseUtils.isInViewport = isInViewport;
     VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /*
  *
  * - percentage
@@ -586,7 +587,7 @@
     VisSenseUtils.isVisible = isVisible;
     VisSenseUtils.isHidden = isHidden;
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
@@ -649,7 +650,7 @@
         return support;
     };
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
@@ -735,11 +736,12 @@
 
     VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
-  /*--------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------*/
 
-  VisSense.fn = VisSense.prototype;
+    VisSense.fn = VisSense.prototype;
 
-  // export VisSense
-  window.VisSense = VisSense;
+    // export VisSense
+    window.VisSense = VisSense;
+    window.VisSense.version = '0.0.1';
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));

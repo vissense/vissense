@@ -976,7 +976,7 @@ UniformSample.prototype.update = function(val) {
       }());
     }
 
-}.call(this, this));
+}(window));
 ;(function(window, undefined) {
   'use strict';
 
@@ -999,7 +999,7 @@ UniformSample.prototype.update = function(val) {
         fireIf: fireIf
     };
 
-}.call(this, this));
+}(window));
 /**
  * depends on ['vissense.utils']
  */
@@ -1065,7 +1065,7 @@ UniformSample.prototype.update = function(val) {
     defer:defer
   });
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, Visibility) {
   'use strict';
 
@@ -1090,7 +1090,8 @@ UniformSample.prototype.update = function(val) {
     VisSenseUtils.isPageVisible = isPageVisible;
     VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
 
-}.call(this, this, this.VisSenseUtils, this.Visibility));
+
+}(window, window.VisSenseUtils, window.Visibility));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -1190,7 +1191,7 @@ UniformSample.prototype.update = function(val) {
     VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
     VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -1262,7 +1263,7 @@ UniformSample.prototype.update = function(val) {
     VisSenseUtils.isInViewport = isInViewport;
     VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /*
  *
  * - percentage
@@ -1325,7 +1326,7 @@ UniformSample.prototype.update = function(val) {
     VisSenseUtils.isVisible = isVisible;
     VisSenseUtils.isHidden = isHidden;
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
@@ -1388,7 +1389,7 @@ UniformSample.prototype.update = function(val) {
         return support;
     };
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
@@ -1474,14 +1475,15 @@ UniformSample.prototype.update = function(val) {
 
     VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
-  /*--------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------*/
 
-  VisSense.fn = VisSense.prototype;
+    VisSense.fn = VisSense.prototype;
 
-  // export VisSense
-  window.VisSense = VisSense;
+    // export VisSense
+    window.VisSense = VisSense;
+    window.VisSense.version = '0.0.1';
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));
 /**
  * detects visibility changes of an element.
  *
@@ -1585,7 +1587,7 @@ UniformSample.prototype.update = function(val) {
         }
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));
 /**
  * detects visibility changes of an element.
  *
@@ -1839,7 +1841,7 @@ UniformSample.prototype.update = function(val) {
         return this._$$monitor;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));
 !function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeOn=this._$$config.reinitializeOn||{}}var version="0.0.9";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals, runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
@@ -1963,7 +1965,7 @@ UniformSample.prototype.update = function(val) {
         return this._$$timer;
     };
 
-}(this, this.Again, this.VisSense, this.VisSenseUtils));
+}(window, window.Again, window.VisSense, window.VisSenseUtils));
 /**
  * depends on ['vissense.utils']
  */
@@ -2073,7 +2075,7 @@ UniformSample.prototype.update = function(val) {
         return new StopWatch();
     };
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
@@ -2239,4 +2241,4 @@ UniformSample.prototype.update = function(val) {
         return this._$$metrics;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));
+}(window, window.VisSense, window.VisSenseUtils, window.brwsrfyMetrics));

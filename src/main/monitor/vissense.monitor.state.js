@@ -108,4 +108,4 @@
         }
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));

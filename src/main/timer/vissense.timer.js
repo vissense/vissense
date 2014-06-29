@@ -126,4 +126,4 @@
         return this._$$timer;
     };
 
-}(this, this.Again, this.VisSense, this.VisSenseUtils));
+}(window, window.Again, window.VisSense, window.VisSenseUtils));

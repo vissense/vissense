@@ -66,4 +66,4 @@
     VisSenseUtils.isVisible = isVisible;
     VisSenseUtils.isHidden = isHidden;
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));

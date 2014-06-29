@@ -69,4 +69,4 @@
     defer:defer
   });
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));

@@ -169,4 +169,4 @@
         return this._$$metrics;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));
+}(window, window.VisSense, window.VisSenseUtils, window.brwsrfyMetrics));

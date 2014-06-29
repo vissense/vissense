@@ -103,4 +103,4 @@
     VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
     VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));

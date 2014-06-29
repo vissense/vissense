@@ -11,4 +11,4 @@
         this.onPercentageTimeTestPassed(0.5, 1000, callback);
     };
 
-}(this, this.VisSense));
+}(window, window.VisSense));

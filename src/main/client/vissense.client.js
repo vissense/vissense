@@ -85,4 +85,4 @@
     VisSense.client = newVisClient;
     VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));

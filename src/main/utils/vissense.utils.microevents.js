@@ -52,4 +52,4 @@
 
     VisSenseUtils.MicroEvent = MicroEvent;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));

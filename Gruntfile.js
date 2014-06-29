@@ -8,6 +8,9 @@ module.exports = function (grunt) {
             '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
             '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
             '*/\n',
+        dirs :{
+            coverage: './bin/coverage'
+        },
         concat: {
             options: {
                 banner: '<%= banner %>',
@@ -113,6 +116,47 @@ module.exports = function (grunt) {
                 'src/test/**/*.html'
             ]
         },
+
+        jasmine: {
+            js: {
+                src: 'dist/vissense.js',
+                options: {
+                    display: 'full',
+                    summary: true,
+                    specs: 'spec/*Spec.js',
+                    helpers: 'spec/*Helper.js'
+                }
+            },
+            coverage: {
+                src: ['dist/vissense.js'],
+                options: {
+                    specs: ['spec/*Spec.js'],
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: '<%= dirs.coverage %>/coverage.json',
+                        report: [{
+                                type: 'html',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/html'
+                                }
+                            }, {
+                                type: 'cobertura',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/cobertura'
+                                }
+                            }, {
+                                type: 'lcov',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/lcov'
+                                }
+                            }, {
+                                type: 'text-summary'
+                            }
+                        ]
+                    }
+                }
+            }
+        },
         connect: {
             server: {
                 options: {
@@ -138,6 +182,12 @@ module.exports = function (grunt) {
                     title: 'Javascript - <%= pkg.title %>',
                     message: 'Minified and validated with success!'
                 }
+            },
+            test: {
+                options: {
+                    title: 'Javascript - <%= pkg.title %>',
+                    message: 'Tests successfully finished!'
+                }
             }
         }
     });
@@ -156,6 +206,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'qunit']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'qunit', 'notify:test']);
 };
 

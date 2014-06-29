@@ -112,4 +112,4 @@
         return new StopWatch();
     };
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));

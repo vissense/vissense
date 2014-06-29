@@ -75,4 +75,4 @@
     VisSenseUtils.isInViewport = isInViewport;
     VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));

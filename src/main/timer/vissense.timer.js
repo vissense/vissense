@@ -68,7 +68,7 @@
             });
 
             // check for other changes periodically. this is needed for example
-            // an accordion expands on the page or dynamic content has been added
+            // if an accordion expands on the page or dynamic content has been added
             me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
 

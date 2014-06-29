@@ -1,12 +1,13 @@
 {
   "name": "vissense",
   "version": "0.0.1",
+  "title": "VisSense.js",
   "dependencies": {},
   "author": {
     "name": "tbk"
   },
   "scripts": {
-      "test": "grunt default --verbose"
+    "test": "grunt default --verbose"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
@@ -15,6 +16,10 @@
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-qunit": "*"
+    "grunt-contrib-qunit": "*",
+    "grunt-contrib-jasmine": "~0.6.5",
+    "grunt-template-jasmine-istanbul": "0.3.0",
+    "time-grunt": "~0.3.2",
+    "grunt-notify": "~0.3.0"
   }
 }

@@ -1,4 +1,4 @@
-/*! vissense - v0.0.1 - 2014-06-24
+/*! vissense - v0.0.1 - 2014-06-29
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";

@@ -1,8 +1,8 @@
-/*! vissense - v0.0.1 - 2014-06-24
+/*! vissense - v0.0.1 - 2014-06-29
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-24
+/*! vissense - v0.0.1 - 2014-06-29
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-24
+/*! vissense - v0.0.1 - 2014-06-29
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -1170,7 +1170,7 @@
             });
 
             // check for other changes periodically. this is needed for example
-            // an accordion expands on the page or dynamic content has been added
+            // if an accordion expands on the page or dynamic content has been added
             me.every(me._config.checkIntervalVisible, me._config.checkIntervalHidden, triggerVisMonUpdate, true);
         }(this));
 

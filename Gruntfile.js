@@ -1,8 +1,8 @@
 module.exports = function (grunt) {
     'use strict';
-    // Project configuration
+    require('time-grunt')(grunt);
+
     grunt.initConfig({
-        // Metadata
         pkg: grunt.file.readJSON('package.json'),
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
             '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -10,7 +10,6 @@ module.exports = function (grunt) {
             '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
             '*/\n',
 
-        // Task configuration
         concat: {
             options: {
                 banner: '<%= banner %>',
@@ -137,7 +136,6 @@ module.exports = function (grunt) {
         }
     });
 
-    // These plugins provide necessary tasks
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -145,8 +143,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
-
-    // Default task
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test']);
     grunt.registerTask('serve', ['default', 'watch']);
     grunt.registerTask('test', ['connect', 'qunit']);

@@ -41,7 +41,7 @@ module.exports = function (grunt) {
             timer: {
                 src: [
                     '<%= concat.monitor.dest %>',
-                    'bower_components/againjs/dist/again.min.js',
+                    'bower_components/againjs/dist/againjs.min.js',
                     'src/main/timer/vissense.timer.js'
                 ],
                 dest: 'dist/vissense.timer.js'
@@ -49,8 +49,8 @@ module.exports = function (grunt) {
             metrics: {
                 src: [
                     'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
+                    'bower_components/countonmejs/dist/countonmejs.min.js',
                     '<%= concat.timer.dest %>',
-                    'src/main/utils/vissense.utils.stopwatch.js',
                     'src/main/metrics/vissense.metrics.js'
                 ],
                 dest: 'dist/vissense.metrics.js'

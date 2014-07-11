@@ -733,6 +733,7 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
+!function(window){"use strict";!function(window){Date.now||(Date.now=function(){return(new Date).getTime()}),window.performance||(window.performance=window.performance||{},window.performance.now=window.performance.now||window.performance.mozNow||window.performance.msNow||window.performance.oNow||window.performance.webkitNow||Date.now)}(window);var Counter=function(){function Counter(val){return this instanceof Counter?((+val!==val||0>val)&&(val=0),void(this._$={i:val})):new Counter(val)}var MAX_VALUE=Math.pow(2,32),check=function(val){return+val!==val?1:+val};return Counter.MAX_VALUE=MAX_VALUE,Counter.prototype.inc=function(val){return this.set(this.get()+check(val)),this.get()},Counter.prototype.dec=function(val){return this.inc(-1*check(val))},Counter.prototype.clear=function(){var val=this._$.i;return this._$.i=0,val},Counter.prototype.get=function(){return this._$.i},Counter.prototype.set=function(val){return this._$.i=check(val),this._$.i<0?this._$.i=0:this._$.i>MAX_VALUE&&(this._$.i-=MAX_VALUE),this.get()},Counter}(),StopWatch=function(){function StopWatch(config){return this instanceof StopWatch?(this._config=config||{},this._config.performance=this._config.performance!==!1,void(this._$={ts:0,te:0,r:!1})):new StopWatch(config)}var now=function(performance){return performance?window.performance.now():Date.now()},asNumberOr=function(optNumber,fallback){return+optNumber===optNumber?+optNumber:fallback};return StopWatch.prototype._orNow=function(optNow){return asNumberOr(optNow,now(this._config.performance))},StopWatch.prototype.startIf=function(condition,optNow){return condition&&(this._$.r=!0,this._$.ts=this._orNow(optNow),this._$.te=null),this},StopWatch.prototype.start=function(optNow){return this.startIf(!this._$.r,optNow)},StopWatch.prototype.forceStart=function(optNow){return this.startIf(!0,optNow)},StopWatch.prototype.restart=function(optNow){return this.forceStart(optNow)},StopWatch.prototype.stop=function(optNow){return this.stopIf(!0,optNow)},StopWatch.prototype.stopIf=function(condition,optNow){return this._$.r&&condition&&(this._$.te=this._orNow(optNow),this._$.r=!1),this},StopWatch.prototype.interim=function(optNow){return this._$.r?this._orNow(optNow)-this._$.ts:0},StopWatch.prototype.time=StopWatch.prototype.interim,StopWatch.prototype.get=function(optNow){return this._$.te?this._$.te-this._$.ts:this.time(optNow)},StopWatch.prototype.running=function(){return this._$.r},StopWatch.prototype.getAndRestartIf=function(condition,optNow){var time=this.get(optNow);return condition&&this.restart(optNow),time},StopWatch}();window.CountOnMe={version:"0.1.0",counter:Counter,stopwatch:StopWatch}}(window);
 /*! vissense - v0.0.1 - 2014-07-12
 * Copyright (c) 2014 tbk;*/
 /*! vissense - v0.0.1 - 2014-07-12
@@ -1840,6 +1841,7 @@ UniformSample.prototype.update = function(val) {
     };
 
 }.call(this, this, this.VisSense, this.VisSenseUtils));
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(setTimeout(function(){runner()},0),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){return this instanceof Again?(this._$$initialized=!1,this._$$state=null,this._$$lastTimerId=-1,this._$$timers={},this._$$config=config||{},void(this._$$config.reinitializeOn=this._$$config.reinitializeOn||{})):new Again(config)}var version="0.0.11";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals,runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId,intervals=stateIntervals;return parseFloat(stateIntervals)===stateIntervals&&(intervals={"*":parseFloat(stateIntervals)}),this._$$timers[id]={callback:callback,intervals:intervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state]||+timer.intervals["*"];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=Again,window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */
@@ -1964,119 +1966,9 @@ UniformSample.prototype.update = function(val) {
 
 }(this, this.Again, this.VisSense, this.VisSenseUtils));
 /**
- * depends on ['vissense.utils']
- */
- ;(function(window, VisSenseUtils) {
-  'use strict';
-
-    // Date.now polyfill
-    if (!Date.now) {
-       Date.now = function now() {
-         return new Date().getTime();
-       };
-    }
-
-    // performance.now polyfill
-    (function (window) {
-        if(!window.performance) {
-            window.performance = window.performance || {};
-            // handle vendor prefixing
-            window.performance.now = window.performance.now ||
-            window.performance.mozNow ||
-            window.performance.msNow ||
-            window.performance.oNow ||
-            window.performance.webkitNow ||
-            Date.now;  // fallback to Date
-        }
-    })(window);
-
-    var StopWatch = (function(window) {
-        var getNow = (function(window) {
-            return function(performance) {
-                  return performance ? window.performance.now : Date.now;
-             };
-        } (window));
-
-        function StopWatch(performance) {
-            var me = this;
-
-            var $ = {
-                ts : 0, // time start
-                te : 0, // time end
-                r : false // currently running
-            };
-
-            var now = me.now = getNow(performance);
-
-            me.start = function(optNow) {
-                $.r = true;
-                $.ts = +optNow || now();
-                return 0;
-            };
-            me.restart = function(optNow) {
-                return me.stopAndRestartIf(true, optNow);
-            };
-
-            me.stop = function (optNow) {
-                return me.stopIf($.r, optNow);
-            };
-            me.running = function () {
-                return $.r;
-            };
-
-            me.stopIf = function (condition, optNow) {
-                var t = me.time(optNow);
-                if(condition) {
-                    $.r = false;
-                }
-                return t;
-            };
-
-            me.time = function (optNow) {
-                if (!$.r) {
-                    return 0;
-                } else {
-                    $.te = +optNow || now();
-                }
-
-                return $.te - $.ts;
-            };
-
-            /**
-            * Does neither stop nor restart if condition is false
-            */
-            me.stopAndRestartIf = function(condition, optNow) {
-                return !condition ? 0 : me.stopAndThenRestartIf(true, optNow);
-            };
-
-            /**
-            * Definitely stops, but restart only if condition is true
-            */
-            me.stopAndThenRestartIf = function(condition, optNow) {
-                var r = me.stop(optNow);
-                if(condition) {
-                    me.start(optNow);
-                }
-                return r;
-            };
-        }
-
-        StopWatch.now = function(performance) {
-            return getNow(performance)();
-        };
-
-        return StopWatch;
-    }(window));
-
-    VisSenseUtils.newStopWatch = function() {
-        return new StopWatch();
-    };
-
-}.call(this, this, this.VisSenseUtils));
-/**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
- ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics, undefined) {
+ ;(function(window, VisSense, VisSenseUtils, CountOnMe, brwsrfyMetrics, undefined) {
   'use strict';
 
     var DEFAULT_CONFIG = {
@@ -2110,17 +2002,17 @@ UniformSample.prototype.update = function(val) {
         var config = parseConfig(inConfig);
         var report = new brwsrfyMetrics.Report();
 
-        var watchVisible = VisSenseUtils.newStopWatch();
-        var watchFullyVisible = VisSenseUtils.newStopWatch();
-        var watchHidden = VisSenseUtils.newStopWatch();
-        var watchDuration = VisSenseUtils.newStopWatch();
+        var watchVisible = CountOnMe.stopwatch();
+        var watchFullyVisible = CountOnMe.stopwatch();
+        var watchHidden = CountOnMe.stopwatch();
+        var watchDuration = CountOnMe.stopwatch().start();
 
         /* Counter */
-        report.addMetric('time.visible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.fullyvisible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.hidden', new brwsrfyMetrics.Counter());
-        report.addMetric('time.relativeVisible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.duration', new brwsrfyMetrics.Counter());
+        report.addMetric('time.visible', new CountOnMe.counter());
+        report.addMetric('time.fullyvisible', new CountOnMe.counter());
+        report.addMetric('time.hidden', new CountOnMe.counter());
+        report.addMetric('time.relativeVisible', new CountOnMe.counter());
+        report.addMetric('time.duration', new CountOnMe.counter());
 
         /* Timer */
         report.addMetric('visibility.changes', new brwsrfyMetrics.Timer());
@@ -2203,22 +2095,25 @@ UniformSample.prototype.update = function(val) {
 
         function stopAndUpdateTimers(vismon) {
             var status = vismon.status();
-            var timeVisible = watchVisible.stopAndThenRestartIf(status.isVisible());
 
-            fireIfPositive(timeVisible, function(value) {
+            fireIfPositive(watchDuration.get(), function(value) {
+                report.getMetric('time.duration').set(value);
+            });
+
+            fireIfPositive(watchHidden.running() ? watchHidden.stop().get() : -1, function(value) {
+                report.getMetric('time.hidden').inc(value);
+            });
+            fireIfPositive(watchVisible.running() ? watchVisible.stop().get() : -1, function(value) {
                 report.getMetric('time.visible').inc(value);
                 report.getMetric('time.relativeVisible').inc(value * status.percentage());
             });
-
-            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(status.isFullyVisible()), function(value) {
+            fireIfPositive(watchFullyVisible.running() ? watchFullyVisible.stop().get() : -1, function(value) {
                 report.getMetric('time.fullyvisible').inc(value);
             });
-            fireIfPositive(watchHidden.stopAndThenRestartIf(status.isHidden()), function(value) {
-                report.getMetric('time.hidden').inc(value);
-            });
-            fireIfPositive(watchDuration.restart(), function(value) {
-                report.getMetric('time.duration').inc(value);
-            });
+
+            watchVisible.startIf(status.isVisible());
+            watchFullyVisible.startIf(status.isFullyVisible());
+            watchHidden.startIf(status.isHidden());
         }
     }
 
@@ -2238,4 +2133,4 @@ UniformSample.prototype.update = function(val) {
         return this._$$metrics;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));
+}.call(this, this, this.VisSense, this.VisSenseUtils, this.CountOnMe, this.brwsrfyMetrics));

@@ -7,7 +7,7 @@
 /**
  * depends on ['vissense.core', 'vissense.utils', 'vissense.monitor', 'vissense.timer', 'vissense.stopwatch']
  */
- ;(function(window, VisSense, VisSenseUtils, brwsrfyMetrics, undefined) {
+ ;(function(window, VisSense, VisSenseUtils, CountOnMe, brwsrfyMetrics, undefined) {
   'use strict';
 
     var DEFAULT_CONFIG = {
@@ -41,17 +41,17 @@
         var config = parseConfig(inConfig);
         var report = new brwsrfyMetrics.Report();
 
-        var watchVisible = VisSenseUtils.newStopWatch();
-        var watchFullyVisible = VisSenseUtils.newStopWatch();
-        var watchHidden = VisSenseUtils.newStopWatch();
-        var watchDuration = VisSenseUtils.newStopWatch();
+        var watchVisible = CountOnMe.stopwatch();
+        var watchFullyVisible = CountOnMe.stopwatch();
+        var watchHidden = CountOnMe.stopwatch();
+        var watchDuration = CountOnMe.stopwatch().start();
 
         /* Counter */
-        report.addMetric('time.visible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.fullyvisible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.hidden', new brwsrfyMetrics.Counter());
-        report.addMetric('time.relativeVisible', new brwsrfyMetrics.Counter());
-        report.addMetric('time.duration', new brwsrfyMetrics.Counter());
+        report.addMetric('time.visible', new CountOnMe.counter());
+        report.addMetric('time.fullyvisible', new CountOnMe.counter());
+        report.addMetric('time.hidden', new CountOnMe.counter());
+        report.addMetric('time.relativeVisible', new CountOnMe.counter());
+        report.addMetric('time.duration', new CountOnMe.counter());
 
         /* Timer */
         report.addMetric('visibility.changes', new brwsrfyMetrics.Timer());
@@ -134,22 +134,25 @@
 
         function stopAndUpdateTimers(vismon) {
             var status = vismon.status();
-            var timeVisible = watchVisible.stopAndThenRestartIf(status.isVisible());
 
-            fireIfPositive(timeVisible, function(value) {
+            fireIfPositive(watchDuration.get(), function(value) {
+                report.getMetric('time.duration').set(value);
+            });
+
+            fireIfPositive(watchHidden.running() ? watchHidden.stop().get() : -1, function(value) {
+                report.getMetric('time.hidden').inc(value);
+            });
+            fireIfPositive(watchVisible.running() ? watchVisible.stop().get() : -1, function(value) {
                 report.getMetric('time.visible').inc(value);
                 report.getMetric('time.relativeVisible').inc(value * status.percentage());
             });
-
-            fireIfPositive(watchFullyVisible.stopAndThenRestartIf(status.isFullyVisible()), function(value) {
+            fireIfPositive(watchFullyVisible.running() ? watchFullyVisible.stop().get() : -1, function(value) {
                 report.getMetric('time.fullyvisible').inc(value);
             });
-            fireIfPositive(watchHidden.stopAndThenRestartIf(status.isHidden()), function(value) {
-                report.getMetric('time.hidden').inc(value);
-            });
-            fireIfPositive(watchDuration.restart(), function(value) {
-                report.getMetric('time.duration').inc(value);
-            });
+
+            watchVisible.startIf(status.isVisible());
+            watchFullyVisible.startIf(status.isFullyVisible());
+            watchHidden.startIf(status.isHidden());
         }
     }
 
@@ -169,4 +172,4 @@
         return this._$$metrics;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils, this.brwsrfyMetrics));
+}.call(this, this, this.VisSense, this.VisSenseUtils, this.CountOnMe, this.brwsrfyMetrics));

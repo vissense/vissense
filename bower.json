@@ -11,18 +11,25 @@
   "license": "MIT",
   "private": true,
   "ignore": [
-    "**/.*",
-    "node_modules",
+    "bin",
+    "spec",
     "bower_components",
-    "test",
-    "tests"
+    "node_modules",
+    "Gruntfile.js",
+    "SpecRunner.html",
+    "package.json",
+    "bower.json",
+    "src/test",
+    "**/.*"
   ],
   "devDependencies": {
-    "qunit": "~1.14.0"
+    "qunit": "~1.14.0",
+    "jasmine": "2.0.0"
   },
   "dependencies": {
     "visibilityjs": "~1.2.1",
     "brwsrfy-metrics": "*",
-    "againjs": "theborakompanioni/againjs#master"
+    "againjs": "theborakompanioni/againjs#master",
+    "countonmejs": "theborakompanioni/countonmejs#master"
   }
 }

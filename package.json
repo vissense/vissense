@@ -19,7 +19,7 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-jasmine": "~0.6.5",
     "grunt-template-jasmine-istanbul": "0.3.0",
-    "time-grunt": "~0.3.2",
+    "time-grunt": "~0.4.0",
     "grunt-notify": "~0.3.0"
   }
 }

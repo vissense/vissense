@@ -13,14 +13,14 @@
     function VisTimer(vismon, config) {
         var me = this;
 
-        me._$$vismon = vismon;
+        me._vismon = vismon;
         me._config = config || {};
 
         me._config.reinitializeImmediatelyOnHidden = true;
         me._config.checkIntervalVisible = 100;
         me._config.checkIntervalHidden = 100;
 
-        me._$$again = Again.create({
+        me._again = Again.create({
             reinitializeOn: {
                 'hidden': false,
                 'visible': true
@@ -31,7 +31,7 @@
     }
 
     VisTimer.prototype.start = function(checkIntervalVisible, checkIntervalHidden) {
-        if(!!this._$$started) {
+        if(!!this._started) {
             return false;
         }
 
@@ -40,21 +40,21 @@
             me._config.checkIntervalHidden = checkIntervalHidden || me._config.checkIntervalHidden;
 
             var triggerVisMonUpdate = function() {
-                me._$$vismon.update();
+                me._vismon.update();
             };
 
             var triggerSelfUpdate = function() {
-                var hasPrev = !!me._$$vismon.status().prev();
-                var isHidden = me._$$vismon.status().isHidden();
-                var wasHidden = me._$$vismon.status().wasHidden();
+                var hasPrev = !!me._vismon.status().prev();
+                var isHidden = me._vismon.status().isHidden();
+                var wasHidden = me._vismon.status().wasHidden();
 
                 if (isHidden !== wasHidden || !hasPrev) {
-                    me._$$again.update(!!isHidden ? 'hidden' : 'visible');
+                    me._again.update(!!isHidden ? 'hidden' : 'visible');
                 }
             };
 
-            me._$$vismon.onHidden(triggerSelfUpdate);
-            me._$$vismon.onVisible(triggerSelfUpdate);
+            me._vismon.onHidden(triggerSelfUpdate);
+            me._vismon.onVisible(triggerSelfUpdate);
 
             // react on tab changes
             VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
@@ -76,7 +76,7 @@
     };
 
     VisTimer.prototype.vismon = function() {
-        return this._$$vismon;
+        return this._vismon;
     };
 
     /*
@@ -89,8 +89,8 @@
             hiddenInterval = 0;
         }
         var me = this;
-        return this._$$again.every(function() {
-            callback(me._$$vismon);
+        return this._again.every(function() {
+            callback(me._vismon);
         }, {
             'visible': interval,
             'hidden': hiddenInterval
@@ -98,7 +98,7 @@
     };
 
     VisTimer.prototype.stop = function(id) {
-        return this._$$again.stop(id);
+        return this._again.stop(id);
     };
 
     /**
@@ -107,7 +107,7 @@
     * the object is unusable after this call.
     */
     VisTimer.prototype.destroy = function() {
-        return this._$$again.stopAll();
+        return this._again.stopAll();
     };
 
     VisSense.fn.timer = function(incomingConfig) {
@@ -117,13 +117,13 @@
             return new VisTimer(this.monitor({ detached : true }), config);
         }
 
-        if(this._$$timer) {
-            return this._$$timer;
+        if(this._timer) {
+            return this._timer;
         }
 
-        this._$$timer = new VisTimer(this.monitor(), config);
+        this._timer = new VisTimer(this.monitor(), config);
 
-        return this._$$timer;
+        return this._timer;
     };
 
 }(window, window.Again, window.VisSense, window.VisSenseUtils));

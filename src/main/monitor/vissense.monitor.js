@@ -67,32 +67,32 @@
     function VisMon(visobj) {
         var me = this;
 
-        me._$$visobj = visobj;
-        me._$$lastListenerId = -1;
-        me._$$status = null;
-        me._$$listeners = {};
+        me._visobj = visobj;
+        me._lastListenerId = -1;
+        me._status = null;
+        me._listeners = {};
     }
 
     // "read-only" access to VisSense instance
     VisMon.prototype.visobj = function() {
-        return this._$$visobj;
+        return this._visobj;
     };
 
     /**
     * "read-only" access to status
     */
     VisMon.prototype.status = function() {
-        return this._$$status;
+        return this._status;
     };
 
     VisMon.prototype.percentage = function() {
-        return this._$$status.percentage();
+        return this._status.percentage();
     };
     /**
     * read-only access to status
     */
     VisMon.prototype.prev = function() {
-        return this._$$status.prev();
+        return this._status.prev();
     };
 
     // Adds a listener that will be called on update().
@@ -101,13 +101,13 @@
     //   doSomething();
     // });
     VisMon.prototype._bind = function(callback) {
-        this._$$lastListenerId += 1;
-        this._$$listeners[this._$$lastListenerId] = callback;
-        return this._$$lastListenerId;
+        this._lastListenerId += 1;
+        this._listeners[this._lastListenerId] = callback;
+        return this._lastListenerId;
     };
 
     VisMon.prototype.off = function(listenerId) {
-        delete this._$$listeners[listenerId];
+        delete this._listeners[listenerId];
         return true;
     };
 
@@ -116,9 +116,9 @@
     */
     VisMon.prototype.update = function() {
         // update status
-        this._$$status = nextState(this._$$visobj, this._$$status);
+        this._status = nextState(this._visobj, this._status);
         // notify listeners
-        fireListeners(this._$$listeners, this);
+        fireListeners(this._listeners, this);
     };
 
     /**
@@ -249,13 +249,13 @@
             return new VisMon(this, config);
         }
 
-        if(this._$$monitor) {
-            return this._$$monitor;
+        if(this._monitor) {
+            return this._monitor;
         }
 
-        this._$$monitor = new VisMon(this, config);
+        this._monitor = new VisMon(this, config);
 
-        return this._$$monitor;
+        return this._monitor;
     };
 
 }(window, window.VisSense, window.VisSenseUtils));

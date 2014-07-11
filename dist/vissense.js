@@ -1,6 +1,6 @@
-/*! vissense - v0.0.1 - 2014-06-29
+/*! vissense - v0.0.1 - 2014-07-11
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-29
+/*! vissense - v0.0.1 - 2014-07-11
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
@@ -735,11 +735,11 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
-/*! vissense - v0.0.1 - 2014-06-29
+/*! vissense - v0.0.1 - 2014-07-11
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-29
+/*! vissense - v0.0.1 - 2014-07-11
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-06-29
+/*! vissense - v0.0.1 - 2014-07-11
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -1518,53 +1518,53 @@ UniformSample.prototype.update = function(val) {
     };
 
     function VisState(state, percentage, prev) {
-        this._$$state = state;
-        this._$$percentage = percentage;
-        this._$$prev = prev;
+        this._state = state;
+        this._percentage = percentage;
+        this._prev = prev;
     }
 
     VisState.prototype.isVisible = function() {
-        return this._$$state ===  STATES.VISIBLE || this.isFullyVisible();
+        return this._state ===  STATES.VISIBLE || this.isFullyVisible();
     };
 
     VisState.prototype.isFullyVisible = function() {
-        return this._$$state ===  STATES.FULLY_VISIBLE;
+        return this._state ===  STATES.FULLY_VISIBLE;
     };
 
     VisState.prototype.isHidden = function() {
-        return this._$$state ===  STATES.HIDDEN;
+        return this._state ===  STATES.HIDDEN;
     };
 
     VisState.prototype.state = function() {
-        return this._$$state;
+        return this._state;
     };
 
     VisState.prototype.wasVisible = function() {
-        return !!this._$$prev && this._$$prev.isVisible();
+        return !!this._prev && this._prev.isVisible();
     };
 
     VisState.prototype.wasFullyVisible = function() {
-        return !!this._$$prev && this._$$prev.isFullyVisible();
+        return !!this._prev && this._prev.isFullyVisible();
     };
 
     VisState.prototype.wasHidden = function() {
-        return !!this._$$prev && this._$$prev.isHidden();
+        return !!this._prev && this._prev.isHidden();
     };
 
     VisState.prototype.hasVisibilityChanged = function() {
-        return !this._$$prev || this._$$state !== this._$$prev._$$state;
+        return !this._prev || this._state !== this._prev._state;
     };
 
     VisState.prototype.prev = function() {
-        return this._$$prev;
+        return this._prev;
     };
 
     VisState.prototype.hasPercentageChanged = function() {
-        return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
+        return !this._prev || this._percentage !== this._prev._percentage;
     };
 
     VisState.prototype.percentage = function() {
-        return this._$$percentage;
+        return this._percentage;
     };
 
     function state(status, percentage, prev) {
@@ -1652,32 +1652,32 @@ UniformSample.prototype.update = function(val) {
     function VisMon(visobj) {
         var me = this;
 
-        me._$$visobj = visobj;
-        me._$$lastListenerId = -1;
-        me._$$status = null;
-        me._$$listeners = {};
+        me._visobj = visobj;
+        me._lastListenerId = -1;
+        me._status = null;
+        me._listeners = {};
     }
 
     // "read-only" access to VisSense instance
     VisMon.prototype.visobj = function() {
-        return this._$$visobj;
+        return this._visobj;
     };
 
     /**
     * "read-only" access to status
     */
     VisMon.prototype.status = function() {
-        return this._$$status;
+        return this._status;
     };
 
     VisMon.prototype.percentage = function() {
-        return this._$$status.percentage();
+        return this._status.percentage();
     };
     /**
     * read-only access to status
     */
     VisMon.prototype.prev = function() {
-        return this._$$status.prev();
+        return this._status.prev();
     };
 
     // Adds a listener that will be called on update().
@@ -1686,13 +1686,13 @@ UniformSample.prototype.update = function(val) {
     //   doSomething();
     // });
     VisMon.prototype._bind = function(callback) {
-        this._$$lastListenerId += 1;
-        this._$$listeners[this._$$lastListenerId] = callback;
-        return this._$$lastListenerId;
+        this._lastListenerId += 1;
+        this._listeners[this._lastListenerId] = callback;
+        return this._lastListenerId;
     };
 
     VisMon.prototype.off = function(listenerId) {
-        delete this._$$listeners[listenerId];
+        delete this._listeners[listenerId];
         return true;
     };
 
@@ -1701,9 +1701,9 @@ UniformSample.prototype.update = function(val) {
     */
     VisMon.prototype.update = function() {
         // update status
-        this._$$status = nextState(this._$$visobj, this._$$status);
+        this._status = nextState(this._visobj, this._status);
         // notify listeners
-        fireListeners(this._$$listeners, this);
+        fireListeners(this._listeners, this);
     };
 
     /**
@@ -1834,17 +1834,17 @@ UniformSample.prototype.update = function(val) {
             return new VisMon(this, config);
         }
 
-        if(this._$$monitor) {
-            return this._$$monitor;
+        if(this._monitor) {
+            return this._monitor;
         }
 
-        this._$$monitor = new VisMon(this, config);
+        this._monitor = new VisMon(this, config);
 
-        return this._$$monitor;
+        return this._monitor;
     };
 
 }(window, window.VisSense, window.VisSenseUtils));
-!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(runner(),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){var me=this;me._$$lastTimerId=-1,me._$$timers={},me._$$initialized=!1,me._$$config=config||{},me._$$state=null,this._$$config.reinitializeOn=this._$$config.reinitializeOn||{}}var version="0.0.9";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals, runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId;return this._$$timers[id]={callback:callback,intervals:stateIntervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=function(config){return new Again(config||{})},window.Again.version=version,window.Again.create=window.Again}(window);
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(setTimeout(function(){runner()},0),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){return this instanceof Again?(this._$$initialized=!1,this._$$state=null,this._$$lastTimerId=-1,this._$$timers={},this._$$config=config||{},void(this._$$config.reinitializeOn=this._$$config.reinitializeOn||{})):new Again(config)}var version="0.0.10";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals,runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId,intervals=stateIntervals;return parseFloat(stateIntervals)===stateIntervals&&(intervals={"*":parseFloat(stateIntervals)}),this._$$timers[id]={callback:callback,intervals:intervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state]||+timer.intervals["*"];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=Again,window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */
@@ -1854,14 +1854,14 @@ UniformSample.prototype.update = function(val) {
     function VisTimer(vismon, config) {
         var me = this;
 
-        me._$$vismon = vismon;
+        me._vismon = vismon;
         me._config = config || {};
 
         me._config.reinitializeImmediatelyOnHidden = true;
         me._config.checkIntervalVisible = 100;
         me._config.checkIntervalHidden = 100;
 
-        me._$$again = Again.create({
+        me._again = Again.create({
             reinitializeOn: {
                 'hidden': false,
                 'visible': true
@@ -1872,7 +1872,7 @@ UniformSample.prototype.update = function(val) {
     }
 
     VisTimer.prototype.start = function(checkIntervalVisible, checkIntervalHidden) {
-        if(!!this._$$started) {
+        if(!!this._started) {
             return false;
         }
 
@@ -1881,21 +1881,21 @@ UniformSample.prototype.update = function(val) {
             me._config.checkIntervalHidden = checkIntervalHidden || me._config.checkIntervalHidden;
 
             var triggerVisMonUpdate = function() {
-                me._$$vismon.update();
+                me._vismon.update();
             };
 
             var triggerSelfUpdate = function() {
-                var hasPrev = !!me._$$vismon.status().prev();
-                var isHidden = me._$$vismon.status().isHidden();
-                var wasHidden = me._$$vismon.status().wasHidden();
+                var hasPrev = !!me._vismon.status().prev();
+                var isHidden = me._vismon.status().isHidden();
+                var wasHidden = me._vismon.status().wasHidden();
 
                 if (isHidden !== wasHidden || !hasPrev) {
-                    me._$$again.update(!!isHidden ? 'hidden' : 'visible');
+                    me._again.update(!!isHidden ? 'hidden' : 'visible');
                 }
             };
 
-            me._$$vismon.onHidden(triggerSelfUpdate);
-            me._$$vismon.onVisible(triggerSelfUpdate);
+            me._vismon.onHidden(triggerSelfUpdate);
+            me._vismon.onVisible(triggerSelfUpdate);
 
             // react on tab changes
             VisSenseUtils.onPageVisibilityChange(triggerVisMonUpdate);
@@ -1917,7 +1917,7 @@ UniformSample.prototype.update = function(val) {
     };
 
     VisTimer.prototype.vismon = function() {
-        return this._$$vismon;
+        return this._vismon;
     };
 
     /*
@@ -1930,8 +1930,8 @@ UniformSample.prototype.update = function(val) {
             hiddenInterval = 0;
         }
         var me = this;
-        return this._$$again.every(function() {
-            callback(me._$$vismon);
+        return this._again.every(function() {
+            callback(me._vismon);
         }, {
             'visible': interval,
             'hidden': hiddenInterval
@@ -1939,7 +1939,7 @@ UniformSample.prototype.update = function(val) {
     };
 
     VisTimer.prototype.stop = function(id) {
-        return this._$$again.stop(id);
+        return this._again.stop(id);
     };
 
     /**
@@ -1948,7 +1948,7 @@ UniformSample.prototype.update = function(val) {
     * the object is unusable after this call.
     */
     VisTimer.prototype.destroy = function() {
-        return this._$$again.stopAll();
+        return this._again.stopAll();
     };
 
     VisSense.fn.timer = function(incomingConfig) {
@@ -1958,13 +1958,13 @@ UniformSample.prototype.update = function(val) {
             return new VisTimer(this.monitor({ detached : true }), config);
         }
 
-        if(this._$$timer) {
-            return this._$$timer;
+        if(this._timer) {
+            return this._timer;
         }
 
-        this._$$timer = new VisTimer(this.monitor(), config);
+        this._timer = new VisTimer(this.monitor(), config);
 
-        return this._$$timer;
+        return this._timer;
     };
 
 }(window, window.Again, window.VisSense, window.VisSenseUtils));
@@ -2234,13 +2234,13 @@ UniformSample.prototype.update = function(val) {
             return new VisMetrics(this.timer({ detached : true }), config);
         }
 
-        if(this._$$metrics) {
-            return this._$$metrics;
+        if(this._metrics) {
+            return this._metrics;
         }
 
-        this._$$metrics = new VisMetrics(this.timer(), config);
+        this._metrics = new VisMetrics(this.timer(), config);
 
-        return this._$$metrics;
+        return this._metrics;
     };
 
 }(window, window.VisSense, window.VisSenseUtils, window.brwsrfyMetrics));
@@ -2437,11 +2437,11 @@ UniformSample.prototype.update = function(val) {
     }
 
     VisSense.fn.client = function(config) {
-        if(this._$$client) {
-            return this._$$client;
+        if(this._client) {
+            return this._client;
         }
-        this._$$client = newVisClient(this, config);
-        return this._$$client;
+        this._client = newVisClient(this, config);
+        return this._client;
     };
 
     VisSense.client = newVisClient;

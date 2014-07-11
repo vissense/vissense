@@ -75,11 +75,11 @@
     }
 
     VisSense.fn.client = function(config) {
-        if(this._$$client) {
-            return this._$$client;
+        if(this._client) {
+            return this._client;
         }
-        this._$$client = newVisClient(this, config);
-        return this._$$client;
+        this._client = newVisClient(this, config);
+        return this._client;
     };
 
     VisSense.client = newVisClient;

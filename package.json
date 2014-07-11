@@ -1,6 +1,6 @@
 {
   "name": "vissense",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "author": {
     "name": "tbk"
@@ -16,6 +16,7 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-watch": "~0.6.1",
-    "time-grunt": "^0.3.2"
+    "time-grunt": "^0.3.2",
+    "grunt-bump": "0.0.14"
   }
 }

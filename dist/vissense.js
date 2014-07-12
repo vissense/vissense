@@ -1,5 +1,6 @@
 /*! vissense - v0.0.2 - 2014-07-12
 * Copyright (c) 2014 tbk;*/
+!function(window,document){"use strict";var Cache=function(){var events=[],_push=function(){return events.push(arguments),events.length-1};return{add:function(obj,type,fn,capture){if(obj.addEventListener)return obj.addEventListener(type,fn,!!capture),_push(obj,type,fn,!!capture);if(obj.attachEvent){var t="DOMContentLoaded"===type?"readystatechange":type;return obj.attachEvent("on"+t,function(){fn.call(obj,window.event)}),_push(obj,t,fn)}return-1},remove:function(i){var item=events[i];return item&&item[0]&&item[1]&&item[2]&&(item[0].removeEventListener?item[0].removeEventListener(item[1],item[2],item[3]):item[0].detachEvent&&item[0].detachEvent("on"+item[1],item[2]),events[i]=null),item},_removeAll:function(){for(var i=events.length-1;i>=0;i--)this.remove(i)}}}(),createEvent=function(eventName){var event;return document.createEvent?(event=document.createEvent("HTMLEvents"),event.initEvent(eventName,!0,!0)):(event=document.createEventObject(),event.eventType=eventName),event.eventName=eventName,event},dispatchEvent=function(element,event){return document.createEvent?element.dispatchEvent(event):element.fireEvent("on"+event.eventType,event)};Cache.add(window,"unload",function(){Cache._removeAll()}),window.Happenings={version:"0.0.1",addEvent:Cache.add,removeEvent:Cache.remove,createEvent:createEvent,dispatchEvent:dispatchEvent}}(window,window.document);
 /*! vissense - v0.0.2 - 2014-07-12
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -2198,67 +2199,7 @@ UniformSample.prototype.update = function(val) {
     };
 
 }(this, this.VisSense));
-/**
- * depends on ['vissense.utils']
- */
- ;(function(window, VisSenseUtils) {
-    'use strict';
-    /*--------------------------------------------------------------------------*/
-    // http://dustindiaz.com/rock-solid-addevent
-    var EventCache = (function () {
-        var listEvents = [];
-        var remove = function(i) {
-            var item = listEvents[i];
-            if(!!item[0] && !!item[1] && !!item[2]) {
-                if (item[0].removeEventListener) {
-                    item[0].removeEventListener(item[1], item[2], item[3]);
-                } else if (item[0].detachEvent) {
-                    item[0].detachEvent('on' + item[1], item[2]);
-                    item[0][item[1]+item[2]] = null;
-                    item[0]['e'+item[1]+item[2]] = null;
-                }
-            }
-            return item;
-        };
-        return {
-            listEvents: listEvents,
-            add: function(/*node, sEventName, fHandler*/) {
-                listEvents.push(arguments);
-                return listEvents.length - 1;
-            },
-            remove: remove,
-            flush: function() {
-                var i;
-                for (i = listEvents.length - 1; i >= 0; i = i - 1) {
-                    remove(i);
-                }
-            }
-        };
-    })();
-
-    function addEvent(obj, type, fn) {
-        var t = (type === 'DOMContentLoaded') ? 'readystatechange' : type;
-        if (obj.addEventListener) {
-            obj.addEventListener(type, fn, false);
-            return EventCache.add(obj, type, fn);
-        } else if (obj.attachEvent) {
-            obj['e' + t + fn] = fn;
-            obj[t + fn] = function () {
-                obj['e' + t + fn].call(obj, window.event);
-            };
-            obj.attachEvent('on' + t, obj[t + fn]);
-            return EventCache.add(obj, t, fn);
-        }
-        return -1;
-    }
-
-    // flush all remaining events
-    addEvent(window, 'unload', EventCache.flush);
-
-    VisSenseUtils.addEvent = addEvent;
-
-}.call(this, this, this.VisSenseUtils));
-;(function(window, VisSense, VisSenseUtils, undefined) {
+;(function(window, VisSense, VisSenseUtils, Happenings, undefined) {
   'use strict';
 
   VisSense.newNetwork = function(config) {
@@ -2302,7 +2243,7 @@ UniformSample.prototype.update = function(val) {
     });
 
 
-    VisSenseUtils.addEvent(window, 'load', function(e/*jshint unused:false*/) {
+    Happenings.addEvent(window, 'load', function(e/*jshint unused:false*/) {
         var ua = window.navigator.userAgent;
         var environment = {
             osver : ( typeof window.device !== 'undefined' ) ? window.device.version
@@ -2316,7 +2257,7 @@ UniformSample.prototype.update = function(val) {
         network.send('load', 'POST');
     });
 
-    VisSenseUtils.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
+    Happenings.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
         //console.log('VisClient: ' + e);
 
         network.send('beforeunload', 'POST');
@@ -2339,4 +2280,4 @@ UniformSample.prototype.update = function(val) {
     VisSense.client = newVisClient;
     VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}.call(this, window, window.VisSense, window.VisSenseUtils, window.Happenings));

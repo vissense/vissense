@@ -29,7 +29,8 @@
   "dependencies": {
     "visibilityjs": "~1.2.1",
     "brwsrfy-metrics": "*",
-    "againjs": "theborakompanioni/againjs#master",
-    "countonmejs": "theborakompanioni/countonmejs#master"
+    "againjs": "theborakompanioni/againjs#0.0.11",
+    "countonmejs": "theborakompanioni/countonmejs#0.1.0",
+    "happeningsjs": "theborakompanioni/happeningsjs#0.0.1"
   }
 }

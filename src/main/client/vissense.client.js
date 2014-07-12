@@ -4,7 +4,7 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, VisSense, VisSenseUtils, undefined) {
+;(function(window, VisSense, VisSenseUtils, Happenings, undefined) {
   'use strict';
 
   VisSense.newNetwork = function(config) {
@@ -48,7 +48,7 @@
     });
 
 
-    VisSenseUtils.addEvent(window, 'load', function(e/*jshint unused:false*/) {
+    Happenings.addEvent(window, 'load', function(e/*jshint unused:false*/) {
         var ua = window.navigator.userAgent;
         var environment = {
             osver : ( typeof window.device !== 'undefined' ) ? window.device.version
@@ -62,7 +62,7 @@
         network.send('load', 'POST');
     });
 
-    VisSenseUtils.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
+    Happenings.addEvent(window, 'beforeunload', function(e/*jshint unused:false*/) {
         //console.log('VisClient: ' + e);
 
         network.send('beforeunload', 'POST');
@@ -85,4 +85,4 @@
     VisSense.client = newVisClient;
     VisSense.client(null); // temporary call to client for demo purposes only TODO: remove afterwards
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}.call(this, window, window.VisSense, window.VisSenseUtils, window.Happenings));

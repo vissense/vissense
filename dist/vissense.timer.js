@@ -1,9 +1,6 @@
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
 ;(function (global) {
     "use strict";
 

@@ -1,5 +1,4 @@
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
 Report = _dereq_('./node_modules/metrics/reporting/report');
@@ -734,12 +733,9 @@ UniformSample.prototype.update = function(val) {
 (1)
 });
 !function(window){"use strict";!function(window){Date.now||(Date.now=function(){return(new Date).getTime()}),window.performance||(window.performance=window.performance||{},window.performance.now=window.performance.now||window.performance.mozNow||window.performance.msNow||window.performance.oNow||window.performance.webkitNow||Date.now)}(window);var Counter=function(){function Counter(val){return this instanceof Counter?((+val!==val||0>val)&&(val=0),void(this._$={i:val})):new Counter(val)}var MAX_VALUE=Math.pow(2,32),check=function(val){return+val!==val?1:+val};return Counter.MAX_VALUE=MAX_VALUE,Counter.prototype.inc=function(val){return this.set(this.get()+check(val)),this.get()},Counter.prototype.dec=function(val){return this.inc(-1*check(val))},Counter.prototype.clear=function(){var val=this._$.i;return this._$.i=0,val},Counter.prototype.get=function(){return this._$.i},Counter.prototype.set=function(val){return this._$.i=check(val),this._$.i<0?this._$.i=0:this._$.i>MAX_VALUE&&(this._$.i-=MAX_VALUE),this.get()},Counter}(),StopWatch=function(){function StopWatch(config){return this instanceof StopWatch?(this._config=config||{},this._config.performance=this._config.performance!==!1,void(this._$={ts:0,te:0,r:!1})):new StopWatch(config)}var now=function(performance){return performance?window.performance.now():Date.now()},asNumberOr=function(optNumber,fallback){return+optNumber===optNumber?+optNumber:fallback};return StopWatch.prototype._orNow=function(optNow){return asNumberOr(optNow,now(this._config.performance))},StopWatch.prototype.startIf=function(condition,optNow){return condition&&(this._$.r=!0,this._$.ts=this._orNow(optNow),this._$.te=null),this},StopWatch.prototype.start=function(optNow){return this.startIf(!this._$.r,optNow)},StopWatch.prototype.forceStart=function(optNow){return this.startIf(!0,optNow)},StopWatch.prototype.restart=function(optNow){return this.forceStart(optNow)},StopWatch.prototype.stop=function(optNow){return this.stopIf(!0,optNow)},StopWatch.prototype.stopIf=function(condition,optNow){return this._$.r&&condition&&(this._$.te=this._orNow(optNow),this._$.r=!1),this},StopWatch.prototype.interim=function(optNow){return this._$.r?this._orNow(optNow)-this._$.ts:0},StopWatch.prototype.time=StopWatch.prototype.interim,StopWatch.prototype.get=function(optNow){return this._$.te?this._$.te-this._$.ts:this.time(optNow)},StopWatch.prototype.running=function(){return this._$.r},StopWatch.prototype.getAndRestartIf=function(condition,optNow){var time=this.get(optNow);return condition&&this.restart(optNow),time},StopWatch}();window.CountOnMe={version:"0.1.0",counter:Counter,stopwatch:StopWatch}}(window);
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.3 - 2014-07-12
-* Copyright (c) 2014 tbk;*/
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.0.3", "copyright": "(c) 2014 tbk" } */
 ;(function (global) {
     "use strict";
 

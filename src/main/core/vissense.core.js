@@ -89,11 +89,12 @@
 
     VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
-  /*--------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------*/
 
-  VisSense.fn = VisSense.prototype;
+    VisSense.fn = VisSense.prototype;
 
-  // export VisSense
-  window.VisSense = VisSense;
+    // export VisSense
+    window.VisSense = VisSense;
+    window.VisSense.version = '0.0.1';
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));

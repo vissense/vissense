@@ -163,13 +163,14 @@
             return new VisMetrics(this.timer({ detached : true }), config);
         }
 
-        if(this._$$metrics) {
-            return this._$$metrics;
+        if(this._metrics) {
+            return this._metrics;
         }
 
-        this._$$metrics = new VisMetrics(this.timer(), config);
+        this._metrics = new VisMetrics(this.timer(), config);
 
-        return this._$$metrics;
+        return this._metrics;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils, this.CountOnMe, this.brwsrfyMetrics));
+}.call(this, window, window.VisSense, window.VisSenseUtils, window.CountOnMe, window.brwsrfyMetrics));
+

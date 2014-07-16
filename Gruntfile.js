@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
     'use strict';
+
     require('time-grunt')(grunt);
 
     grunt.initConfig({
@@ -10,6 +11,10 @@ module.exports = function (grunt) {
             '<%= pkg.homepage ? "\\"homepage\\": \\"" + pkg.homepage + "\\"," : "" %>' +
             '"copyright": "(c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>" ' +
         '} */\n',
+
+        dirs :{
+            coverage: './bin/coverage'
+        },
 
         concat: {
             options: {
@@ -118,6 +123,47 @@ module.exports = function (grunt) {
                 'src/test/**/*.html'
             ]
         },
+
+        jasmine: {
+            js: {
+                src: 'dist/vissense.client.js',
+                options: {
+                    display: 'full',
+                    summary: true,
+                    specs: 'spec/*Spec.js',
+                    helpers: 'spec/*Helper.js'
+                }
+            },
+            coverage: {
+                src: ['dist/vissense.client.js'],
+                options: {
+                    specs: ['spec/*Spec.js'],
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: '<%= dirs.coverage %>/coverage.json',
+                        report: [{
+                                type: 'html',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/html'
+                                }
+                            }, {
+                                type: 'cobertura',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/cobertura'
+                                }
+                            }, {
+                                type: 'lcov',
+                                options: {
+                                    dir: '<%= dirs.coverage %>/lcov'
+                                }
+                            }, {
+                                type: 'text-summary'
+                            }
+                        ]
+                    }
+                }
+            }
+        },
         connect: {
             server: {
                 options: {
@@ -151,19 +197,43 @@ module.exports = function (grunt) {
                 pushTo: 'upstream',
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
+            }
+        },
+        notify: {
+            js: {
+                options: {
+                    title: 'Javascript - <%= pkg.title %>',
+                    message: 'Minified and validated with success!'
+                }
+            },
+            test: {
+                options: {
+                    title: 'Javascript - <%= pkg.title %>',
+                    message: 'Tests successfully finished!'
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-karma');
 
-    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test']);
+    grunt.loadNpmTasks('grunt-notify');
+
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
+
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'qunit']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'qunit', 'notify:test']);
 };
 

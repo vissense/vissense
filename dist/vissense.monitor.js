@@ -237,7 +237,7 @@
       }());
     }
 
-}.call(this, this));
+}(window));
 ;(function(window, undefined) {
   'use strict';
 
@@ -260,7 +260,7 @@
         fireIf: fireIf
     };
 
-}.call(this, this));
+}(window));
 /**
  * depends on ['vissense.utils']
  */
@@ -326,7 +326,7 @@
     defer:defer
   });
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, Visibility) {
   'use strict';
 
@@ -351,7 +351,8 @@
     VisSenseUtils.isPageVisible = isPageVisible;
     VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
 
-}.call(this, this, this.VisSenseUtils, this.Visibility));
+
+}(window, window.VisSenseUtils, window.Visibility));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -451,7 +452,7 @@
     VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
     VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /**
  * Exports following functions to VisSenseUtils
  *
@@ -523,7 +524,7 @@
     VisSenseUtils.isInViewport = isInViewport;
     VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 /*
  *
  * - percentage
@@ -586,7 +587,7 @@
     VisSenseUtils.isVisible = isVisible;
     VisSenseUtils.isHidden = isHidden;
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));
 ;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
@@ -649,7 +650,7 @@
         return support;
     };
 
-}.call(this, this, this.VisSenseUtils));
+}(window, window.VisSenseUtils));
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 
@@ -735,14 +736,15 @@
 
     VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
 
-  /*--------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------*/
 
-  VisSense.fn = VisSense.prototype;
+    VisSense.fn = VisSense.prototype;
 
-  // export VisSense
-  window.VisSense = VisSense;
+    // export VisSense
+    window.VisSense = VisSense;
+    window.VisSense.version = '0.0.1';
 
-}.call(this, this, this.Math, this.VisSenseUtils));
+}(window, Math, window.VisSenseUtils));
 /**
  * detects visibility changes of an element.
  *
@@ -775,53 +777,53 @@
     };
 
     function VisState(state, percentage, prev) {
-        this._$$state = state;
-        this._$$percentage = percentage;
-        this._$$prev = prev;
+        this._state = state;
+        this._percentage = percentage;
+        this._prev = prev;
     }
 
     VisState.prototype.isVisible = function() {
-        return this._$$state ===  STATES.VISIBLE || this.isFullyVisible();
+        return this._state ===  STATES.VISIBLE || this.isFullyVisible();
     };
 
     VisState.prototype.isFullyVisible = function() {
-        return this._$$state ===  STATES.FULLY_VISIBLE;
+        return this._state ===  STATES.FULLY_VISIBLE;
     };
 
     VisState.prototype.isHidden = function() {
-        return this._$$state ===  STATES.HIDDEN;
+        return this._state ===  STATES.HIDDEN;
     };
 
     VisState.prototype.state = function() {
-        return this._$$state;
+        return this._state;
     };
 
     VisState.prototype.wasVisible = function() {
-        return !!this._$$prev && this._$$prev.isVisible();
+        return !!this._prev && this._prev.isVisible();
     };
 
     VisState.prototype.wasFullyVisible = function() {
-        return !!this._$$prev && this._$$prev.isFullyVisible();
+        return !!this._prev && this._prev.isFullyVisible();
     };
 
     VisState.prototype.wasHidden = function() {
-        return !!this._$$prev && this._$$prev.isHidden();
+        return !!this._prev && this._prev.isHidden();
     };
 
     VisState.prototype.hasVisibilityChanged = function() {
-        return !this._$$prev || this._$$state !== this._$$prev._$$state;
+        return !this._prev || this._state !== this._prev._state;
     };
 
     VisState.prototype.prev = function() {
-        return this._$$prev;
+        return this._prev;
     };
 
     VisState.prototype.hasPercentageChanged = function() {
-        return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
+        return !this._prev || this._percentage !== this._prev._percentage;
     };
 
     VisState.prototype.percentage = function() {
-        return this._$$percentage;
+        return this._percentage;
     };
 
     function state(status, percentage, prev) {
@@ -846,7 +848,7 @@
         }
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));
 /**
  * detects visibility changes of an element.
  *
@@ -909,32 +911,32 @@
     function VisMon(visobj) {
         var me = this;
 
-        me._$$visobj = visobj;
-        me._$$lastListenerId = -1;
-        me._$$status = null;
-        me._$$listeners = {};
+        me._visobj = visobj;
+        me._lastListenerId = -1;
+        me._status = null;
+        me._listeners = {};
     }
 
     // "read-only" access to VisSense instance
     VisMon.prototype.visobj = function() {
-        return this._$$visobj;
+        return this._visobj;
     };
 
     /**
     * "read-only" access to status
     */
     VisMon.prototype.status = function() {
-        return this._$$status;
+        return this._status;
     };
 
     VisMon.prototype.percentage = function() {
-        return this._$$status.percentage();
+        return this._status.percentage();
     };
     /**
     * read-only access to status
     */
     VisMon.prototype.prev = function() {
-        return this._$$status.prev();
+        return this._status.prev();
     };
 
     // Adds a listener that will be called on update().
@@ -943,13 +945,13 @@
     //   doSomething();
     // });
     VisMon.prototype._bind = function(callback) {
-        this._$$lastListenerId += 1;
-        this._$$listeners[this._$$lastListenerId] = callback;
-        return this._$$lastListenerId;
+        this._lastListenerId += 1;
+        this._listeners[this._lastListenerId] = callback;
+        return this._lastListenerId;
     };
 
     VisMon.prototype.off = function(listenerId) {
-        delete this._$$listeners[listenerId];
+        delete this._listeners[listenerId];
         return true;
     };
 
@@ -958,9 +960,9 @@
     */
     VisMon.prototype.update = function() {
         // update status
-        this._$$status = nextState(this._$$visobj, this._$$status);
+        this._status = nextState(this._visobj, this._status);
         // notify listeners
-        fireListeners(this._$$listeners, this);
+        fireListeners(this._listeners, this);
     };
 
     /**
@@ -1091,13 +1093,13 @@
             return new VisMon(this, config);
         }
 
-        if(this._$$monitor) {
-            return this._$$monitor;
+        if(this._monitor) {
+            return this._monitor;
         }
 
-        this._$$monitor = new VisMon(this, config);
+        this._monitor = new VisMon(this, config);
 
-        return this._$$monitor;
+        return this._monitor;
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));

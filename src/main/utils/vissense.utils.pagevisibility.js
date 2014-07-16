@@ -28,4 +28,5 @@
     VisSenseUtils.isPageVisible = isPageVisible;
     VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
 
-}.call(this, this, this.VisSenseUtils, this.Visibility));
+
+}(window, window.VisSenseUtils, window.Visibility));

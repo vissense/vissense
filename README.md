@@ -4,6 +4,20 @@
 
 A utility library for detecting visibility of DOM element
 
+## Get Started
+
+Install dependencies
+
+`sudo npm install && bower install`
+
+Build Project
+
+`grunt`
+
+Run Tests
+
+Open `SpecRunner.html` in your browser and test with jasmine
+
 ## utils
 ### What it does
  * provides methods for detecting visibility of DOM elements

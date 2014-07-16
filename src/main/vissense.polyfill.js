@@ -45,4 +45,4 @@
       }());
     }
 
-}.call(this, this));
+}(window));

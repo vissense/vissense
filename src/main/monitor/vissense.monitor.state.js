@@ -37,53 +37,53 @@
     };
 
     function VisState(state, percentage, prev) {
-        this._$$state = state;
-        this._$$percentage = percentage;
-        this._$$prev = prev;
+        this._state = state;
+        this._percentage = percentage;
+        this._prev = prev;
     }
 
     VisState.prototype.isVisible = function() {
-        return this._$$state ===  STATES.VISIBLE || this.isFullyVisible();
+        return this._state ===  STATES.VISIBLE || this.isFullyVisible();
     };
 
     VisState.prototype.isFullyVisible = function() {
-        return this._$$state ===  STATES.FULLY_VISIBLE;
+        return this._state ===  STATES.FULLY_VISIBLE;
     };
 
     VisState.prototype.isHidden = function() {
-        return this._$$state ===  STATES.HIDDEN;
+        return this._state ===  STATES.HIDDEN;
     };
 
     VisState.prototype.state = function() {
-        return this._$$state;
+        return this._state;
     };
 
     VisState.prototype.wasVisible = function() {
-        return !!this._$$prev && this._$$prev.isVisible();
+        return !!this._prev && this._prev.isVisible();
     };
 
     VisState.prototype.wasFullyVisible = function() {
-        return !!this._$$prev && this._$$prev.isFullyVisible();
+        return !!this._prev && this._prev.isFullyVisible();
     };
 
     VisState.prototype.wasHidden = function() {
-        return !!this._$$prev && this._$$prev.isHidden();
+        return !!this._prev && this._prev.isHidden();
     };
 
     VisState.prototype.hasVisibilityChanged = function() {
-        return !this._$$prev || this._$$state !== this._$$prev._$$state;
+        return !this._prev || this._state !== this._prev._state;
     };
 
     VisState.prototype.prev = function() {
-        return this._$$prev;
+        return this._prev;
     };
 
     VisState.prototype.hasPercentageChanged = function() {
-        return !this._$$prev || this._$$percentage !== this._$$prev._$$percentage;
+        return !this._prev || this._percentage !== this._prev._percentage;
     };
 
     VisState.prototype.percentage = function() {
-        return this._$$percentage;
+        return this._percentage;
     };
 
     function state(status, percentage, prev) {
@@ -108,4 +108,4 @@
         }
     };
 
-}.call(this, this, this.VisSense, this.VisSenseUtils));
+}(window, window.VisSense, window.VisSenseUtils));

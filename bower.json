@@ -24,7 +24,7 @@
   ],
   "devDependencies": {
     "qunit": "~1.14.0",
-    "jasmine": "2.0.0"
+    "jasmine": "~2.0.0"
   },
   "dependencies": {
     "visibilityjs": "~1.2.1",

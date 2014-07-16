@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="1015"  lines-covered="480"  line-rate="0.4729"  branches-valid="497"  branches-covered="172"  branch-rate="0.3461"  timestamp="1405111952577" complexity="0" version="0.1">
+<coverage lines-valid="1015"  lines-covered="480"  line-rate="0.4729"  branches-valid="497"  branches-covered="172"  branch-rate="0.3461"  timestamp="1405550113985" complexity="0" version="0.1">
 <sources>
 	<source>/home/void/workspace/twyn/vissense</source>
 </sources>

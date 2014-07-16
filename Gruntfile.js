@@ -42,7 +42,7 @@ module.exports = function (grunt) {
             timer: {
                 src: [
                     '<%= concat.monitor.dest %>',
-                    'bower_components/againjs/dist/again.min.js',
+                    'bower_components/againjs/dist/againjs.min.js',
                     'src/main/timer/vissense.timer.js'
                 ],
                 dest: 'dist/vissense.timer.js'
@@ -176,6 +176,11 @@ module.exports = function (grunt) {
                 tasks: ['jshint:src_test', 'default']
             }
         },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js'
+            }
+        },
         notify: {
             js: {
                 options: {
@@ -201,11 +206,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.loadNpmTasks('grunt-notify');
 
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'jasmine', 'qunit', 'notify:test']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'qunit', 'notify:test']);
 };
 

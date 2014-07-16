@@ -24,6 +24,6 @@
   "dependencies": {
     "visibilityjs": "~1.2.1",
     "brwsrfy-metrics": "*",
-    "againjs": "theborakompanioni/againjs#master"
+    "againjs": "theborakompanioni/againjs#0.0.11"
   }
 }

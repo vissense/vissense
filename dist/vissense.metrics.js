@@ -1,4 +1,4 @@
-/*! vissense - v0.0.1 - 2014-07-11
+/*! vissense - v0.0.1 - 2014-07-17
 * Copyright (c) 2014 tbk;*/
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.brwsrfyMetrics=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 var Metrics = _dereq_('./node_modules/metrics/metrics'), 
@@ -733,11 +733,11 @@ UniformSample.prototype.update = function(val) {
 },{"../lib/utils":3,"./sample":12}]},{},[1])
 (1)
 });
-/*! vissense - v0.0.1 - 2014-07-11
+/*! vissense - v0.0.1 - 2014-07-17
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-07-11
+/*! vissense - v0.0.1 - 2014-07-17
 * Copyright (c) 2014 tbk;*/
-/*! vissense - v0.0.1 - 2014-07-11
+/*! vissense - v0.0.1 - 2014-07-17
 * Copyright (c) 2014 tbk;*/
 ;(function (global) {
     "use strict";
@@ -1842,7 +1842,7 @@ UniformSample.prototype.update = function(val) {
     };
 
 }(window, window.VisSense, window.VisSenseUtils));
-!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(setTimeout(function(){runner()},0),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){return this instanceof Again?(this._$$initialized=!1,this._$$state=null,this._$$lastTimerId=-1,this._$$timers={},this._$$config=config||{},void(this._$$config.reinitializeOn=this._$$config.reinitializeOn||{})):new Again(config)}var version="0.0.10";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals,runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId,intervals=stateIntervals;return parseFloat(stateIntervals)===stateIntervals&&(intervals={"*":parseFloat(stateIntervals)}),this._$$timers[id]={callback:callback,intervals:intervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state]||+timer.intervals["*"];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=Again,window.Again.version=version,window.Again.create=window.Again}(window);
+!function(window){"use strict";function cancel(timer){clearInterval(timer.id),clearTimeout(timer.delay),delete timer.id,delete timer.delay}function run(timer,interval,state,runNow){var runner=function(){timer.last[state]=Date.now(),timer.callback()};if(timer.last=timer.last||{},runNow){var now=Date.now(),last=now-timer.last[state];interval>last?timer.delay=setTimeout(function(){runner(),timer.id=setInterval(runner,interval)},interval-last):(setTimeout(function(){runner()},0),timer.id=setInterval(runner,interval))}else timer.id=setInterval(runner,interval)}function Again(config){return this instanceof Again?(this._$$initialized=!1,this._$$state=null,this._$$lastTimerId=-1,this._$$timers={},this._$$config=config||{},void(this._$$config.reinitializeOn=this._$$config.reinitializeOn||{})):new Again(config)}var version="0.0.11";Date.now||(Date.now=function(){return(new Date).getTime()}),Again.prototype.state=function(){return this._$$state},Again.prototype.update=function(state){this._$$state=state,this._cancelAndReinitialize()},Again.prototype.every=function(callback,stateIntervals,runNow){this._$$lastTimerId+=1;var id=this._$$lastTimerId,intervals=stateIntervals;return parseFloat(stateIntervals)===stateIntervals&&(intervals={"*":parseFloat(stateIntervals)}),this._$$timers[id]={callback:callback,intervals:intervals},this._run(id,!!runNow),id},Again.prototype.stop=function(id){return this._$$timers[id]?(cancel(this._$$timers[id]),delete this._$$timers[id],!0):!1},Again.prototype.stopAll=function(){for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&cancel(this._$$timers[id]);this._$$timers={}},Again.prototype._run=function(id,runNow){var timer=this._$$timers[id],interval=+timer.intervals[this._$$state]||+timer.intervals["*"];interval>0&&run(timer,interval,this._$$state,!!runNow)},Again.prototype._cancelAndReinitialize=function(){var runNow=!!this._$$config.reinitializeOn[this._$$state];for(var id in this._$$timers)this._$$timers.hasOwnProperty(id)&&(cancel(this._$$timers[id]),this._run(id,runNow))},window.Again=Again,window.Again.version=version,window.Again.create=window.Again}(window);
 /*
  * depends on ['againjs', 'vissense.core', 'vissense.monitor']
  */

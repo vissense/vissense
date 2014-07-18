@@ -114,6 +114,9 @@ module.exports = function (grunt) {
             gruntfile: {
                 src: 'Gruntfile.js'
             },
+            karma: {
+                src: 'karma.conf.js'
+            },
             src_test: {
                 src: ['src/**/*.js', 'spec/**/*.js']
             }
@@ -124,17 +127,20 @@ module.exports = function (grunt) {
             ]
         },
 
-        jasmine: {
+        /*jasmine: {
             js: {
                 src: 'dist/vissense.client.js',
                 options: {
                     display: 'full',
                     summary: true,
-                    specs: 'spec/*Spec.js',
-                    helpers: 'spec/*Helper.js',
+                    specs: ['spec/*Spec.js'],
+                    helpers: [
+                        'spec/*Helper.js'
+                    ],
                     vendor: [
                         './bower_components/jquery/dist/jquery.min.js',
-                        './bower_components/lodash/dist/lodash.min.js'
+                        './bower_components/lodash/dist/lodash.min.js',
+                        './bower_components/jasmine-jquery/lib/jasmine-jquery.js'
                     ]
                 }
             },
@@ -142,10 +148,13 @@ module.exports = function (grunt) {
                 src: ['dist/vissense.client.js'],
                 options: {
                     specs: ['spec/*Spec.js'],
-                    helpers: 'spec/*Helper.js',
+                    helpers: [
+                        'spec/*Helper.js'
+                    ],
                     vendor: [
                         './bower_components/jquery/dist/jquery.min.js',
-                        './bower_components/lodash/dist/lodash.min.js'
+                        './bower_components/lodash/dist/lodash.min.js',
+                        './bower_components/jasmine-jquery/lib/jasmine-jquery.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
@@ -172,7 +181,7 @@ module.exports = function (grunt) {
                     }
                 }
             }
-        },
+        },*/
         connect: {
             server: {
                 options: {
@@ -235,7 +244,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.loadNpmTasks('grunt-notify');
@@ -243,6 +251,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'qunit', 'notify:test']);
+    grunt.registerTask('test', ['connect',/* 'jasmine',*/ 'karma', 'qunit', 'notify:test']);
 };
 

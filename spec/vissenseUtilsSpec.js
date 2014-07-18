@@ -1,4 +1,4 @@
-/*global VisSenseUtils,describe,it,it,expect,beforeEach,afterEach*/
+/*global VisSenseUtils,jasmine,describe,it,it,expect,beforeEach,afterEach*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -7,6 +7,7 @@
  */
 describe('VisSenseUtils', function() {
     'use strict';
+    jasmine.getFixtures().fixturesPath = 'spec/javascripts/fixtures';
 
     describe('browser viewport', function() {
         var simpleNode;
@@ -85,10 +86,18 @@ describe('VisSenseUtils', function() {
         it('should verify that all VIS_HIDDEN_ELEMENTS are in fact hidden', function () {
             var that = this;
             Object.keys(that.VIS_HIDDEN_ELEMENTS).forEach(function(key) {
-                //expect(that.VIS_HIDDEN_ELEMENTS[key]).toBeHidden();
+                //expect($(that.VIS_HIDDEN_ELEMENTS[key])).toBeHidden(); // jQuery hidden
                 expect(that.VIS_HIDDEN_ELEMENTS[key]).toBeVisSenseHidden();
                 //expect(that.VIS_HIDDEN_ELEMENTS[key]).toHaveVisSensePercentageOf(0);
             });
         });
+
+        it('should test visible objects with jasmine-jquery', function () {
+            //jasmine.getFixtures().load('testVisible.html');
+            //expect($('#element')).toBeVisible();
+            //expect($('#element1')).toBeVisible();
+
+        });
+
     });
 });

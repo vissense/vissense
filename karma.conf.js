@@ -51,7 +51,7 @@ module.exports = function(config) {
         ],
  
         // test results reporter to use
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress', 'spec', 'coverage'],
  
         // web server port
         port: 9876,

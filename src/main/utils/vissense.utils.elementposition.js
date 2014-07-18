@@ -43,31 +43,27 @@
 
 	function isFullyInViewport(element) {
 		var r = _getBoundingClientRect(element);
-		if(r && (r.width <= 0 || r.height <= 0)) {
+		if(!r || (r.width <= 0 || r.height <= 0)) {
 			return false;
 		}
 		var view = viewport(element);
 
-		return (!!r &&
-			r.top >= 0 &&
+		return r.top >= 0 &&
 			r.left >= 0 &&
-			r.bottom < view.height &&
-			r.right < view.width
-		);
+			r.bottom <= view.height &&
+			r.right <= view.width;
 	}
 
 	function isInViewport(element) {
 		var r = _getBoundingClientRect(element);
-		if(r && (r.width <= 0 || r.height <= 0)) {
+		if(!r || (r.width <= 0 || r.height <= 0)) {
 			return false;
 		}
 		var view = viewport(element);
-		return ( !!r &&
-			r.bottom > 0 &&
+		return r.bottom > 0 &&
 			r.right > 0 &&
 			r.top < view.height &&
-			r.left < view.width
-		);
+			r.left < view.width;
 	}
 
     VisSenseUtils.viewport = viewport;

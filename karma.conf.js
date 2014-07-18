@@ -11,6 +11,10 @@ module.exports = function(config) {
  
         // list of files / patterns to load in the browser
         files: [
+            './bower_components/jquery/dist/jquery.min.js',
+            './bower_components/lodash/dist/lodash.min.js',
+            './node_modules/jasmine-jquery/dist/jasmine-jquery.min.js',
+            './dist/vissense.min.js',
             './dist/vissense.min.js',
             './spec/**/*.js'
         ],

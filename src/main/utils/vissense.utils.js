@@ -21,9 +21,9 @@
       };
     }
 
-    window.VisSenseUtils = {
+    this.VisSenseUtils = {
         _window : _window,
         fireIf: fireIf
     };
 
-}(window));
+}.call(this, window));

@@ -1,4 +1,4 @@
-/*global Again,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -48,9 +48,8 @@ describe('VisSense Timer', function() {
             expect(stopped).toBe(true);
         });
 
-        it('jasmine clearTimeout clearInverval test', function () {
+        it('jasmine clearTimeout clearInterval test', function () {
             var intervalCount = 0;
-            var timerCount = 0;
 
             var intervalId = setInterval(function() {
                 intervalCount++;
@@ -83,6 +82,8 @@ describe('VisSense Timer', function() {
                 });
             }, false);
 
+            expect(timerId).toBeDefined();
+
             jasmine.clock().tick(11);
 
             expect(invocations).toBe(1);
@@ -100,6 +101,8 @@ describe('VisSense Timer', function() {
             var timerId = vistimer.every(10, 10, function() {
                 invocations = invocations + 1;
             }, false);
+
+            expect(timerId).toBeDefined();
 
             jasmine.clock().tick(1000001);
 

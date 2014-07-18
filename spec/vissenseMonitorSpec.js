@@ -1,4 +1,4 @@
-/*global Again,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,VisSenseUtils,jasmine,describe,it,expect,beforeEach,afterEach*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -8,7 +8,7 @@
 describe('VisSense Monitor', function() {
     'use strict';
 
-    var noop = function() { /*empty*/ };
+    //var noop = function() { /*empty*/ };
 
     // TODO: uncomment this if jasmine supports mocking the Date object natively
     //it('should verify that jasmine mocks the Date object', function () {

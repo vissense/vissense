@@ -115,7 +115,7 @@ module.exports = function (grunt) {
                 src: 'Gruntfile.js'
             },
             src_test: {
-                src: ['src/**/*.js', 'test/**/*.js']
+                src: ['src/**/*.js', 'spec/**/*.js']
             }
         },
         qunit: {
@@ -131,13 +131,22 @@ module.exports = function (grunt) {
                     display: 'full',
                     summary: true,
                     specs: 'spec/*Spec.js',
-                    helpers: 'spec/*Helper.js'
+                    helpers: 'spec/*Helper.js',
+                    vendor: [
+                        './bower_components/jquery/dist/jquery.min.js',
+                        './bower_components/lodash/dist/lodash.min.js'
+                    ]
                 }
             },
             coverage: {
                 src: ['dist/vissense.client.js'],
                 options: {
                     specs: ['spec/*Spec.js'],
+                    helpers: 'spec/*Helper.js',
+                    vendor: [
+                        './bower_components/jquery/dist/jquery.min.js',
+                        './bower_components/lodash/dist/lodash.min.js'
+                    ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
                         coverage: '<%= dirs.coverage %>/coverage.json',

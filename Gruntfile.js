@@ -127,7 +127,7 @@ module.exports = function (grunt) {
             ]
         },
 
-        /*jasmine: {
+        jasmine: {
             js: {
                 src: 'dist/vissense.client.js',
                 options: {
@@ -181,7 +181,7 @@ module.exports = function (grunt) {
                     }
                 }
             }
-        },*/
+        },
         connect: {
             server: {
                 options: {
@@ -243,6 +243,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-karma');
 
@@ -251,6 +252,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect',/* 'jasmine',*/ 'karma', 'qunit', 'notify:test']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'qunit', 'notify:test']);
 };
 

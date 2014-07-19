@@ -7,7 +7,7 @@
  */
 describe('VisSenseUtils', function() {
     'use strict';
-    jasmine.getFixtures().fixturesPath = 'spec/javascripts/fixtures';
+    jasmine.getFixtures().fixturesPath = 'http://localhost:9876/base/spec/javascripts/fixtures';
 
     describe('browser viewport', function() {
         var simpleNode;
@@ -94,6 +94,7 @@ describe('VisSenseUtils', function() {
 
         it('should test visible objects with jasmine-jquery', function () {
             //jasmine.getFixtures().load('testVisible.html');
+            //jasmine.setFixtures('<div id="element"></div>');
             //expect($('#element')).toBeVisible();
             //expect($('#element1')).toBeVisible();
 

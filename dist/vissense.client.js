@@ -1220,6 +1220,9 @@ UniformSample.prototype.update = function(val) {
 		return r;
 	}
 
+	/**
+	* return the viewport (does *not* subtract scrollbar size)
+	*/
     function viewport(element) {
         var w = element ? VisSenseUtils._window(element) : window;
 		return {
@@ -1411,7 +1414,7 @@ UniformSample.prototype.update = function(val) {
         // currently only ELEMENT_NODEs are supported
         // see https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType
         if ( !element || 1 !== element.nodeType ) {
-            throw new Error('InvalidArgument: not an element node');
+            throw new Error('InvalidArgument: Not an element node');
         }
 
         this._element = element;

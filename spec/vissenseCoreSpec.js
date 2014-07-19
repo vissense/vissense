@@ -1,4 +1,4 @@
-/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,$,jasmine,describe,it,expect,beforeEach,afterEach*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -8,7 +8,7 @@
 describe('VisSense', function() {
     'use strict';
 
-    //var noop = function() { /*empty*/ };
+    var returnTrue = function() { return true; };
 
     // TODO: uncomment this if jasmine supports mocking the Date object natively
     //it('should verify that jasmine mocks the Date object', function () {
@@ -28,84 +28,59 @@ describe('VisSense', function() {
         expect(VisSense.version).toBe('0.0.1');
     });
 
+    it('should throw error when not initialized with element node', function () {
+        expect(function() { return new VisSense(); }).toThrow(new Error('InvalidArgument: Not an element node'));
+    });
+
     describe('vissense.core.js', function() {
-        var element;
-
-        beforeEach(function() {
-
-           element = document.createElement('div');
-           element.id = 'testNode1';
-        });
-
         it('should create a VisSense object', function () {
-            var visobj = new VisSense(element);
+            jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
+            var visobj = new VisSense($('#element')[0]);
             /* jshint newcap:false */
-            var visobj2 = VisSense(element);
+            var visobj2 = VisSense($('#element')[0]);
 
             expect(visobj).toBeDefined();
             expect(visobj2).toBeDefined();
         });
 
         it('should create and test for a hidden object', function () {
-            var visobj = new VisSense(element);
+            jasmine.getFixtures().set('<div id="element" style="width: 0; height: 0;"></div>');
+            var visobj = new VisSense($('#element')[0]);
 
             expect(visobj.isHidden()).toBe(true);
             expect(visobj.isVisible()).toBe(false);
             expect(visobj.isFullyVisible()).toBe(false);
             expect(visobj.percentage()).toBe(0);
+            expect(visobj.fireIfHidden(returnTrue)()).toBe(true);
+            expect(visobj.fireIfVisible(returnTrue)()).not.toBeDefined();
+            expect(visobj.fireIfFullyVisible(returnTrue)()).not.toBeDefined();
+        });
+
+        it('should create and test for a visible object', function () {
+            jasmine.getFixtures().set('<div id="element" style="width: 2px; height: 2px; position: fixed; top:-1px; left: -1px;"></div>');
+            var visobj = new VisSense($('#element')[0]);
+
+            expect(visobj.isHidden()).toBe(false);
+            expect(visobj.isVisible()).toBe(true);
+            expect(visobj.isFullyVisible()).toBe(false);
+            expect(visobj.percentage()).toBe(0.25);
+            expect(visobj.fireIfHidden(returnTrue)()).not.toBeDefined();
+            expect(visobj.fireIfVisible(returnTrue)()).toBe(true);
+            expect(visobj.fireIfFullyVisible(returnTrue)()).not.toBeDefined();
         });
 
         it('should create and test for a fully visible object', function () {
-            document.body.appendChild(element);
-
-            element.style.display = 'block';
-            element.style.left = '1px';
-            element.style.top = '1px';
-            element.style.width = '1px';
-            element.style.height = '1px';
-            element.style.position = 'fixed';
-
-            var visobj = new VisSense(element);
+            jasmine.getFixtures().set('<div id="element" style="position:fixed; top:0; right:0; bottom:0; left:0;"></div>');
+            var visobj = new VisSense($('#element')[0]);
 
             expect(visobj.isHidden()).toBe(false);
             expect(visobj.isVisible()).toBe(true);
             expect(visobj.isFullyVisible()).toBe(true);
             expect(visobj.percentage()).toBe(1);
+            expect(visobj.fireIfHidden(returnTrue)()).not.toBeDefined();
+            expect(visobj.fireIfVisible(returnTrue)()).toBe(true);
+            expect(visobj.fireIfFullyVisible(returnTrue)()).toBe(true);
         });
-
     });
 
-    /* phantomjs default viewport size is 400x300 */
-    describe('fully visible elements', function() {
-        var element;
-
-        beforeEach(function() {
-           element = document.createElement('div');
-           element.id = 'testNode1';
-
-            element.style.display = 'block';
-            element.style.left = '0';
-            element.style.top = '0';
-            element.style.width = '400px';
-            element.style.height = '300px';
-            element.style.position = 'fixed';
-
-            document.body.appendChild(element);
-        });
-
-        afterEach(function() {
-            document.body.removeChild(element);
-        });
-
-        it('should create and test for a fully visible object', function () {
-
-            var visobj = new VisSense(element);
-
-            expect(visobj.isHidden()).toBe(false);
-            expect(visobj.isVisible()).toBe(true);
-            expect(visobj.isFullyVisible()).toBe(true);
-            expect(visobj.percentage()).toBe(1);
-        });
-
-    });
 });

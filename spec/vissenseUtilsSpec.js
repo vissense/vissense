@@ -79,6 +79,11 @@ describe('VisSenseUtils', function() {
 
             describe('elements hidden by styling', function() {
 
+                it('should detect element with ´display´ "none" as hidden', function () {
+                    jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10x; display: none;"></div>');
+                    expect($('#element')[0]).toBeVisSenseHidden();
+                });
+
                 it('should detect element with ´opacity´ < 0.01 as hidden', function () {
                     jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10px; opacity: 0.00999;"></div>');
                     expect($('#element')[0]).toBeVisSenseHidden();
@@ -131,11 +136,14 @@ describe('VisSenseUtils', function() {
                 jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
                 expect($('#element')).toBeVisible();
                 expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
+
             it('should detect element with ´opacity´ >= 0.01 as visible', function () {
                 jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px; opacity: 0.1;"></div>');
                 expect($('#element')).toBeVisible();
                 expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
         });
 

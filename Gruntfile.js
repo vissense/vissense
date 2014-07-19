@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= concat.client.dest %>'
                 ],
-                dest: 'dist/vissense.client.js'
+                dest: 'dist/vissense.js'
             }
         },
         uglify: {
@@ -129,7 +129,7 @@ module.exports = function (grunt) {
 
         jasmine: {
             js: {
-                src: 'dist/vissense.client.js',
+                src: 'dist/vissense.js',
                 options: {
                     display: 'full',
                     summary: true,
@@ -145,7 +145,7 @@ module.exports = function (grunt) {
                 }
             },
             coverage: {
-                src: ['dist/vissense.client.js'],
+                src: ['dist/vissense.js'],
                 options: {
                     specs: ['spec/*Spec.js'],
                     helpers: [

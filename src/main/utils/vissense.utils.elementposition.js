@@ -33,11 +33,14 @@
 		return r;
 	}
 
+	/**
+	* return the viewport (does *not* subtract scrollbar size)
+	*/
     function viewport(element) {
-		var w = VisSenseUtils._window(element);
+        var w = element ? VisSenseUtils._window(element) : window;
 		return {
-		    height: w.innerHeight || w.document.documentElement.clientHeight,
-		    width: w.innerWidth || w.document.documentElement.clientWidth
+		    height: (w.innerHeight || w.document.documentElement.clientHeight),
+		    width: (w.innerWidth || w.document.documentElement.clientWidth)
 		};
 	}
 

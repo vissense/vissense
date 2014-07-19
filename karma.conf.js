@@ -43,7 +43,9 @@ module.exports = function(config) {
 
             'src/main/client/vissense.client.js',
 
-            'spec/**/*.js'
+            'spec/**/*.js',
+            // fixtures
+            {pattern: 'spec/**/*.html', watched: true, served: true, included: false}
         ],
  
         // list of files to exclude
@@ -54,7 +56,7 @@ module.exports = function(config) {
         reporters: ['progress', 'spec', 'coverage'],
  
         // web server port
-        port: 9876,
+        port: 3000,
  
         // enable / disable colors in the output (reporters and logs)
         colors: true,

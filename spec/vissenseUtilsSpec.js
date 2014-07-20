@@ -5,12 +5,131 @@
  * Copyright 2014 twyn group IT solutions & marketing services AG <vissense@twyn.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-describe('VisSenseUtils', function() {
+describe('VisSenseUtils', function(undefined) {
     'use strict';
 
-    describe('browser viewport', function() {
-        it('should verify defined values from viewport()', function () {
+
+    it('should verify that identity() returns the object passed', function () {
+        var a = {};
+        expect(VisSenseUtils.identity(a)).toBe(a);
+    });
+
+    describe('_', function() {
+
+        it('should verify that noop() returns undefined', function () {
+            expect(VisSenseUtils.noop()).not.toBeDefined();
+        });
+
+        it('should verify that identity() returns the object passed', function () {
+            var a = {};
+            expect(VisSenseUtils.identity(a)).toBe(a);
+        });
+
+        describe('isObject', function() {
+            it('should detect {} as object', function () {
+                expect(VisSenseUtils.isObject({})).toBe(true);
+            });
+
+            it('should detect [] as object', function () {
+                expect(VisSenseUtils.isObject([])).toBe(true);
+            });
+
+            it('should NOT detect null/undefined as object', function () {
+                expect(VisSenseUtils.isObject(null)).toBe(false);
+                expect(VisSenseUtils.isObject(undefined)).toBe(false);
+            });
+        });
+
+        describe('defaults', function() {
+            it('should immediately return on non-object values', function () {
+                expect(VisSenseUtils.defaults(true, false)).toBe(false);
+                expect(VisSenseUtils.defaults(null, false)).toBe(false);
+            });
+
+            it('should add needed default values to object', function () {
+                var config = {
+                    'aEnabled': 13,
+                    'bEnabled': {},
+                    'cEnabled': false,
+                    'dEnabled': true
+                };
+
+                var defaults = {
+                    'aEnabled': true,
+                    'bEnabled': false,
+                    'cEnabled': false,
+                    'dEnabled': true,
+                    'eEnabled': 1,
+                    'fEnabled': false
+                };
+
+                expect(VisSenseUtils.defaults(config, defaults)).toEqual({
+                    'aEnabled': 13,
+                    'bEnabled': {},
+                    'cEnabled': false,
+                    'dEnabled': true,
+                    'eEnabled': 1,
+                    'fEnabled': false
+                });
+            });
+
+            it('should add needed default values to array', function () {
+                var config = [
+                    false,
+                    true,
+                    false,
+                    true
+                ];
+
+                var defaults = [
+                    true,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false
+                ];
+
+                expect(VisSenseUtils.defaults(config, defaults)).toEqual([
+                     false,
+                     true,
+                     false,
+                     true,
+                     true,
+                     false
+                 ]);
+            });
+        });
+    });
+
+    describe('window', function() {
+        it('should verify defined values from window()', function () {
+            var win = VisSenseUtils._window();
+
+            expect(win).toBe(window);
+        });
+
+        it('should verify defined values from window(element)', function () {
             jasmine.getFixtures().set('<div id="element"></div>');
+
+            var win = VisSenseUtils._window($('#element')[0]);
+
+            expect(win).toBe(window);
+        });
+    });
+
+    describe('viewport', function() {
+
+        it('should verify defined values from viewport()', function () {
+            var viewport = VisSenseUtils.viewport();
+
+            expect(viewport.height).toBeDefined();
+            expect(viewport.width).toBeDefined();
+        });
+
+        it('should verify defined values from viewport(element)', function () {
+            jasmine.getFixtures().set('<div id="element"></div>');
+
             var viewport = VisSenseUtils.viewport($('#element')[0]);
 
             expect(viewport.height).toBeDefined();
@@ -50,29 +169,21 @@ describe('VisSenseUtils', function() {
     describe('elements visibility', function() {
 
         describe('hidden elements', function() {
-            /*it('should verify that all VIS_HIDDEN_ELEMENTS are in fact hidden', function () {
-                var that = this;
-                Object.keys(that.VIS_HIDDEN_ELEMENTS).forEach(function(key) {
-                    //expect($(that.VIS_HIDDEN_ELEMENTS[key])).toBeHidden(); // jQuery hidden
-                    expect(that.VIS_HIDDEN_ELEMENTS[key]).toBeVisSenseHidden();
-                    //expect(that.VIS_HIDDEN_ELEMENTS[key]).toHaveVisSensePercentageOf(0);
-                });
-            });*/
 
             describe('elements hidden by dimension', function() {
 
                 it('should detect element where height and width are 0 as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 0; height: 0"></div>');
-                    expect($('#element')[0]).toBeVisSenseHidden();
-                });
-
-                it('should detect element where height is 0 as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="height: 0"></div>');
+                    jasmine.getFixtures().load('hidden_dimension.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element where width is 0 as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 0"></div>');
+                    jasmine.getFixtures().load('hidden_dimension_width.html');
+                    expect($('#element')[0]).toBeVisSenseHidden();
+                });
+
+                it('should detect element where height is 0 as hidden', function () {
+                    jasmine.getFixtures().load('hidden_dimension_height.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
             });
@@ -80,22 +191,22 @@ describe('VisSenseUtils', function() {
             describe('elements hidden by styling', function() {
 
                 it('should detect element with ´display´ "none" as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10x; display: none;"></div>');
+                    jasmine.getFixtures().load('hidden_styling-display-none.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element with ´opacity´ < 0.01 as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10px; opacity: 0.00999;"></div>');
+                    jasmine.getFixtures().load('hidden_styling-opacity.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element with ´visibility´ "hidden" as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10x; visibility: hidden;"></div>');
+                    jasmine.getFixtures().load('hidden_styling-visibility-collapse.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element with ´visibility´ "collapse" as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" style="width: 10px; height: 10x; visibility: collapse;"></div>');
+                    jasmine.getFixtures().load('hidden_styling-visibility-hidden.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
             });
@@ -103,28 +214,22 @@ describe('VisSenseUtils', function() {
             describe('elements hidden by position', function() {
 
                 it('should detect element out of viewport (top) as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" ' +
-                        'style="top:-10px; left:0; position: fixed; width: 10px; height: 10px"></div>');
+                    jasmine.getFixtures().load('hidden_out-of-viewport-top.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
-                /* SpecRunner.html has a problem with "top:0; right-10px;" as a scrollbar is added -  */
                 it('should detect element out of viewport (right) as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" ' +
-                        'style="top:0; right:-25px; position: fixed; width: 10px; height: 10px"></div>');
+                    jasmine.getFixtures().load('hidden_out-of-viewport-right.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element out of viewport (bottom) as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" ' +
-                        'style="bottom:-10px; left:0; position: fixed; width: 10px; height: 10px"></div>');
+                    jasmine.getFixtures().load('hidden_out-of-viewport-bottom.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
 
                 it('should detect element out of viewport (left) as hidden', function () {
-                    jasmine.getFixtures().set('<div id="element" ' +
-                        'style="top:0; left:-10px; position: fixed; width: 10px; height: 10px"></div>');
-                    expect($('#element')[0]).toBeVisSenseHidden();
+                    jasmine.getFixtures().load('hidden_out-of-viewport-left.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                 });
             });
@@ -132,15 +237,14 @@ describe('VisSenseUtils', function() {
 
         describe('visible elements', function() {
             it('should detect an element as visible', function () {
-                //jasmine.getFixtures().load('testVisible.html');
-                jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
+                jasmine.getFixtures().load('testVisible.html');
                 expect($('#element')).toBeVisible();
                 expect($('#element')[0]).toBeVisSenseVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
 
             it('should detect element with ´opacity´ >= 0.01 as visible', function () {
-                jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px; opacity: 0.1;"></div>');
+                jasmine.getFixtures().load('visible_styling-opacity.html');
                 expect($('#element')).toBeVisible();
                 expect($('#element')[0]).toBeVisSenseVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(1);

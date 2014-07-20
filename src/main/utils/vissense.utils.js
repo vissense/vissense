@@ -8,8 +8,11 @@
   'use strict';
 
     function _window(element) {
-		var doc = element.ownerDocument;
-		return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
+        if(!element) {
+            return window;
+        }
+        var doc = element.ownerDocument;
+        return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
 	}
 
     /**

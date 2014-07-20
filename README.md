@@ -8,7 +8,7 @@ A utility library for detecting visibility of DOM element
 
 Install dependencies
 
-`sudo npm install && bower install`
+`npm install && bower install`
 
 Build Project
 
@@ -16,7 +16,8 @@ Build Project
 
 Run Tests
 
-Open `SpecRunner.html` in your browser and test with jasmine
+Open `SpecRunner.html` in your browser and test with jasmine.
+(Run chrome with --disable-web-security to allow local file access)
 
 ## utils
 ### What it does

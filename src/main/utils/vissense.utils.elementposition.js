@@ -13,13 +13,13 @@
  * isInViewport
  * _getBoundingClientRect
  */
-;(function(window, VisSenseUtils) {
+;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
 	function _getBoundingClientRect(element) {
 		var r = element.getBoundingClientRect();
 		// height and width are not standard elements - so lets add them
-		if(typeof r.height === 'undefined' || typeof r.width === 'undefined') {
+		if(r.height === undefined || r.width === undefined) {
 			// copying object because attributes cannot be added to 'r'
 			return {
 				top: r.top,
@@ -38,9 +38,15 @@
 	*/
     function viewport(element) {
         var w = element ? VisSenseUtils._window(element) : window;
+        if(w.innerWidth === undefined) {
+            return {
+                height: w.document.documentElement.clientHeight,
+                width: w.document.documentElement.clientWidth
+            };
+        }
 		return {
-		    height: (w.innerHeight || w.document.documentElement.clientHeight),
-		    width: (w.innerWidth || w.document.documentElement.clientWidth)
+		    height: w.innerHeight,
+		    width: w.innerWidth
 		};
 	}
 

@@ -242,8 +242,11 @@
   'use strict';
 
     function _window(element) {
-		var doc = element.ownerDocument;
-		return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
+        if(!element) {
+            return window;
+        }
+        var doc = element.ownerDocument;
+        return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
 	}
 
     /**
@@ -305,10 +308,11 @@
 
   function defaults(obj, source) {
     if (!isObject(obj)) {
-        return obj;
+        return source;
     }
-
-    for (var prop in Object.keys(source)) {
+    var keys = Object.keys(source);
+    for (var i = 0, n = keys.length; i < n; i++) {
+      var prop = keys[i];
       if (obj[prop] === void 0) {
         obj[prop] = source[prop];
       }
@@ -462,13 +466,13 @@
  * isInViewport
  * _getBoundingClientRect
  */
-;(function(window, VisSenseUtils) {
+;(function(window, VisSenseUtils, undefined) {
   'use strict';
 
 	function _getBoundingClientRect(element) {
 		var r = element.getBoundingClientRect();
 		// height and width are not standard elements - so lets add them
-		if(typeof r.height === 'undefined' || typeof r.width === 'undefined') {
+		if(r.height === undefined || r.width === undefined) {
 			// copying object because attributes cannot be added to 'r'
 			return {
 				top: r.top,
@@ -487,9 +491,15 @@
 	*/
     function viewport(element) {
         var w = element ? VisSenseUtils._window(element) : window;
+        if(w.innerWidth === undefined) {
+            return {
+                height: w.document.documentElement.clientHeight,
+                width: w.document.documentElement.clientWidth
+            };
+        }
 		return {
-		    height: (w.innerHeight || w.document.documentElement.clientHeight),
-		    width: (w.innerWidth || w.document.documentElement.clientWidth)
+		    height: w.innerHeight,
+		    width: w.innerWidth
 		};
 	}
 

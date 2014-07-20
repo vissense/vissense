@@ -1,4 +1,4 @@
-/*global VisSense,$,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,$,jasmine,describe,it,expect*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -10,29 +10,16 @@ describe('VisSense', function() {
 
     var returnTrue = function() { return true; };
 
-    // TODO: uncomment this if jasmine supports mocking the Date object natively
-    //it('should verify that jasmine mocks the Date object', function () {
-    //    expect(jasmine.clock().mockDate).toBeDefined();
-    //});
-    beforeEach(function() {
-       jasmine.clock().install();
-
-        //jasmine.clock().mockDate();
-    });
-
-    afterEach(function() {
-        jasmine.clock().uninstall();
-    });
-
     it('should get the version of VisSense', function () {
         expect(VisSense.version).toBe('0.0.1');
     });
 
-    it('should throw error when not initialized with element node', function () {
-        expect(function() { return new VisSense(); }).toThrow(new Error('InvalidArgument: Not an element node'));
-    });
-
     describe('vissense.core.js', function() {
+
+        it('should throw error when not initialized with element node', function () {
+            expect(function() { return new VisSense(); }).toThrow(new Error('InvalidArgument: Not an element node'));
+        });
+
         it('should create a VisSense object', function () {
             jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
             var visobj = new VisSense($('#element')[0]);

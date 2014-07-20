@@ -8,7 +8,7 @@
 beforeEach(function () {
     'use strict';
     function getMessage(actual, testPassed, stateLabel) {
-        if(testPassed) {
+        if(testPassed === true) {
             return 'Expected visibility to be "'+stateLabel+'"';
         }
         return 'Expected visibility to be "'+stateLabel+'", but it was NOT! ';

@@ -48,10 +48,11 @@
 
   function defaults(obj, source) {
     if (!isObject(obj)) {
-        return obj;
+        return source;
     }
-
-    for (var prop in Object.keys(source)) {
+    var keys = Object.keys(source);
+    for (var i = 0, n = keys.length; i < n; i++) {
+      var prop = keys[i];
       if (obj[prop] === void 0) {
         obj[prop] = source[prop];
       }

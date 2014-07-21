@@ -87,7 +87,7 @@
         }
 
         var opacity = _findEffectiveStyleProperty(element, 'opacity');
-        if(+opacity < 0.01) {
+        if(+opacity <= 0.01) {
             return false;
         }
 

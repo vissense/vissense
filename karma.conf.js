@@ -20,6 +20,8 @@ module.exports = function(config) {
             'bower_components/happeningsjs/dist/happeningsjs.min.js',
             'bower_components/againjs/dist/againjs.min.js',
 
+            'bower_components/visibilityjs/lib/visibility.core.js',
+
             'src/main/vissense.polyfill.js',
             'src/main/utils/vissense.utils.js',
             'src/main/utils/vissense.utils._.js',
@@ -75,7 +77,7 @@ module.exports = function(config) {
         },
  
         // Start these browsers
-        browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
         //browsers: ['PhantomJS'],
 
         // you can define custom flags

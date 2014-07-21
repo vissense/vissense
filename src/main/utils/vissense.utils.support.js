@@ -55,7 +55,9 @@
         support.IEVersion = getIEVersion();
         support.DOMPresent = isDomPresent();
         support.CanReadStyle = canReadStyle();
-        support.BrowserSupported = support.IEVersion >= support.MinIEVersion;
+
+        var ieVersion = getIEVersion();
+        support.BrowserSupported = ieVersion === undefined || support.IEVersion >= support.MinIEVersion;
 
         support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
 

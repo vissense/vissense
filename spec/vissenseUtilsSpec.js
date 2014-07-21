@@ -9,6 +9,12 @@ describe('VisSenseUtils', function(undefined) {
     'use strict';
 
 
+    it('should retrieve support object', function () {
+        var support = VisSenseUtils.support();
+        expect(support).toBeDefined();
+        expect(support.compatible).toBe(true);
+    });
+
     it('should verify that identity() returns the object passed', function () {
         var a = {};
         expect(VisSenseUtils.identity(a)).toBe(a);
@@ -120,7 +126,7 @@ describe('VisSenseUtils', function(undefined) {
                 var sneakIn = {
                     'aEnabled': 42
                 };
-            ///////////////********** ;MUST BE CHANGED
+
                 var dest = {
                     'aEnabled': 13,
                     'bEnabled': {},
@@ -278,7 +284,7 @@ describe('VisSenseUtils', function(undefined) {
 
         describe('hidden elements', function() {
 
-            describe('elements hidden by dimension', function() {
+            describe('by dimension', function() {
 
                 it('should detect element where height and width are 0 as hidden', function () {
                     jasmine.getFixtures().load('hidden_dimension.html');
@@ -302,7 +308,7 @@ describe('VisSenseUtils', function(undefined) {
                 });
             });
 
-            describe('elements hidden by styling', function() {
+            describe('by styling', function() {
 
                 it('should detect element with ´display´ "none" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-display-none.html');
@@ -311,7 +317,7 @@ describe('VisSenseUtils', function(undefined) {
                     expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
-                it('should detect element with ´opacity´ < 0.01 as hidden', function () {
+                it('should detect element with ´opacity´ <= 1% as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-opacity.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                     expect($('#element')[0]).not.toBeVisSenseVisible();
@@ -333,7 +339,7 @@ describe('VisSenseUtils', function(undefined) {
                 });
             });
 
-            describe('elements hidden by position', function() {
+            describe('by position', function() {
 
                 it('should detect element out of viewport (top) as hidden', function () {
                     jasmine.getFixtures().load('hidden_out-of-viewport-top.html');

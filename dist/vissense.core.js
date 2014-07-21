@@ -439,7 +439,7 @@
         }
 
         var opacity = _findEffectiveStyleProperty(element, 'opacity');
-        if(+opacity < 0.01) {
+        if(+opacity <= 0.01) {
             return false;
         }
 
@@ -648,7 +648,9 @@
         support.IEVersion = getIEVersion();
         support.DOMPresent = isDomPresent();
         support.CanReadStyle = canReadStyle();
-        support.BrowserSupported = support.IEVersion >= support.MinIEVersion;
+
+        var ieVersion = getIEVersion();
+        support.BrowserSupported = ieVersion === undefined || support.IEVersion >= support.MinIEVersion;
 
         support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
 

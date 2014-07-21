@@ -1,4 +1,4 @@
-/*global VisSenseUtils,$,jasmine,describe,it,expect*/
+/*global VisSenseUtils,$,jasmine,describe,it,xit,expect*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -7,7 +7,6 @@
  */
 describe('VisSenseUtils', function(undefined) {
     'use strict';
-
 
     it('should retrieve support object', function () {
         var support = VisSenseUtils.support();
@@ -205,12 +204,12 @@ describe('VisSenseUtils', function(undefined) {
                 ];
 
                 expect(VisSenseUtils.defaults(dest, defaults)).toEqual([
-                     false,
-                     true,
-                     false,
-                     true,
-                     true,
-                     false
+                    false,
+                    true,
+                    false,
+                    true,
+                    true,
+                    false
                  ]);
             });
         });
@@ -281,6 +280,49 @@ describe('VisSenseUtils', function(undefined) {
     });
 
     describe('elements visibility', function() {
+
+        describe('effective style', function() {
+
+            it('should find effective style of simple element', function () {
+                jasmine.getFixtures().set('<div id="element"></div>');
+
+                var style = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                expect(style).toBeDefined();
+            });
+
+            it('should find inherit "visibility" property of simple element', function () {
+                jasmine.getFixtures().set('<div id="element" style="visibility: hidden">' +
+                    '<div></div>' +
+                    '<div style="visibility: inherit"></div>' +
+                    '<div style="visibility: visible"></div>' +
+                    '<div style="visibility: collapse"></div>' +
+                '</div>');
+
+                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                var style0 = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
+                var style1 = VisSenseUtils._findEffectiveStyle($('#element').children()[1]);
+                var style2 = VisSenseUtils._findEffectiveStyle($('#element').children()[2]);
+                var style3 = VisSenseUtils._findEffectiveStyle($('#element').children()[3]);
+
+                expect(parentStyle.visibility).toEqual('hidden');
+                expect(style0.visibility).toEqual('hidden');
+                expect(style1.visibility).toEqual('hidden');
+                expect(style2.visibility).toEqual('visible');
+                expect(style3.visibility).toEqual('collapse');
+            });
+
+            xit('should find inherit "opacity" property of simple element', function () {
+                jasmine.getFixtures().set('<div id="element" style="opacity: 0.5">' +
+                    '<div style="height: 100px; width: 100px; background-color: red;"></div>' +
+                '</div>');
+
+                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                var style = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
+                expect(parentStyle.opacity).toEqual('0.5');
+                expect(style.height).toEqual('100px');
+                expect(style.width).toEqual('100px');
+            });
+        });
 
         describe('hidden elements', function() {
 

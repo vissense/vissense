@@ -7,50 +7,52 @@
  */
 beforeEach(function () {
     'use strict';
-    function getMessage(actual, testPassed, stateLabel) {
-        if(testPassed === true) {
-            return 'Expected visibility to be "'+stateLabel+'"';
+    function getMessage(result, actual, expected) {
+        if(result.pass === true) {
+            return 'Expected visibility to be "'+expected+'"';
         }
-        return 'Expected visibility to be "'+stateLabel+'", but it was NOT! ';
+        return 'Expected visibility to be "'+expected+'", but it was "'+actual+'"! ';
     }
 
     jasmine.addMatchers({
         toHaveVisSensePercentageOf: function() {
             return {
-                compare: function (actual, expected) {
+                compare: function (element, expected) {
                     var result = {};
-                    result.pass = VisSenseUtils.percentage(actual) === expected;
-                    result.message = getMessage(actual, result, (expected * 100) + '%');
+                    var actual = VisSenseUtils.percentage(element);
+
+                    result.pass = (actual === expected);
+                    result.message = getMessage(result, actual, expected);
                     return result;
                 }
             };
         },
         toBeVisSenseHidden: function() {
             return {
-                compare: function (actual) {
+                compare: function (element, expected) {
                     var result = {};
-                    result.pass = VisSenseUtils.isHidden(actual);
-                    result.message = getMessage(actual, result, 'hidden');
+                    result.pass = VisSenseUtils.isHidden(element);
+                    result.message = getMessage(result, element, expected);
                     return result;
                 }
             };
         },
         toBeVisSenseVisible: function() {
             return {
-                compare: function (actual) {
+                compare: function (element, expected) {
                     var result = {};
-                    result.pass = VisSenseUtils.isVisible(actual);
-                    result.message = getMessage(actual, result, 'visible');
+                    result.pass = VisSenseUtils.isVisible(element);
+                    result.message = getMessage(result, element, expected);
                     return result;
                 }
             };
         },
         toBeVisSenseFullyVisible: function() {
             return {
-                compare: function (actual) {
+                compare: function (element, expected) {
                     var result = {};
-                    result.pass = VisSenseUtils.isFullyVisible(actual);
-                    result.message = getMessage(actual, result, 'fullyvisible');
+                    result.pass = VisSenseUtils.isFullyVisible(element);
+                    result.message = getMessage(result, element, expected);
                     return result;
                 }
             };

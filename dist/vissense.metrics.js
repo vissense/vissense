@@ -1284,11 +1284,8 @@ UniformSample.prototype.update = function(val) {
 		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {
 			return 0;
 		}
-
+		// r's height and width are greater than 0 because element is in viewport
 		var r = VisSenseUtils._getBoundingClientRect(element);
-		if(!r || r.height <= 0 || r.width <= 0) {
-			return 0;
-		}
 
 		var vh = 0; // visible height
 		var vw = 0; // visible width
@@ -1296,15 +1293,19 @@ UniformSample.prototype.update = function(val) {
 
 		if(r.top >= 0) {
 			vh = Math.min(r.height, viewport.height - r.top);
-		} else if(r.top < 0 && r.bottom > 0) {
+		} else if(r.bottom > 0) {
 			vh = Math.min(viewport.height, r.bottom);
-		}
+		} /* otherwise {
+			this path cannot be taken otherwise element would not be in viewport
+		} */
 
 		if(r.left >= 0) {
 			vw = Math.min(r.width, viewport.width - r.left);
-		} else if(r.left < 0 && r.right > 0) {
+		} else if(r.right > 0) {
 			vw = Math.min(viewport.width, r.right);
-		}
+		} /* otherwise {
+			 this path cannot be taken otherwise element would not be in viewport
+		} */
 
 		var area = (vh * vw) / (r.height * r.width);
 

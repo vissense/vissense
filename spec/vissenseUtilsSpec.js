@@ -283,16 +283,22 @@ describe('VisSenseUtils', function(undefined) {
                 it('should detect element where height and width are 0 as hidden', function () {
                     jasmine.getFixtures().load('hidden_dimension.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element where width is 0 as hidden', function () {
                     jasmine.getFixtures().load('hidden_dimension_width.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element where height is 0 as hidden', function () {
                     jasmine.getFixtures().load('hidden_dimension_height.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
             });
 
@@ -301,21 +307,29 @@ describe('VisSenseUtils', function(undefined) {
                 it('should detect element with ´display´ "none" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-display-none.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element with ´opacity´ < 0.01 as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-opacity.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element with ´visibility´ "hidden" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-visibility-collapse.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element with ´visibility´ "collapse" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-visibility-hidden.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
             });
 
@@ -324,39 +338,76 @@ describe('VisSenseUtils', function(undefined) {
                 it('should detect element out of viewport (top) as hidden', function () {
                     jasmine.getFixtures().load('hidden_out-of-viewport-top.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element out of viewport (right) as hidden', function () {
                     jasmine.getFixtures().load('hidden_out-of-viewport-right.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element out of viewport (bottom) as hidden', function () {
                     jasmine.getFixtures().load('hidden_out-of-viewport-bottom.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element out of viewport (left) as hidden', function () {
                     jasmine.getFixtures().load('hidden_out-of-viewport-left.html');
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
                     expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
             });
         });
 
         describe('visible elements', function() {
-            it('should detect an element as visible', function () {
-                jasmine.getFixtures().load('testVisible.html');
+            it('should detect element with 1% visibility as visible', function () {
+                jasmine.getFixtures().load('visible_1_percent_top_left.html');
                 expect($('#element')).toBeVisible();
+                expect($('#element')[0]).not.toBeVisSenseHidden();
                 expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).not.toBeVisSenseFullyVisible();
+                expect($('#element')[0]).toHaveVisSensePercentageOf(0.01);
+            });
+
+            it('should detect element bigger than viewport as visible', function () {
+                jasmine.getFixtures().load('visible_bigger_than_viewport.html');
+                expect($('#element')).toBeVisible();
+                expect($('#element')[0]).not.toBeVisSenseHidden();
+                expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).not.toBeVisSenseFullyVisible();
+
+                /* we really dont know what the viewport size will be */
+                var percentage = VisSenseUtils.percentage($('#element')[0]);
+                expect(percentage).toBeLessThan(1);
+                expect(percentage).toBeGreaterThan(0);
+
+            });
+        });
+
+        describe('fullyvisible elements', function() {
+            it('should detect an element as fullyvisible', function () {
+                jasmine.getFixtures().load('fullyvisible_simple.html');
+                expect($('#element')).toBeVisible();
+                expect($('#element')[0]).not.toBeVisSenseHidden();
+                expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).toBeVisSenseFullyVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
 
-            it('should detect element with ´opacity´ >= 0.01 as visible', function () {
-                jasmine.getFixtures().load('visible_styling-opacity.html');
+            it('should detect element with ´opacity´ >= 0.01 as fullyvisible', function () {
+                jasmine.getFixtures().load('fullyvisible_styling-opacity.html');
                 expect($('#element')).toBeVisible();
                 expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).toBeVisSenseFullyVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
+
         });
 
     });

@@ -12,17 +12,17 @@
 
   /*--------------------------------------------------------------------------*/
 
-  function extend(object, source, callback) {
+  function extend(dest, source, callback) {
     var index = -1,
         props = Object.keys(source),
         length = props.length;
 
     while (++index < length) {
       var key = props[index];
-      object[key] = callback ? callback(object[key], source[key], key, object, source) : source[key];
+      dest[key] = callback ? callback(dest[key], source[key], key, dest, source) : source[key];
     }
 
-    return object;
+    return dest;
   }
 
   function noop() {
@@ -46,18 +46,18 @@
     return obj === Object(obj);
   }
 
-  function defaults(obj, source) {
-    if (!isObject(obj)) {
+  function defaults(dest, source) {
+    if (!isObject(dest)) {
         return source;
     }
     var keys = Object.keys(source);
     for (var i = 0, n = keys.length; i < n; i++) {
       var prop = keys[i];
-      if (obj[prop] === void 0) {
-        obj[prop] = source[prop];
+      if (dest[prop] === void 0) {
+        dest[prop] = source[prop];
       }
     }
-    return obj;
+    return dest;
   }
 
   VisSenseUtils = extend(VisSenseUtils, {

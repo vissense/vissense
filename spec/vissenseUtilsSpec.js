@@ -34,9 +34,116 @@ describe('VisSenseUtils', function(undefined) {
                 expect(VisSenseUtils.isObject([])).toBe(true);
             });
 
-            it('should NOT detect null/undefined as object', function () {
+            it('should detect a function as object', function () {
+                expect(VisSenseUtils.isObject(VisSenseUtils.isObject)).toBe(true);
+            });
+
+            it('should NOT detect null/undefined/number/string/etc. as object', function () {
                 expect(VisSenseUtils.isObject(null)).toBe(false);
                 expect(VisSenseUtils.isObject(undefined)).toBe(false);
+                expect(VisSenseUtils.isObject(0/0)).toBe(false);
+                expect(VisSenseUtils.isObject(13)).toBe(false);
+                expect(VisSenseUtils.isObject('string')).toBe(false);
+            });
+        });
+
+        describe('extend', function() {
+            it('should throw errors on non-objects', function () {
+                expect(function() { VisSenseUtils.extend(null); }).toThrow();
+                expect(function() { VisSenseUtils.extend(undefined); }).toThrow();
+                expect(function() { VisSenseUtils.extend(0/0); }).toThrow();
+                expect(function() { VisSenseUtils.extend(13); }).toThrow();
+                expect(function() { VisSenseUtils.extend('string'); }).toThrow();
+            });
+
+            it('should extend an object with given values', function () {
+                var dest = {
+                    'aEnabled': 13,
+                    'bEnabled': {},
+                    'cEnabled': false,
+                    'dEnabled': true,
+                    'xEnabled': 'string'
+                };
+
+                var source = {
+                    'aEnabled': true,
+                    'bEnabled': false,
+                    'cEnabled': false,
+                    'dEnabled': true,
+                    'eEnabled': 1,
+                    'fEnabled': false
+                };
+
+                expect(VisSenseUtils.extend(dest, source)).toEqual({
+                    'aEnabled': true,
+                    'bEnabled': false,
+                    'cEnabled': false,
+                    'dEnabled': true,
+                    'eEnabled': 1,
+                    'fEnabled': false,
+                    'xEnabled': 'string'
+                });
+            });
+
+            it('should extend an array with given values', function () {
+                var dest = [
+                    false,
+                    true,
+                    false,
+                    true,
+                    null,
+                    null,
+                    13
+                ];
+
+                var source = [
+                    true,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false
+                ];
+
+                expect(VisSenseUtils.extend(dest, source)).toEqual([
+                    true,
+                    false,
+                    false,
+                    true,
+                    true,
+                    false,
+                    13
+                 ]);
+            });
+
+            it('should extend with callback values', function () {
+                var sneakIn = {
+                    'aEnabled': 42
+                };
+            ///////////////********** ;MUST BE CHANGED
+                var dest = {
+                    'aEnabled': 13,
+                    'bEnabled': {},
+                    'cEnabled': false
+                };
+
+                var source = {
+                    'aEnabled': false,
+                    'cEnabled': true
+                };
+
+                var callback = function(destVal, sourceVal, key) {
+                    if(sneakIn[key] !== undefined) {
+                        return sneakIn[key];
+                    }
+                    return sourceVal;
+                };
+
+                expect(VisSenseUtils.extend(dest, source, callback)).toEqual({
+                    'aEnabled': 42,
+                    'bEnabled': {},
+                    'cEnabled': true
+                });
             });
         });
 
@@ -46,16 +153,16 @@ describe('VisSenseUtils', function(undefined) {
                 expect(VisSenseUtils.defaults(null, false)).toBe(false);
             });
 
-            it('should add needed default values to object', function () {
-                var config = {
+            it('should add default values to object', function () {
+                var dest = {
                     'aEnabled': 13,
                     'bEnabled': {},
                     'cEnabled': false,
-                    'dEnabled': true
+                    'dEnabled': true,
+                    'xEnabled': 'string'
                 };
 
                 var defaults = {
-                    'aEnabled': true,
                     'bEnabled': false,
                     'cEnabled': false,
                     'dEnabled': true,
@@ -63,18 +170,19 @@ describe('VisSenseUtils', function(undefined) {
                     'fEnabled': false
                 };
 
-                expect(VisSenseUtils.defaults(config, defaults)).toEqual({
+                expect(VisSenseUtils.defaults(dest, defaults)).toEqual({
                     'aEnabled': 13,
                     'bEnabled': {},
                     'cEnabled': false,
                     'dEnabled': true,
                     'eEnabled': 1,
-                    'fEnabled': false
+                    'fEnabled': false,
+                    'xEnabled': 'string'
                 });
             });
 
-            it('should add needed default values to array', function () {
-                var config = [
+            it('should add default values to array', function () {
+                var dest = [
                     false,
                     true,
                     false,
@@ -90,7 +198,7 @@ describe('VisSenseUtils', function(undefined) {
                     false
                 ];
 
-                expect(VisSenseUtils.defaults(config, defaults)).toEqual([
+                expect(VisSenseUtils.defaults(dest, defaults)).toEqual([
                      false,
                      true,
                      false,

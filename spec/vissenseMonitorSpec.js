@@ -48,13 +48,4 @@ describe('VisSense Monitor', function() {
 
     });
 
-    /*
-    var element1 = document.getElementById('testNode1');
-    var vis1 = new VisSense(element1);
-    var vistimer = vis1.timer();
-
-    asyncTest( "if handler can be deregistered from VisTimer", function() {
-        expect(2);
-    });
-    */
 });

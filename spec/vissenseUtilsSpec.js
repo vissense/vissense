@@ -311,6 +311,24 @@ describe('VisSenseUtils', function(undefined) {
                 expect(style3.visibility).toEqual('collapse');
             });
 
+            it('should find inherit "display" property of simple element', function () {
+                jasmine.getFixtures().set('<div id="element" style="display: none">' +
+                    '<div style="display: inherit"></div>' +
+                    '<div style="display: block"></div>' +
+                    '<div style="display: inline-block"></div>' +
+                '</div>');
+
+                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                var style0 = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
+                var style1 = VisSenseUtils._findEffectiveStyle($('#element').children()[1]);
+                var style2 = VisSenseUtils._findEffectiveStyle($('#element').children()[2]);
+
+                expect(parentStyle.display).toEqual('none');
+                expect(style0.display).toEqual('none');
+                expect(style1.display).toEqual('block');
+                expect(style2.display).toEqual('inline-block');
+            });
+
         });
 
         describe('hidden elements', function() {
@@ -403,6 +421,22 @@ describe('VisSenseUtils', function(undefined) {
                 expect($('#element')[0]).toBeVisSenseVisible();
                 expect($('#element')[0]).not.toBeVisSenseFullyVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(0.01);
+            });
+            it('should detect element with 25% visibility as visible', function () {
+                jasmine.getFixtures().load('visible_25_percent_top_left.html');
+                expect($('#element')).toBeVisible();
+                expect($('#element')[0]).not.toBeVisSenseHidden();
+                expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).not.toBeVisSenseFullyVisible();
+                expect($('#element')[0]).toHaveVisSensePercentageOf(0.25);
+            });
+            it('should detect element with 50% visibility as visible', function () {
+                jasmine.getFixtures().load('visible_50_percent_top.html');
+                expect($('#element')).toBeVisible();
+                expect($('#element')[0]).not.toBeVisSenseHidden();
+                expect($('#element')[0]).toBeVisSenseVisible();
+                expect($('#element')[0]).not.toBeVisSenseFullyVisible();
+                expect($('#element')[0]).toHaveVisSensePercentageOf(0.5);
             });
 
             it('should detect element bigger than viewport as visible', function () {

@@ -2,14 +2,12 @@ module.exports = function(config) {
     'use strict';
 
     config.set({
- 
+
         // base path, that will be used to resolve files and exclude
         basePath: './',
  
-        // frameworks to use
         frameworks: ['jasmine'],
  
-        // list of files / patterns to load in the browser
         files: [
             'bower_components/jquery/dist/jquery.min.js',
             'bower_components/lodash/dist/lodash.min.js',
@@ -43,44 +41,31 @@ module.exports = function(config) {
             'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
             'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js',
 
-            //'src/main/client/vissense.client.js',
-
             'spec/**/*.js',
             // fixtures
             {pattern: 'spec/**/*.html', watched: true, served: true, included: false}
         ],
- 
-        // list of files to exclude
+
         exclude: [
         ],
  
-        // test results reporter to use
         reporters: ['progress', 'coverage'],
  
-        // web server port
         port: 3000,
  
-        // enable / disable colors in the output (reporters and logs)
         colors: true,
  
-        // level of logging
         logLevel: config.LOG_INFO,
  
-        // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
 
         preprocessors: {
-          // source files, that you wanna generate coverage for
-          // do not include tests or libraries
-          // (these files will be instrumented by Istanbul)
           'src/main/**/*.js': ['coverage']
         },
  
-        // Start these browsers
         browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
         //browsers: ['PhantomJS'],
 
-        // you can define custom flags
         customLaunchers: {
           Chrome_without_security: {
             base: 'Chrome',
@@ -88,7 +73,6 @@ module.exports = function(config) {
           }
         },
 
-        // optionally, configure the reporter
         coverageReporter: {
             reporters:[
               {type: 'lcov', dir:'bin/coverage/'}

@@ -43,7 +43,7 @@ module.exports = function(config) {
             'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
             'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js',
 
-            'src/main/client/vissense.client.js',
+            //'src/main/client/vissense.client.js',
 
             'spec/**/*.js',
             // fixtures

@@ -61,19 +61,11 @@ module.exports = function (grunt) {
                 ],
                 dest: 'dist/vissense.metrics.js'
             },
-            client: {
-                src: [
-                    'bower_components/happeningsjs/dist/happeningsjs.min.js',
-                    '<%= concat.metrics.dest %>',
-                    'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
-                    'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js',
-                    'src/main/client/vissense.client.js'
-                ],
-                dest: 'dist/vissense.client.js'
-            },
             dist: {
                 src: [
-                    '<%= concat.client.dest %>'
+                    '<%= concat.timer.dest %>',
+                    'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
+                    'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js'
                 ],
                 dest: 'dist/vissense.js'
             }
@@ -97,10 +89,6 @@ module.exports = function (grunt) {
             metrics: {
                 src: '<%= concat.metrics.dest %>',
                 dest: 'dist/vissense.metrics.min.js'
-            },
-            client: {
-                src: '<%= concat.client.dest %>',
-                dest: 'dist/vissense.client.min.js'
             },
             dist: {
                 src: '<%= concat.dist.dest %>',

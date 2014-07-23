@@ -1175,11 +1175,6 @@ UniformSample.prototype.update = function(val) {
             return false;
         }
 
-        var opacity = _findEffectiveStyleProperty(element, 'opacity');
-        if(+opacity <= 0.01) {
-            return false;
-        }
-
         var visibility = _findEffectiveStyleProperty(element, 'visibility');
         if(visibility === 'hidden' || visibility === 'collapse') {
             return false;

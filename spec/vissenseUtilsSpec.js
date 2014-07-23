@@ -1,4 +1,4 @@
-/*global VisSenseUtils,$,jasmine,describe,it,xit,expect*/
+/*global VisSenseUtils,$,jasmine,describe,it,expect*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -311,17 +311,6 @@ describe('VisSenseUtils', function(undefined) {
                 expect(style3.visibility).toEqual('collapse');
             });
 
-            xit('should find inherit "opacity" property of simple element', function () {
-                jasmine.getFixtures().set('<div id="element" style="opacity: 0.5">' +
-                    '<div style="height: 100px; width: 100px; background-color: red;"></div>' +
-                '</div>');
-
-                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
-                var style = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
-                expect(parentStyle.opacity).toEqual('0.5');
-                expect(style.height).toEqual('100px');
-                expect(style.width).toEqual('100px');
-            });
         });
 
         describe('hidden elements', function() {
@@ -354,13 +343,6 @@ describe('VisSenseUtils', function(undefined) {
 
                 it('should detect element with ´display´ "none" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-display-none.html');
-                    expect($('#element')[0]).toBeVisSenseHidden();
-                    expect($('#element')[0]).not.toBeVisSenseVisible();
-                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
-                });
-
-                it('should detect element with ´opacity´ <= 1% as hidden', function () {
-                    jasmine.getFixtures().load('hidden_styling-opacity.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                     expect($('#element')[0]).not.toBeVisSenseVisible();
                     expect($('#element')[0]).toHaveVisSensePercentageOf(0);
@@ -447,15 +429,6 @@ describe('VisSenseUtils', function(undefined) {
                 expect($('#element')[0]).toBeVisSenseFullyVisible();
                 expect($('#element')[0]).toHaveVisSensePercentageOf(1);
             });
-
-            it('should detect element with ´opacity´ >= 0.01 as fullyvisible', function () {
-                jasmine.getFixtures().load('fullyvisible_styling-opacity.html');
-                expect($('#element')).toBeVisible();
-                expect($('#element')[0]).toBeVisSenseVisible();
-                expect($('#element')[0]).toBeVisSenseFullyVisible();
-                expect($('#element')[0]).toHaveVisSensePercentageOf(1);
-            });
-
         });
 
     });

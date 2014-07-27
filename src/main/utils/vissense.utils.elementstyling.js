@@ -62,7 +62,7 @@
 		if (display === 'none') {
 			return false;
 		}
-		if (element.parentNode.style) {
+		if (element.parentNode && element.parentNode.style) {
 			return _isDisplayed(element.parentNode);
 		}
 		return true;

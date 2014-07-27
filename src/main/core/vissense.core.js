@@ -95,6 +95,6 @@
 
     // export VisSense
     window.VisSense = VisSense;
-    window.VisSense.version = '0.0.1';
+    window.VisSense.version = '0.1.0-rc1';
 
 }(window, Math, window.VisSenseUtils));

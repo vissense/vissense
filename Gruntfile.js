@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
                 stripBanners: true
             },
-            core: {
+            dist: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
                     'src/main/vissense.polyfill.js',
@@ -34,61 +34,12 @@ module.exports = function (grunt) {
                     'src/main/utils/vissense.utils.support.js',
                     'src/main/core/vissense.core.js'
                 ],
-                dest: 'dist/vissense.core.js'
-            },
-            monitor: {
-                src: [
-                    '<%= concat.core.dest %>',
-                    'src/main/monitor/vissense.monitor.state.js',
-                    'src/main/monitor/vissense.monitor.js'
-                ],
-                dest: 'dist/vissense.monitor.js'
-            },
-            timer: {
-                src: [
-                    '<%= concat.monitor.dest %>',
-                    'bower_components/againjs/dist/againjs.min.js',
-                    'src/main/timer/vissense.timer.js'
-                ],
-                dest: 'dist/vissense.timer.js'
-            },
-            metrics: {
-                src: [
-                    'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
-                    'bower_components/countonmejs/dist/countonmejs.min.js',
-                    '<%= concat.timer.dest %>',
-                    'src/main/metrics/vissense.metrics.js'
-                ],
-                dest: 'dist/vissense.metrics.js'
-            },
-            dist: {
-                src: [
-                    '<%= concat.timer.dest %>',
-                    'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
-                    'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js'
-                ],
                 dest: 'dist/vissense.js'
             }
         },
         uglify: {
             options: {
                 banner: '<%= banner %>'
-            },
-            core: {
-                src: '<%= concat.core.dest %>',
-                dest: 'dist/vissense.core.min.js'
-            },
-            monitor: {
-                src: '<%= concat.monitor.dest %>',
-                dest: 'dist/vissense.monitor.min.js'
-            },
-            timer: {
-                src: '<%= concat.timer.dest %>',
-                dest: 'dist/vissense.timer.min.js'
-            },
-            metrics: {
-                src: '<%= concat.metrics.dest %>',
-                dest: 'dist/vissense.metrics.min.js'
             },
             dist: {
                 src: '<%= concat.dist.dest %>',
@@ -116,8 +67,17 @@ module.exports = function (grunt) {
         },
 
         jasmine: {
-            js: {
-                src: 'dist/vissense.js',
+            coverage: {
+                src: [
+                    'src/main/utils/vissense.utils.js',
+                    'src/main/utils/vissense.utils._.js',
+                    'src/main/utils/vissense.utils.pagevisibility.js',
+                    'src/main/utils/vissense.utils.elementstyling.js',
+                    'src/main/utils/vissense.utils.elementposition.js',
+                    'src/main/utils/vissense.utils.elementvisibility.js',
+                    'src/main/utils/vissense.utils.support.js',
+                    'src/main/core/vissense.core.js'
+                ],
                 options: {
                     display: 'full',
                     summary: true,
@@ -126,23 +86,12 @@ module.exports = function (grunt) {
                         'spec/*Helper.js'
                     ],
                     vendor: [
-                        './bower_components/jquery/dist/jquery.min.js',
-                        './bower_components/lodash/dist/lodash.min.js',
-                        './bower_components/jasmine-jquery/lib/jasmine-jquery.js'
-                    ]
-                }
-            },
-            coverage: {
-                src: ['dist/vissense.js'],
-                options: {
-                    specs: ['spec/*Spec.js'],
-                    helpers: [
-                        'spec/*Helper.js'
-                    ],
-                    vendor: [
-                        './bower_components/jquery/dist/jquery.min.js',
-                        './bower_components/lodash/dist/lodash.min.js',
-                        './bower_components/jasmine-jquery/lib/jasmine-jquery.js'
+                        'bower_components/jquery/dist/jquery.min.js',
+                        'bower_components/lodash/dist/lodash.min.js',
+                        'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+                        'bower_components/visibilityjs/lib/visibility.core.js',
+
+                        'src/main/vissense.polyfill.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {
@@ -240,6 +189,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'qunit', 'notify:test']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', /*'qunit',*/ 'notify:test']);
 };
 

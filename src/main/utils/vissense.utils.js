@@ -8,7 +8,7 @@
   'use strict';
 
     function _window(element) {
-        if(!element) {
+        if(!element || !element.ownerDocument) {
             return window;
         }
         var doc = element.ownerDocument;

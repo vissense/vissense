@@ -13,11 +13,6 @@ module.exports = function(config) {
             'bower_components/lodash/dist/lodash.min.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
 
-            'bower_components/brwsrfy-metrics/dist/brwsrfy-metrics.js',
-            'bower_components/countonmejs/dist/countonmejs.min.js',
-            'bower_components/happeningsjs/dist/happeningsjs.min.js',
-            'bower_components/againjs/dist/againjs.min.js',
-
             'bower_components/visibilityjs/lib/visibility.core.js',
 
             'src/main/vissense.polyfill.js',
@@ -30,16 +25,6 @@ module.exports = function(config) {
             'src/main/utils/vissense.utils.support.js',
 
             'src/main/core/vissense.core.js',
-
-            'src/main/monitor/vissense.monitor.state.js',
-            'src/main/monitor/vissense.monitor.js',
-
-            'src/main/timer/vissense.timer.js',
-
-            'src/main/metrics/vissense.metrics.js',
-
-            'src/main/plugins/percentage_time_test/vissense.plugins.percentage_time_test.js',
-            'src/main/plugins/percentage_time_test/vissense.plugins.50_1_test.js',
 
             'spec/**/*.js',
             // fixtures
@@ -60,7 +45,8 @@ module.exports = function(config) {
         autoWatch: true,
 
         preprocessors: {
-          'src/main/**/*.js': ['coverage']
+          'src/main/core/*.js': ['coverage'],
+          'src/main/utils/*.js': ['coverage']
         },
  
         browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],

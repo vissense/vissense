@@ -1,4 +1,4 @@
-/*global VisSenseUtils,$,jasmine,describe,it,expect*/
+/*global VisSenseUtils,$,jasmine,describe,it,expect,_*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -319,14 +319,65 @@ describe('VisSenseUtils', function(undefined) {
                 '</div>');
 
                 var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
-                var style0 = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
-                var style1 = VisSenseUtils._findEffectiveStyle($('#element').children()[1]);
-                var style2 = VisSenseUtils._findEffectiveStyle($('#element').children()[2]);
+
+                var children = $('#element').children();
+                var style0 = VisSenseUtils._findEffectiveStyle(children[0]);
+                var style1 = VisSenseUtils._findEffectiveStyle(children[1]);
+                var style2 = VisSenseUtils._findEffectiveStyle(children[2]);
 
                 expect(parentStyle.display).toEqual('none');
                 expect(style0.display).toEqual('none');
                 expect(style1.display).toEqual('block');
                 expect(style2.display).toEqual('inline-block');
+            });
+
+            it('should detect children in container with style "display:none" to be hidden', function () {
+                jasmine.getFixtures().set('<div id="element" style="display: none">' +
+                    '<div style="display: inherit"></div>' +
+                    '<div style="display: block"></div>' +
+                    '<div style="display: inline-block"></div>' +
+                    '<div style="display: none"></div>' +
+                    '<div style="visibility: hidden"></div>' +
+                    '<div style="visibility: collapse"></div>' +
+                    '<div style="visibility: visible"></div>' +
+                '</div>');
+
+                expect(VisSenseUtils._isDisplayed($('#element')[0])).toBe(false);
+                expect(VisSenseUtils.isVisibleByStyling($('#element')[0])).toBe(false);
+
+                _.forEach($('#element').children(), function(child) {
+                    expect(VisSenseUtils._isDisplayed(child)).toBe(false);
+                    expect(VisSenseUtils.isVisibleByStyling(child)).toBe(false);
+                });
+
+            });
+
+
+            it('should detect children in container with style "display:block" to be visible', function () {
+                jasmine.getFixtures().set('<div id="element" style="display: block">' +
+                    '<div style="display: inherit"></div>' +
+                    '<div style="display: inline-block"></div>' +
+                    '<div style="display: none"></div>' +
+                '</div>');
+
+                var children = $('#element').children();
+
+                expect(VisSenseUtils._isDisplayed($('#element')[0])).toBe(true);
+                expect(VisSenseUtils._isDisplayed(children[0])).toBe(true);
+                expect(VisSenseUtils._isDisplayed(children[1])).toBe(true);
+                expect(VisSenseUtils._isDisplayed(children[2])).toBe(false);
+
+                expect(VisSenseUtils.isVisibleByStyling($('#element')[0])).toBe(true);
+                expect(VisSenseUtils.isVisibleByStyling(children[0])).toBe(true);
+                expect(VisSenseUtils.isVisibleByStyling(children[1])).toBe(true);
+                expect(VisSenseUtils.isVisibleByStyling(children[2])).toBe(false);
+            });
+
+            it('should detect "document" has visible by styling', function () {
+                expect(VisSenseUtils.isVisibleByStyling(document)).toBe(true);
+            });
+            it('should detect "null" has hidden by styling', function () {
+                expect(VisSenseUtils.isVisibleByStyling(null)).toBe(false);
             });
 
         });

@@ -1,7 +1,7 @@
 {
   "name": "vissense",
-  "version": "0.0.3",
-  "homepage": "https://github.com/theborakompanioni/vissense",
+  "version": "0.1.0-rc1",
+  "homepage": "https://example.com",
   "authors": [
     "tbk"
   ],
@@ -30,10 +30,6 @@
     "jasmine-jquery": "velesin/jasmine-jquery#2.0.5"
   },
   "dependencies": {
-    "visibilityjs": "~1.2.1",
-    "brwsrfy-metrics": "*",
-    "againjs": "theborakompanioni/againjs#0.0.11",
-    "countonmejs": "theborakompanioni/countonmejs#0.1.0",
-    "happeningsjs": "theborakompanioni/happeningsjs#0.0.1"
+    "visibilityjs": "~1.2.1"
   }
 }

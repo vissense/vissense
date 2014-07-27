@@ -2,7 +2,14 @@
 */
 ;(function(/*window*/) {
   'use strict';
-  // Date.now is polyfilled by againjs!
+
+    // polyfill for Date.now()
+    // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+    if (!Date.now) {
+       Date.now = function() {
+         return new Date().getTime();
+       };
+    }
 
     // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
     if (!Object.keys) {

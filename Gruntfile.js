@@ -24,14 +24,7 @@ module.exports = function (grunt) {
             dist: {
                 src: [
                     'bower_components/visibilityjs/lib/visibility.core.js',
-                    'src/main/vissense.polyfill.js',
                     'src/main/utils/vissense.utils.js',
-                    'src/main/utils/vissense.utils._.js',
-                    'src/main/utils/vissense.utils.pagevisibility.js',
-                    'src/main/utils/vissense.utils.elementstyling.js',
-                    'src/main/utils/vissense.utils.elementposition.js',
-                    'src/main/utils/vissense.utils.elementvisibility.js',
-                    'src/main/utils/vissense.utils.support.js',
                     'src/main/core/vissense.core.js'
                 ],
                 dest: 'dist/vissense.js'
@@ -70,12 +63,6 @@ module.exports = function (grunt) {
             coverage: {
                 src: [
                     'src/main/utils/vissense.utils.js',
-                    'src/main/utils/vissense.utils._.js',
-                    'src/main/utils/vissense.utils.pagevisibility.js',
-                    'src/main/utils/vissense.utils.elementstyling.js',
-                    'src/main/utils/vissense.utils.elementposition.js',
-                    'src/main/utils/vissense.utils.elementvisibility.js',
-                    'src/main/utils/vissense.utils.support.js',
                     'src/main/core/vissense.core.js'
                 ],
                 options: {
@@ -89,9 +76,7 @@ module.exports = function (grunt) {
                         'bower_components/jquery/dist/jquery.min.js',
                         'bower_components/lodash/dist/lodash.min.js',
                         'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
-                        'bower_components/visibilityjs/lib/visibility.core.js',
-
-                        'src/main/vissense.polyfill.js'
+                        'bower_components/visibilityjs/lib/visibility.core.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {

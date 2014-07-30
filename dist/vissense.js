@@ -191,68 +191,12 @@
 
 })(this);
 
-;(function(/*window*/) {
-  'use strict';
-
-    // polyfill for Date.now()
-    // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
-    if (!Date.now) {
-       Date.now = function() {
-         return new Date().getTime();
-       };
-    }
-
-    // @href https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-    if (!Object.keys) {
-      Object.keys = (function () {
-        var hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
-            dontEnums = [
-              'toString',
-              'toLocaleString',
-              'valueOf',
-              'hasOwnProperty',
-              'isPrototypeOf',
-              'propertyIsEnumerable',
-              'constructor'
-            ],
-            dontEnumsLength = dontEnums.length;
-
-        return function (obj) {
-          if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
-            throw new TypeError('Object.keys called on non-object');
-          }
-
-          var result = [], prop, i;
-
-          for (prop in obj) {
-            if (hasOwnProperty.call(obj, prop)) {
-              result.push(prop);
-            }
-          }
-
-          if (hasDontEnumBug) {
-            for (i = 0; i < dontEnumsLength; i++) {
-              if (hasOwnProperty.call(obj, dontEnums[i])) {
-                result.push(dontEnums[i]);
-              }
-            }
-          }
-          return result;
-        };
-      }());
-    }
-
-}(window));
-;(function(window, undefined) {
+;(function(window, Visibility, undefined) {
   'use strict';
 
     function _window(element) {
-        if(!element || !element.ownerDocument) {
-            return window;
-        }
-        var doc = element.ownerDocument;
-        return 'defaultView' in doc ? doc.defaultView : doc.parentWindow;
+        var doc = element && element.ownerDocument;
+        return doc ? doc.defaultView || doc.parentWindow : window;
 	}
 
     /**
@@ -264,113 +208,135 @@
       };
     }
 
-    this.VisSenseUtils = {
+    var VisSenseUtils = {
         _window : _window,
         fireIf: fireIf
     };
 
-}.call(this, window));
-/**
- * depends on ['vissense.utils']
- */
- ;(function(window, VisSenseUtils, undefined) {
-  'use strict';
+      function extend(dest, source, callback) {
+        var index = -1,
+            props = Object.keys(source),
+            length = props.length;
 
-  /*--------------------------------------------------------------------------*/
-
-  function extend(dest, source, callback) {
-    var index = -1,
-        props = Object.keys(source),
-        length = props.length;
-
-    while (++index < length) {
-      var key = props[index];
-      dest[key] = callback ? callback(dest[key], source[key], key, dest, source) : source[key];
-    }
-
-    return dest;
-  }
-
-  function noop() {
-  }
-
-  function identity(i) {
-    return i;
-  }
-
-  function now() {
-      return new Date().getTime();
-  }
-
-  function defer(callback) {
-      return window.setTimeout(function() {
-          callback();
-      }, 0 /*1*/);
-  }
-
-  function isObject(obj) {
-    return obj === Object(obj);
-  }
-
-  function defaults(dest, source) {
-    if (!isObject(dest)) {
-        return source;
-    }
-    var keys = Object.keys(source);
-    for (var i = 0, n = keys.length; i < n; i++) {
-      var prop = keys[i];
-      if (dest[prop] === void 0) {
-        dest[prop] = source[prop];
-      }
-    }
-    return dest;
-  }
-
-  VisSenseUtils = extend(VisSenseUtils, {
-    noop:noop,
-    identity:identity,
-    isObject:isObject,
-    defaults:defaults,
-    extend:extend,
-    now:now,
-    defer:defer
-  });
-
-}(window, window.VisSenseUtils));
-;(function(window, VisSenseUtils, Visibility) {
-  'use strict';
-
-    /*--------------------------------------------------------------------------*/
-    var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
-
-    function isPageVisibilityAPIAvailable() {
-      return !!PageVisibilityAPIAvailable;
-    }
-
-    function isPageVisible() {
-      return PageVisibilityAPIAvailable ? !Visibility.hidden() : true;
-    }
-
-    function onPageVisibilityChange(callback) {
-        if(PageVisibilityAPIAvailable) {
-            Visibility.change(callback);
+        while (++index < length) {
+          var key = props[index];
+          dest[key] = callback ? callback(dest[key], source[key], key, dest, source) : source[key];
         }
-    }
 
-    VisSenseUtils.isPageVisibilityAPIAvailable = isPageVisibilityAPIAvailable;
-    VisSenseUtils.isPageVisible = isPageVisible;
-    VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
+        return dest;
+      }
+
+      function noop() {
+      }
+
+      function identity(i) {
+        return i;
+      }
+
+      function now() {
+          return new Date().getTime();
+      }
+
+      function defer(callback) {
+          return window.setTimeout(function() {
+              callback();
+          }, 0 /*1*/);
+      }
+
+      function isObject(obj) {
+        return obj === Object(obj);
+      }
+
+      function defaults(dest, source) {
+        if (!isObject(dest)) {
+            return source;
+        }
+        var keys = Object.keys(source);
+        for (var i = 0, n = keys.length; i < n; i++) {
+          var prop = keys[i];
+          if (dest[prop] === void 0) {
+            dest[prop] = source[prop];
+          }
+        }
+        return dest;
+      }
+
+      VisSenseUtils = extend(VisSenseUtils, {
+        noop:noop,
+        identity:identity,
+        isObject:isObject,
+        defaults:defaults,
+        extend:extend,
+        now:now,
+        defer:defer
+      });
+
+    /********************************************************** element-position */
+
+	function _getBoundingClientRect(element) {
+		var r = element.getBoundingClientRect();
+		// height and width are not standard elements - so lets add them
+		if(r.height === undefined || r.width === undefined) {
+			// copying object because attributes cannot be added to 'r'
+			return extend({
+				height: element.clientHeight,
+				width: element.clientWidth
+			}, r);
+		}
+		return r;
+	}
+
+	/**
+	* return the viewport (does *not* subtract scrollbar size)
+	*/
+    function viewport(element) {
+        var w = element ? VisSenseUtils._window(element) : window;
+        if(w.innerWidth === undefined) {
+            return {
+                height: w.document.documentElement.clientHeight,
+                width: w.document.documentElement.clientWidth
+            };
+        }
+		return {
+		    height: w.innerHeight,
+		    width: w.innerWidth
+		};
+	}
+
+	function isFullyInViewport(element) {
+		var r = _getBoundingClientRect(element);
+		if(!r || (r.width <= 0 || r.height <= 0)) {
+			return false;
+		}
+		var view = viewport(element);
+
+		return r.top >= 0 &&
+			r.left >= 0 &&
+			r.bottom <= view.height &&
+			r.right <= view.width;
+	}
+
+	function isInViewport(element) {
+		var r = _getBoundingClientRect(element);
+		if(!r || (r.width <= 0 || r.height <= 0)) {
+			return false;
+		}
+		var view = viewport(element);
+		return r.bottom > 0 &&
+			r.right > 0 &&
+			r.top < view.height &&
+			r.left < view.width;
+	}
+
+    VisSenseUtils.viewport = viewport;
+    VisSenseUtils.isFullyInViewport = isFullyInViewport;
+    VisSenseUtils.isInViewport = isInViewport;
+    VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
 
 
-}(window, window.VisSenseUtils, window.Visibility));
-/**
- * Exports following functions to VisSenseUtils
- *
- * - isVisibleByStyling
- *
- */
-;(function(window, VisSenseUtils, undefined) {
-  'use strict';
+    /********************************************************** element-position end */
+
+    /********************************************************** element-styling */
 
     function _isVisibleByOffsetParentCheck(element) {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
@@ -457,213 +423,94 @@
     VisSenseUtils._findEffectiveStyle = _findEffectiveStyle;
     VisSenseUtils.isVisibleByStyling = isVisibleByStyling;
 
-}(window, window.VisSenseUtils));
-/**
- * Exports following functions to VisSenseUtils
- *
- * viewportHeight
- * viewportWidth
- * isFullyInViewport
- * isInViewport
- * _getBoundingClientRect
- */
-;(function(window, VisSenseUtils, undefined) {
-  'use strict';
+    /********************************************************** element-styling end */
 
-	function _getBoundingClientRect(element) {
-		var r = element.getBoundingClientRect();
-		// height and width are not standard elements - so lets add them
-		if(r.height === undefined || r.width === undefined) {
-			// copying object because attributes cannot be added to 'r'
-			return {
-				top: r.top,
-				bottom: r.bottom,
-				left: r.left,
-				right: r.right,
-				height: element.clientHeight,
-				width: element.clientWidth
-			};
-		}
-		return r;
-	}
+    /********************************************************** element visibility */
 
-	/**
-	* return the viewport (does *not* subtract scrollbar size)
-	*/
-    function viewport(element) {
-        var w = element ? VisSenseUtils._window(element) : window;
-        if(w.innerWidth === undefined) {
-            return {
-                height: w.document.documentElement.clientHeight,
-                width: w.document.documentElement.clientWidth
-            };
-        }
-		return {
-		    height: w.innerHeight,
-		    width: w.innerWidth
-		};
-	}
+    function percentage(element) {
+  		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {
+  			return 0;
+  		}
+  		// r's height and width are greater than 0 because element is in viewport
+  		var r = VisSenseUtils._getBoundingClientRect(element);
 
-	function isFullyInViewport(element) {
-		var r = _getBoundingClientRect(element);
-		if(!r || (r.width <= 0 || r.height <= 0)) {
-			return false;
-		}
-		var view = viewport(element);
+  		var vh = 0; // visible height
+  		var vw = 0; // visible width
+  		var viewport = VisSenseUtils.viewport(element);
 
-		return r.top >= 0 &&
-			r.left >= 0 &&
-			r.bottom <= view.height &&
-			r.right <= view.width;
-	}
+  		if(r.top >= 0) {
+  			vh = Math.min(r.height, viewport.height - r.top);
+  		} else if(r.bottom > 0) {
+  			vh = Math.min(viewport.height, r.bottom);
+  		} /* otherwise {
+  			this path cannot be taken otherwise element would not be in viewport
+  		} */
 
-	function isInViewport(element) {
-		var r = _getBoundingClientRect(element);
-		if(!r || (r.width <= 0 || r.height <= 0)) {
-			return false;
-		}
-		var view = viewport(element);
-		return r.bottom > 0 &&
-			r.right > 0 &&
-			r.top < view.height &&
-			r.left < view.width;
-	}
+  		if(r.left >= 0) {
+  			vw = Math.min(r.width, viewport.width - r.left);
+  		} else if(r.right > 0) {
+  			vw = Math.min(viewport.width, r.right);
+  		} /* otherwise {
+  			 this path cannot be taken otherwise element would not be in viewport
+  		} */
 
-    VisSenseUtils.viewport = viewport;
-    VisSenseUtils.isFullyInViewport = isFullyInViewport;
-    VisSenseUtils.isInViewport = isInViewport;
-    VisSenseUtils._getBoundingClientRect = _getBoundingClientRect;
+  		var area = (vh * vw) / (r.height * r.width);
 
-}(window, window.VisSenseUtils));
-/*
- *
- * - percentage
- * - isVisible
- * - isFullyVisible
- * - isHidden
- */
-;(function(window, Math, VisSenseUtils, undefined) {
-  'use strict';
+  		return Math.max(area, 0);
+  	}
 
-	function percentage(element) {
-		if(!VisSenseUtils.isInViewport(element) || !VisSenseUtils.isVisibleByStyling(element) || !VisSenseUtils.isPageVisible()) {
-			return 0;
-		}
-		// r's height and width are greater than 0 because element is in viewport
-		var r = VisSenseUtils._getBoundingClientRect(element);
+  	function isFullyVisible(element) {
+  		return VisSenseUtils.isPageVisible() &&
+  		VisSenseUtils.isFullyInViewport(element) &&
+  		VisSenseUtils.isVisibleByStyling(element);
+  	}
 
-		var vh = 0; // visible height
-		var vw = 0; // visible width
-		var viewport = VisSenseUtils.viewport(element);
+      function isVisible(element) {
+          return VisSenseUtils.isPageVisible() &&
+          VisSenseUtils.isInViewport(element) &&
+          VisSenseUtils.isVisibleByStyling(element);
+      }
 
-		if(r.top >= 0) {
-			vh = Math.min(r.height, viewport.height - r.top);
-		} else if(r.bottom > 0) {
-			vh = Math.min(viewport.height, r.bottom);
-		} /* otherwise {
-			this path cannot be taken otherwise element would not be in viewport
-		} */
+      function isHidden(element) {
+          return !isVisible(element);
+      }
 
-		if(r.left >= 0) {
-			vw = Math.min(r.width, viewport.width - r.left);
-		} else if(r.right > 0) {
-			vw = Math.min(viewport.width, r.right);
-		} /* otherwise {
-			 this path cannot be taken otherwise element would not be in viewport
-		} */
+      VisSenseUtils.percentage = percentage;
+      VisSenseUtils.isFullyVisible = isFullyVisible;
+      VisSenseUtils.isVisible = isVisible;
+      VisSenseUtils.isHidden = isHidden;
 
-		var area = (vh * vw) / (r.height * r.width);
 
-		return Math.max(area, 0);
-	}
+    /********************************************************** element visibility end */
 
-	function isFullyVisible(element) {
-		return VisSenseUtils.isPageVisible() &&
-		VisSenseUtils.isFullyInViewport(element) &&
-		VisSenseUtils.isVisibleByStyling(element);
-	}
+    /********************************************************** page visibility */
+    var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
 
-    function isVisible(element) {
-        return VisSenseUtils.isPageVisible() &&
-        VisSenseUtils.isInViewport(element) &&
-        VisSenseUtils.isVisibleByStyling(element);
+    function isPageVisibilityAPIAvailable() {
+      return !!PageVisibilityAPIAvailable;
     }
 
-    function isHidden(element) {
-        return !isVisible(element);
+    function isPageVisible() {
+      return PageVisibilityAPIAvailable ? !Visibility.hidden() : true;
     }
 
-    VisSenseUtils.percentage = percentage;
-    VisSenseUtils.isFullyVisible = isFullyVisible;
-    VisSenseUtils.isVisible = isVisible;
-    VisSenseUtils.isHidden = isHidden;
-
-}(window, Math, window.VisSenseUtils));
-;(function(window, VisSenseUtils, undefined) {
-  'use strict';
-
-    /**
-     * An object used to flag environments features.
-     */
-    var support = (function(window, document) {
-        /**
-        * Detect IE version
-        */
-        function getIEVersion() {
-          var v = 4, div = document.createElement('div');
-          while (
-            div.innerHTML = '<!--[if gt IE '+v+']><i></i><![endif]-->',
-            div.getElementsByTagName('i')[0]
-          ){
-            v++;
-          }
-          return v > 4 ? v : undefined;
+    function onPageVisibilityChange(callback) {
+        if(PageVisibilityAPIAvailable) {
+            Visibility.change(callback);
         }
+    }
 
-        /**
-         * Detect IE
-         
-        function isIE() {
-          return !!getIEVersion();
-        }*/
+    VisSenseUtils.isPageVisibilityAPIAvailable = isPageVisibilityAPIAvailable;
+    VisSenseUtils.isPageVisible = isPageVisible;
+    VisSenseUtils.onPageVisibilityChange = onPageVisibilityChange;
 
-        /**
-         * Detect if the DOM is supported.
-         */
-        function isDomPresent() {
-          try {
-           return document.createDocumentFragment().nodeType === 11;
-          } catch(e) {}
-          return false;
-        }
+    /********************************************************** page visibility end */
 
-        function canReadStyle() {
-          try {
-           return !!VisSenseUtils._findEffectiveStyle(document.getElementsByTagName('body')[0]);
-          } catch(e) {}
-          return false;
-        }
 
-        var support = {};
-        support.MinIEVersion = 7;
-        support.PageVisibilityAPIAvailable = VisSenseUtils.isPageVisibilityAPIAvailable();
-        support.IEVersion = getIEVersion();
-        support.DOMPresent = isDomPresent();
-        support.CanReadStyle = canReadStyle();
 
-        var ieVersion = getIEVersion();
-        support.BrowserSupported = ieVersion === undefined || support.IEVersion >= support.MinIEVersion;
+    window.VisSenseUtils = VisSenseUtils;
 
-        support.compatible = support.DOMPresent && support.CanReadStyle && support.BrowserSupported;
-
-        return support;
-    }(window, window.document));
-
-    VisSenseUtils.support = function() {
-        return support;
-    };
-
-}(window, window.VisSenseUtils));
+}.call(this, window, window.Visibility || null));
 ;(function(window, Math, VisSenseUtils, undefined) {
   'use strict';
 

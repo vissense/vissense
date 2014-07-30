@@ -17,13 +17,6 @@ module.exports = function(config) {
 
             'src/main/vissense.polyfill.js',
             'src/main/utils/vissense.utils.js',
-            'src/main/utils/vissense.utils._.js',
-            'src/main/utils/vissense.utils.pagevisibility.js',
-            'src/main/utils/vissense.utils.elementstyling.js',
-            'src/main/utils/vissense.utils.elementposition.js',
-            'src/main/utils/vissense.utils.elementvisibility.js',
-            'src/main/utils/vissense.utils.support.js',
-
             'src/main/core/vissense.core.js',
 
             'spec/**/*.js',

@@ -1,4 +1,5 @@
 /**
+* deprecated: polyfills dont belong to the project.
 */
 ;(function(/*window*/) {
   'use strict';

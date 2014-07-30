@@ -8,12 +8,6 @@
 describe('VisSenseUtils', function(undefined) {
     'use strict';
 
-    it('should retrieve support object', function () {
-        var support = VisSenseUtils.support();
-        expect(support).toBeDefined();
-        expect(support.compatible).toBe(true);
-    });
-
     it('should verify that identity() returns the object passed', function () {
         var a = {};
         expect(VisSenseUtils.identity(a)).toBe(a);

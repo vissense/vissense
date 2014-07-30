@@ -50,38 +50,6 @@ function isHiddenInputElement(element) {
 ### What it does *not*
 
 
-
-
-## vismon
-### What it does
- * provides a convenience class for detecting changes in visibility
- * memoizes current and previous computed results
-
-### What it does *not*
- * update automatically. this is up to you - hence giving you the freedom to decide when
-   to trigger updates. here is what this could look like:
-
-```
-#!javascript
-var vismon = VisSense(element).monitor();
-
-(function initVisMonUpdateStrategy() {
-    var updateTriggerEvents = ['readystatechange', 'scroll', 'resize'];
-
-    for(var i in updateTriggerEvents) {
-        if(updateTriggerEvents.hasOwnProperty(i)) {
-            VisSenseUtils.addEvent(window, updateTriggerEvents[i], vismon.update);
-        }
-    }
-
-    // triggers update if mouse moves over element
-    // this is important for example if the element is draggable
-    VisSenseUtils.addEvent(vismon.visobj()._element, 'mousemove', vismon.update);
-}());
-```
-
-
-
 ## vistimer
 ### What it does
  * provides a convenience class for periodically tasks based on elements visibility

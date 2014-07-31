@@ -1,4 +1,4 @@
-/* global VisSenseUtils,jasmine,beforeEach*/
+/* global VisSenseUtils,VisSense,jasmine,beforeEach*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -14,8 +14,9 @@ beforeEach(function () {
         return 'Expected '+valueDescription+' to be "'+expected+'", but it was "'+actual+'"! ';
     }
     function getVisibilityState(element) {
-        return VisSenseUtils.isHidden(element) ? 'hidden' :
-            (VisSenseUtils.isFullyVisible(element) ? 'fullyvisible' : 'visible');
+        var vis = VisSense.of(element);
+        return vis.isHidden() ? 'hidden' :
+            (vis.isFullyVisible() ? 'fullyvisible' : 'visible');
     }
 
     jasmine.addMatchers({
@@ -35,7 +36,7 @@ beforeEach(function () {
             return {
                 compare: function (element) {
                     var result = {};
-                    result.pass = VisSenseUtils.isHidden(element);
+                    result.pass = VisSense.of(element).isHidden();
                     result.message = getMessage('visibility', result, getVisibilityState(element), 'hidden');
                     return result;
                 }
@@ -45,7 +46,7 @@ beforeEach(function () {
             return {
                 compare: function (element) {
                     var result = {};
-                    result.pass = VisSenseUtils.isVisible(element);
+                    result.pass = VisSense.of(element).isVisible();
                     result.message = getMessage('visibility', result, getVisibilityState(element), 'visible');
                     return result;
                 }
@@ -55,7 +56,7 @@ beforeEach(function () {
             return {
                 compare: function (element) {
                     var result = {};
-                    result.pass = VisSenseUtils.isFullyVisible(element);
+                    result.pass = VisSense.of(element).isFullyVisible();
                     result.message = getMessage('visibility', result, getVisibilityState(element), 'fullyvisible');
                     return result;
                 }

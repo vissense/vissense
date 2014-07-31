@@ -1,4 +1,4 @@
-    /**
+/**
  * @license
  * Vissense <http://vissense.com/>
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
@@ -87,7 +87,7 @@
     /**
     * return the viewport (does *not* subtract scrollbar size)
     */
-    function viewport(element) {
+    function _viewport(element) {
         var w = element ?   _window(element) : window;
         if(w.innerWidth === undefined) {
             return {
@@ -99,31 +99,6 @@
             height: w.innerHeight,
             width: w.innerWidth
         };
-    }
-
-    function isFullyInViewport(element) {
-        var r = _getBoundingClientRect(element);
-        if(!r || (r.width <= 0 || r.height <= 0)) {
-            return false;
-        }
-        var view = viewport(element);
-
-        return r.top >= 0 &&
-            r.left >= 0 &&
-            r.bottom <= view.height &&
-            r.right <= view.width;
-    }
-
-    function isInViewport(element) {
-        var r = _getBoundingClientRect(element);
-        if(!r || (r.width <= 0 || r.height <= 0)) {
-            return false;
-        }
-        var view = viewport(element);
-        return r.bottom > 0 &&
-            r.right > 0 &&
-            r.top < view.height &&
-            r.left < view.width;
     }
 
 
@@ -152,47 +127,30 @@
         return true;
     }
 
-    function _findEffectiveStyle(element) {
-        var w =  _window(element);
-
+    function _findEffectiveStyleProperty(element, property, computedStyleProvider) {
         if (element.style === undefined) {
-            return; // not a styled element
+            return; // not a styled element, e.g. document
         }
-        if (w.getComputedStyle) {
-            // DOM-Level-2-CSS
-            return w.getComputedStyle(element, null);
-        }
-        if (element.currentStyle) {
-            // non-standard IE alternative
-            return element.currentStyle;
-            // TODO: this won't really work in a general sense, as
-            //   currentStyle is not identical to getComputedStyle()
-            //   ... but it's good enough for "visibility"
-        }
-
-        throw new Error('cannot determine effective stylesheet');
-    }
-
-    function _findEffectiveStyleProperty(element, property) {
-        var effectiveStyle = _findEffectiveStyle(element);
-        if(!effectiveStyle) {
-            return;
-        }
-        var propertyValue = effectiveStyle[property];
-        if (propertyValue === 'inherit' && element.parentNode.style) {
-            return _findEffectiveStyleProperty(element.parentNode, property);
-        }
-        return propertyValue;
+        var w =  computedStyleProvider || _window(element);
+        var effectiveStyle =  w.getComputedStyle(element, null);
+        return effectiveStyle && effectiveStyle.getPropertyValue(property);
     }
 
     function _isDisplayed(element) {
-        var display = _findEffectiveStyleProperty(element, 'display');
+        var display = _findEffectiveStyleProperty(element, 'display', _window(element));
         if (display === 'none') {
             return false;
         }
+
+        var visibility = _findEffectiveStyleProperty(element, 'visibility', _window(element));
+        if (visibility === 'hidden' || visibility === 'collapse') {
+            return false;
+        }
+
         if (element.parentNode && element.parentNode.style) {
             return _isDisplayed(element.parentNode);
         }
+
         return true;
     }
 
@@ -214,68 +172,61 @@
             return false;
         }
 
-        var visibility = _findEffectiveStyleProperty(element, 'visibility');
-        if(visibility === 'hidden' || visibility === 'collapse') {
-            return false;
-        }
-
         return true;
     }
     /********************************************************** element-styling end */
 
     /********************************************************** element visibility */
 
+    function _isInViewport(rect, viewport) {
+        if(!rect || (rect.width <= 0 || rect.height <= 0)) {
+            return false;
+        }
+        return rect.bottom > 0 &&
+            rect.right > 0 &&
+            rect.top < viewport.height &&
+            rect.left < viewport.width;
+    }
+
     function percentage(element) {
-        if(!isPageVisible() || !isInViewport(element) || !isVisibleByStyling(element)) {
+        if(!isPageVisible()) {
             return 0;
         }
-        // r's height and width are greater than 0 because element is in viewport
-        var r =   _getBoundingClientRect(element);
+
+        var rect = _getBoundingClientRect(element);
+        var view = _viewport(element);
+
+        if(!_isInViewport(rect, view) || !isVisibleByStyling(element)) {
+           return 0;
+        }
 
         var vh = 0; // visible height
         var vw = 0; // visible width
-        var view = viewport(element);
 
-        if(r.top >= 0) {
-            vh = Math.min(r.height, view.height - r.top);
-        } else if(r.bottom > 0) {
-            vh = Math.min(view.height, r.bottom);
+        if(rect.top >= 0) {
+            vh = Math.min(rect.height, view.height - rect.top);
+        } else if(rect.bottom > 0) {
+            vh = Math.min(view.height, rect.bottom);
         } /* otherwise {
             this path cannot be taken otherwise element would not be in viewport
         } */
 
-        if(r.left >= 0) {
-            vw = Math.min(r.width, view.width - r.left);
-        } else if(r.right > 0) {
-            vw = Math.min(view.width, r.right);
+        if(rect.left >= 0) {
+            vw = Math.min(rect.width, view.width - rect.left);
+        } else if(rect.right > 0) {
+            vw = Math.min(view.width, rect.right);
         } /* otherwise {
              this path cannot be taken otherwise element would not be in viewport
         } */
 
-        var area = (vh * vw) / (r.height * r.width);
-
-        return Math.max(area, 0);
+        // rect's height and width are greater than 0 because element is in viewport
+        return (vh * vw) / (rect.height * rect.width);
     }
 
-    function isFullyVisible(element) {
-        return  isPageVisible() &&
-            isFullyInViewport(element) &&
-            isVisibleByStyling(element);
-    }
-
-    function isVisible(element) {
-        return  isPageVisible() &&
-            isInViewport(element) &&
-            isVisibleByStyling(element);
-    }
-
-    function isHidden(element) {
-        return !isVisible(element);
-    }
     /********************************************************** element visibility end */
 
-    /********************************************************** page visibility */
-    var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
+    /********************************************************** page visibility - hard dependency to Visibilityjs*/
+    var PageVisibilityAPIAvailable = Visibility && Visibility.change && Visibility.isSupported && Visibility.isSupported();
 
     function isPageVisibilityAPIAvailable() {
         return !!PageVisibilityAPIAvailable;
@@ -293,7 +244,7 @@
     /********************************************************** page visibility end */
 
     window.VisSenseUtils = extend({}, {
-        _window : _window,
+
         fireIf: fireIf,
 
         noop:noop,
@@ -309,18 +260,17 @@
         onPageVisibilityChange : onPageVisibilityChange,
 
         percentage : percentage,
-        isFullyVisible : isFullyVisible,
-        isVisible : isVisible,
-        isHidden : isHidden,
+        isVisibleByStyling : isVisibleByStyling,
 
-        viewport : viewport,
-        isFullyInViewport : isFullyInViewport,
-        isInViewport : isInViewport,
+        _window : _window,
+
+        _viewport : _viewport,
+        _isInViewport : _isInViewport,
 
         _getBoundingClientRect : _getBoundingClientRect,
         _isDisplayed : _isDisplayed,
-        _findEffectiveStyle : _findEffectiveStyle,
-        isVisibleByStyling : isVisibleByStyling
+        _findEffectiveStyleProperty:_findEffectiveStyleProperty
+
     });
 
 

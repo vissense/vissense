@@ -1,196 +1,4 @@
 /*! { "name": "vissense", "version": "0.1.0-rc1", "copyright": "(c) 2014 tbk" } */
-;(function (global) {
-    "use strict";
-
-    var lastId = -1;
-
-    // Visibility.js allow you to know, that your web page is in the background
-    // tab and thus not visible to the user. This library is wrap under
-    // Page Visibility API. It fix problems with different vendor prefixes and
-    // add high-level useful functions.
-    var self = {
-
-        // Call callback only when page become to visible for user or
-        // call it now if page is visible now or Page Visibility API
-        // doesn’t supported.
-        //
-        // Return false if API isn’t supported, true if page is already visible
-        // or listener ID (you can use it in `unbind` method) if page isn’t
-        // visible now.
-        //
-        //   Visibility.onVisible(function () {
-        //       startIntroAnimation();
-        //   });
-        onVisible: function (callback) {
-            var support = self.isSupported();
-            if ( !support || !self.hidden() ) {
-                callback();
-                return support;
-            }
-
-            var listener = self.change(function (e, state) {
-                if ( !self.hidden() ) {
-                    self.unbind(listener);
-                    callback();
-                }
-            });
-            return listener;
-        },
-
-        // Call callback when visibility will be changed. First argument for
-        // callback will be original event object, second will be visibility
-        // state name.
-        //
-        // Return listener ID to unbind listener by `unbind` method.
-        //
-        // If Page Visibility API doesn’t supported method will be return false
-        // and callback never will be called.
-        //
-        //   Visibility.change(function(e, state) {
-        //       Statistics.visibilityChange(state);
-        //   });
-        //
-        // It is just proxy to `visibilitychange` event, but use vendor prefix.
-        change: function (callback) {
-            if ( !self.isSupported() ) {
-                return false;
-            }
-            lastId += 1;
-            var number = lastId;
-            self._callbacks[number] = callback;
-            self._listen();
-            return number;
-        },
-
-        // Remove `change` listener by it ID.
-        //
-        //   var id = Visibility.change(function(e, state) {
-        //       firstChangeCallback();
-        //       Visibility.unbind(id);
-        //   });
-        unbind: function (id) {
-            delete self._callbacks[id];
-        },
-
-        // Call `callback` in any state, expect “prerender”. If current state
-        // is “prerender” it will wait until state will be changed.
-        // If Page Visibility API doesn’t supported, it will call `callback`
-        // immediately.
-        //
-        // Return false if API isn’t supported, true if page is already after
-        // prerendering or listener ID (you can use it in `unbind` method)
-        // if page is prerended now.
-        //
-        //   Visibility.afterPrerendering(function () {
-        //       Statistics.countVisitor();
-        //   });
-        afterPrerendering: function (callback) {
-            var support   = self.isSupported();
-            var prerender = 'prerender';
-
-            if ( !support || prerender != self.state() ) {
-                callback();
-                return support;
-            }
-
-            var listener = self.change(function (e, state) {
-                if ( prerender != state ) {
-                    self.unbind(listener);
-                    callback();
-                }
-            });
-            return listener;
-        },
-
-        // Return true if page now isn’t visible to user.
-        //
-        //   if ( !Visibility.hidden() ) {
-        //       VideoPlayer.play();
-        //   }
-        //
-        // It is just proxy to `document.hidden`, but use vendor prefix.
-        hidden: function () {
-            return !!(self._doc.hidden || self._doc.webkitHidden);
-        },
-
-        // Return visibility state: 'visible', 'hidden' or 'prerender'.
-        //
-        //   if ( 'prerender' == Visibility.state() ) {
-        //       Statistics.pageIsPrerendering();
-        //   }
-        //
-        // Don’t use `Visibility.state()` to detect, is page visible, because
-        // visibility states can extend in next API versions.
-        // Use more simpler and general `Visibility.hidden()` for this cases.
-        //
-        // It is just proxy to `document.visibilityState`, but use
-        // vendor prefix.
-        state: function () {
-            return self._doc.visibilityState       ||
-                   self._doc.webkitVisibilityState ||
-                   'visible';
-        },
-
-        // Return true if browser support Page Visibility API.
-        //
-        //   if ( Visibility.isSupported() ) {
-        //       Statistics.startTrackingVisibility();
-        //       Visibility.change(function(e, state)) {
-        //           Statistics.trackVisibility(state);
-        //       });
-        //   }
-        isSupported: function () {
-            return !!(self._doc.visibilityState ||
-                      self._doc.webkitVisibilityState);
-        },
-
-        // Link to document object to change it in tests.
-        _doc: document || {},
-
-        // Callbacks from `change` method, that wait visibility changes.
-        _callbacks: { },
-
-        // Listener for `visibilitychange` event.
-        _change: function(event) {
-            var state = self.state();
-
-            for ( var i in self._callbacks ) {
-                self._callbacks[i].call(self._doc, event, state);
-            }
-        },
-
-        // Set listener for `visibilitychange` event.
-        _listen: function () {
-            if ( self._init ) {
-                return;
-            }
-
-            var event = 'visibilitychange';
-            if ( self._doc.webkitVisibilityState ) {
-                event = 'webkit' + event;
-            }
-
-            var listener = function () {
-                self._change.apply(self, arguments);
-            };
-            if ( self._doc.addEventListener ) {
-                self._doc.addEventListener(event, listener);
-            } else {
-                self._doc.attachEvent(event, listener);
-            }
-            self._init = true;
-        }
-
-    };
-
-    if ( typeof(module) != 'undefined' && module.exports ) {
-        module.exports = self;
-    } else {
-        global.Visibility = self;
-    }
-
-})(this);
-
 ;(function(window, Visibility, undefined) {
     'use strict';
 
@@ -274,7 +82,7 @@
     /**
     * return the viewport (does *not* subtract scrollbar size)
     */
-    function viewport(element) {
+    function _viewport(element) {
         var w = element ?   _window(element) : window;
         if(w.innerWidth === undefined) {
             return {
@@ -286,31 +94,6 @@
             height: w.innerHeight,
             width: w.innerWidth
         };
-    }
-
-    function isFullyInViewport(element) {
-        var r = _getBoundingClientRect(element);
-        if(!r || (r.width <= 0 || r.height <= 0)) {
-            return false;
-        }
-        var view = viewport(element);
-
-        return r.top >= 0 &&
-            r.left >= 0 &&
-            r.bottom <= view.height &&
-            r.right <= view.width;
-    }
-
-    function isInViewport(element) {
-        var r = _getBoundingClientRect(element);
-        if(!r || (r.width <= 0 || r.height <= 0)) {
-            return false;
-        }
-        var view = viewport(element);
-        return r.bottom > 0 &&
-            r.right > 0 &&
-            r.top < view.height &&
-            r.left < view.width;
     }
 
 
@@ -339,47 +122,30 @@
         return true;
     }
 
-    function _findEffectiveStyle(element) {
-        var w =  _window(element);
-
+    function _findEffectiveStyleProperty(element, property, computedStyleProvider) {
         if (element.style === undefined) {
-            return; // not a styled element
+            return; // not a styled element, e.g. document
         }
-        if (w.getComputedStyle) {
-            // DOM-Level-2-CSS
-            return w.getComputedStyle(element, null);
-        }
-        if (element.currentStyle) {
-            // non-standard IE alternative
-            return element.currentStyle;
-            // TODO: this won't really work in a general sense, as
-            //   currentStyle is not identical to getComputedStyle()
-            //   ... but it's good enough for "visibility"
-        }
-
-        throw new Error('cannot determine effective stylesheet');
-    }
-
-    function _findEffectiveStyleProperty(element, property) {
-        var effectiveStyle = _findEffectiveStyle(element);
-        if(!effectiveStyle) {
-            return;
-        }
-        var propertyValue = effectiveStyle[property];
-        if (propertyValue === 'inherit' && element.parentNode.style) {
-            return _findEffectiveStyleProperty(element.parentNode, property);
-        }
-        return propertyValue;
+        var w =  computedStyleProvider || _window(element);
+        var effectiveStyle =  w.getComputedStyle(element, null);
+        return effectiveStyle && effectiveStyle.getPropertyValue(property);
     }
 
     function _isDisplayed(element) {
-        var display = _findEffectiveStyleProperty(element, 'display');
+        var display = _findEffectiveStyleProperty(element, 'display', _window(element));
         if (display === 'none') {
             return false;
         }
+
+        var visibility = _findEffectiveStyleProperty(element, 'visibility', _window(element));
+        if (visibility === 'hidden' || visibility === 'collapse') {
+            return false;
+        }
+
         if (element.parentNode && element.parentNode.style) {
             return _isDisplayed(element.parentNode);
         }
+
         return true;
     }
 
@@ -401,68 +167,61 @@
             return false;
         }
 
-        var visibility = _findEffectiveStyleProperty(element, 'visibility');
-        if(visibility === 'hidden' || visibility === 'collapse') {
-            return false;
-        }
-
         return true;
     }
     /********************************************************** element-styling end */
 
     /********************************************************** element visibility */
 
+    function _isInViewport(rect, viewport) {
+        if(!rect || (rect.width <= 0 || rect.height <= 0)) {
+            return false;
+        }
+        return rect.bottom > 0 &&
+            rect.right > 0 &&
+            rect.top < viewport.height &&
+            rect.left < viewport.width;
+    }
+
     function percentage(element) {
-        if(!isPageVisible() || !isInViewport(element) || !isVisibleByStyling(element)) {
+        if(!isPageVisible()) {
             return 0;
         }
-        // r's height and width are greater than 0 because element is in viewport
-        var r =   _getBoundingClientRect(element);
+
+        var rect = _getBoundingClientRect(element);
+        var view = _viewport(element);
+
+        if(!_isInViewport(rect, view) || !isVisibleByStyling(element)) {
+           return 0;
+        }
 
         var vh = 0; // visible height
         var vw = 0; // visible width
-        var view = viewport(element);
 
-        if(r.top >= 0) {
-            vh = Math.min(r.height, view.height - r.top);
-        } else if(r.bottom > 0) {
-            vh = Math.min(view.height, r.bottom);
+        if(rect.top >= 0) {
+            vh = Math.min(rect.height, view.height - rect.top);
+        } else if(rect.bottom > 0) {
+            vh = Math.min(view.height, rect.bottom);
         } /* otherwise {
             this path cannot be taken otherwise element would not be in viewport
         } */
 
-        if(r.left >= 0) {
-            vw = Math.min(r.width, view.width - r.left);
-        } else if(r.right > 0) {
-            vw = Math.min(view.width, r.right);
+        if(rect.left >= 0) {
+            vw = Math.min(rect.width, view.width - rect.left);
+        } else if(rect.right > 0) {
+            vw = Math.min(view.width, rect.right);
         } /* otherwise {
              this path cannot be taken otherwise element would not be in viewport
         } */
 
-        var area = (vh * vw) / (r.height * r.width);
-
-        return Math.max(area, 0);
+        // rect's height and width are greater than 0 because element is in viewport
+        return (vh * vw) / (rect.height * rect.width);
     }
 
-    function isFullyVisible(element) {
-        return  isPageVisible() &&
-            isFullyInViewport(element) &&
-            isVisibleByStyling(element);
-    }
-
-    function isVisible(element) {
-        return  isPageVisible() &&
-            isInViewport(element) &&
-            isVisibleByStyling(element);
-    }
-
-    function isHidden(element) {
-        return !isVisible(element);
-    }
     /********************************************************** element visibility end */
 
-    /********************************************************** page visibility */
-    var PageVisibilityAPIAvailable = !!Visibility && !!Visibility.change && !!Visibility.isSupported && Visibility.isSupported();
+    /********************************************************** page visibility - hard dependency to Visibilityjs*/
+    var PageVisibilityAPIAvailable = Visibility && Visibility.change && Visibility.isSupported && Visibility.isSupported();
 
     function isPageVisibilityAPIAvailable() {
         return !!PageVisibilityAPIAvailable;
@@ -480,7 +239,7 @@
     /********************************************************** page visibility end */
 
     window.VisSenseUtils = extend({}, {
-        _window : _window,
+
         fireIf: fireIf,
 
         noop:noop,
@@ -496,18 +255,17 @@
         onPageVisibilityChange : onPageVisibilityChange,
 
         percentage : percentage,
-        isFullyVisible : isFullyVisible,
-        isVisible : isVisible,
-        isHidden : isHidden,
+        isVisibleByStyling : isVisibleByStyling,
 
-        viewport : viewport,
-        isFullyInViewport : isFullyInViewport,
-        isInViewport : isInViewport,
+        _window : _window,
+
+        _viewport : _viewport,
+        _isInViewport : _isInViewport,
 
         _getBoundingClientRect : _getBoundingClientRect,
         _isDisplayed : _isDisplayed,
-        _findEffectiveStyle : _findEffectiveStyle,
-        isVisibleByStyling : isVisibleByStyling
+        _findEffectiveStyleProperty:_findEffectiveStyleProperty
+
     });
 
 
@@ -538,11 +296,14 @@
         // currently only ELEMENT_NODEs are supported
         // see https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType
         if ( !element || 1 !== element.nodeType ) {
-            throw new Error('InvalidArgument: Not an element node');
+            throw new Error('not an element node');
         }
 
         this._element = element;
-        this._config = config || {};
+        this._config = VisSenseUtils.defaults(config, {
+            fullyvisible : 1,
+            hidden: 0
+        });
     }
 
     VisSense.prototype.percentage = function() {
@@ -550,15 +311,15 @@
     };
 
     VisSense.prototype.isFullyVisible = function() {
-      return VisSenseUtils.isFullyVisible(this._element);
+      return VisSenseUtils.percentage(this._element) >= this._config.fullyvisible;
     };
 
     VisSense.prototype.isVisible = function() {
-      return VisSenseUtils.isVisible(this._element);
+      return !this.isHidden();
     };
 
     VisSense.prototype.isHidden = function() {
-      return VisSenseUtils.isHidden(this._element);
+      return VisSenseUtils.percentage(this._element) <= this._config.hidden;
     };
 
     /*--------------------------------------------------------------------------*/
@@ -593,16 +354,13 @@
         }, callback);
     };
 
-    /*--------------------------------------------------------------------------*/
-
-    VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
-
-    /*--------------------------------------------------------------------------*/
-
     VisSense.fn = VisSense.prototype;
+    VisSense.version = '0.1.0-rc1';
+    VisSense.of = function(element, config) {
+        return new VisSense(element, config);
+    };
 
     // export VisSense
     window.VisSense = VisSense;
-    window.VisSense.version = '0.1.0-rc1';
 
 }(window, Math, window.VisSenseUtils));

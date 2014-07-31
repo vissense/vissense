@@ -17,17 +17,19 @@ describe('VisSense', function() {
     describe('vissense.core.js', function() {
 
         it('should throw error when not initialized with element node', function () {
-            expect(function() { return new VisSense(); }).toThrow(new Error('InvalidArgument: Not an element node'));
+            expect(function() { return new VisSense(); }).toThrow(new Error('not an element node'));
         });
 
         it('should create a VisSense object', function () {
             jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
             var visobj = new VisSense($('#element')[0]);
+            var visobj3 = VisSense.of($('#element')[0]);
             /* jshint newcap:false */
             var visobj2 = VisSense($('#element')[0]);
 
             expect(visobj).toBeDefined();
             expect(visobj2).toBeDefined();
+            expect(visobj3).toBeDefined();
         });
 
         it('should create and test for a hidden object', function () {

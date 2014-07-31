@@ -30,11 +30,14 @@
         // currently only ELEMENT_NODEs are supported
         // see https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType
         if ( !element || 1 !== element.nodeType ) {
-            throw new Error('InvalidArgument: Not an element node');
+            throw new Error('not an element node');
         }
 
         this._element = element;
-        this._config = config || {};
+        this._config = VisSenseUtils.defaults(config, {
+            fullyvisible : 1,
+            hidden: 0
+        });
     }
 
     VisSense.prototype.percentage = function() {
@@ -42,15 +45,15 @@
     };
 
     VisSense.prototype.isFullyVisible = function() {
-      return VisSenseUtils.isFullyVisible(this._element);
+      return VisSenseUtils.percentage(this._element) >= this._config.fullyvisible;
     };
 
     VisSense.prototype.isVisible = function() {
-      return VisSenseUtils.isVisible(this._element);
+      return !this.isHidden();
     };
 
     VisSense.prototype.isHidden = function() {
-      return VisSenseUtils.isHidden(this._element);
+      return VisSenseUtils.percentage(this._element) <= this._config.hidden;
     };
 
     /*--------------------------------------------------------------------------*/
@@ -85,16 +88,13 @@
         }, callback);
     };
 
-    /*--------------------------------------------------------------------------*/
-
-    VisSense.prototype.getFullyVisibleThreshold = VisSenseUtils.noop;
-
-    /*--------------------------------------------------------------------------*/
-
     VisSense.fn = VisSense.prototype;
+    VisSense.version = '0.1.0-rc1';
+    VisSense.of = function(element, config) {
+        return new VisSense(element, config);
+    };
 
     // export VisSense
     window.VisSense = VisSense;
-    window.VisSense.version = '0.1.0-rc1';
 
 }(window, Math, window.VisSenseUtils));

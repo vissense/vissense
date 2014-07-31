@@ -228,7 +228,7 @@ describe('VisSenseUtils', function(undefined) {
     describe('viewport', function() {
 
         it('should verify defined values from viewport()', function () {
-            var viewport = VisSenseUtils.viewport();
+            var viewport = VisSenseUtils._viewport();
 
             expect(viewport.height).toBeDefined();
             expect(viewport.width).toBeDefined();
@@ -237,7 +237,7 @@ describe('VisSenseUtils', function(undefined) {
         it('should verify defined values from viewport(element)', function () {
             jasmine.getFixtures().set('<div id="element"></div>');
 
-            var viewport = VisSenseUtils.viewport($('#element')[0]);
+            var viewport = VisSenseUtils._viewport($('#element')[0]);
 
             expect(viewport.height).toBeDefined();
             expect(viewport.width).toBeDefined();
@@ -257,7 +257,7 @@ describe('VisSenseUtils', function(undefined) {
         });
 
         it('should test _getBoundingClientRect with concrete values', function () {
-            var viewport = VisSenseUtils.viewport();
+            var viewport = VisSenseUtils._viewport();
 
             jasmine.getFixtures().set('<div id="element" ' +
                 'style="top:0; left:0; position: fixed; width: '+viewport.width+'px; height: '+viewport.height+'px"></div>');
@@ -277,10 +277,10 @@ describe('VisSenseUtils', function(undefined) {
 
         describe('effective style', function() {
 
-            it('should find effective style of simple element', function () {
+            it('should be pres simple element', function () {
                 jasmine.getFixtures().set('<div id="element"></div>');
 
-                var style = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                var style = VisSenseUtils._findEffectiveStyleProperty($('#element')[0]);
                 expect(style).toBeDefined();
             });
 
@@ -292,17 +292,19 @@ describe('VisSenseUtils', function(undefined) {
                     '<div style="visibility: collapse"></div>' +
                 '</div>');
 
-                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
-                var style0 = VisSenseUtils._findEffectiveStyle($('#element').children()[0]);
-                var style1 = VisSenseUtils._findEffectiveStyle($('#element').children()[1]);
-                var style2 = VisSenseUtils._findEffectiveStyle($('#element').children()[2]);
-                var style3 = VisSenseUtils._findEffectiveStyle($('#element').children()[3]);
+                var parentStyle = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'visibility');
+                var children = $('#element').children();
 
-                expect(parentStyle.visibility).toEqual('hidden');
-                expect(style0.visibility).toEqual('hidden');
-                expect(style1.visibility).toEqual('hidden');
-                expect(style2.visibility).toEqual('visible');
-                expect(style3.visibility).toEqual('collapse');
+                var style0 = VisSenseUtils._findEffectiveStyleProperty(children[0], 'visibility');
+                var style1 = VisSenseUtils._findEffectiveStyleProperty(children[1], 'visibility');
+                var style2 = VisSenseUtils._findEffectiveStyleProperty(children[2], 'visibility');
+                var style3 = VisSenseUtils._findEffectiveStyleProperty(children[3], 'visibility');
+
+                expect(parentStyle).toEqual('hidden');
+                expect(style0).toEqual('hidden');
+                expect(style1).toEqual('hidden');
+                expect(style2).toEqual('visible');
+                expect(style3).toEqual('collapse');
             });
 
             it('should find inherit "display" property of simple element', function () {
@@ -312,17 +314,17 @@ describe('VisSenseUtils', function(undefined) {
                     '<div style="display: inline-block"></div>' +
                 '</div>');
 
-                var parentStyle = VisSenseUtils._findEffectiveStyle($('#element')[0]);
+                var parentStyle = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'display');
 
                 var children = $('#element').children();
-                var style0 = VisSenseUtils._findEffectiveStyle(children[0]);
-                var style1 = VisSenseUtils._findEffectiveStyle(children[1]);
-                var style2 = VisSenseUtils._findEffectiveStyle(children[2]);
+                var style0 = VisSenseUtils._findEffectiveStyleProperty(children[0], 'display');
+                var style1 = VisSenseUtils._findEffectiveStyleProperty(children[1], 'display');
+                var style2 = VisSenseUtils._findEffectiveStyleProperty(children[2], 'display');
 
-                expect(parentStyle.display).toEqual('none');
-                expect(style0.display).toEqual('none');
-                expect(style1.display).toEqual('block');
-                expect(style2.display).toEqual('inline-block');
+                expect(parentStyle).toEqual('none');
+                expect(style0).toEqual('none');
+                expect(style1).toEqual('block');
+                expect(style2).toEqual('inline-block');
             });
 
             it('should detect children in container with style "display:none" to be hidden', function () {

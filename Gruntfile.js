@@ -23,7 +23,6 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: [
-                    'bower_components/visibilityjs/lib/visibility.core.js',
                     'src/main/utils/vissense.utils.js',
                     'src/main/core/vissense.core.js'
                 ],
@@ -171,7 +170,8 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-notify');
 
-    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'test', 'notify:js']);
+    grunt.registerTask('dist', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
     grunt.registerTask('test', ['connect', 'jasmine', 'karma', /*'qunit',*/ 'notify:test']);

@@ -104,7 +104,7 @@
     /**
     * element.offsetParent
     *
-    * Firefox: null if element is hidden (style.distplay := "none")
+    * Firefox: null if element is hidden (style.display := "none")
     * Webkit: null if the element is hidden
     * or if the style.position of the element itself is set to "fixed".
     * Internet Explorer (9): null if the style.position of the element itself is set to "fixed".

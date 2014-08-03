@@ -11,7 +11,7 @@
   "license": "MIT",
   "private": true,
   "ignore": [
-    "bin",
+    "coverage",
     "spec",
     "bower_components",
     "node_modules",

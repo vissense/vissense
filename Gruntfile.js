@@ -10,10 +10,10 @@ module.exports = function (grunt) {
             '"version": "<%= pkg.version %>", ' +
             '<%= pkg.homepage ? "\\"homepage\\": \\"" + pkg.homepage + "\\"," : "" %>' +
             '"copyright": "(c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>" ' +
-        '} */\n',
+        '} */',
 
         dirs :{
-            coverage: './bin/coverage'
+            coverage: './coverage'
         },
 
         concat: {
@@ -31,7 +31,11 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                banner: '<%= banner %>'
+                banner: '<%= banner %>',
+                report: 'gzip',
+                drop_console: true,
+                sourceMap: true,
+                sourceMapName: '<%= uglify.dist.dest %>.map'
             },
             dist: {
                 src: '<%= concat.dist.dest %>',

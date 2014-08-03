@@ -4,4 +4,4 @@
 .idea
 node_modules/
 bower_components/
-bin/
+coverage/

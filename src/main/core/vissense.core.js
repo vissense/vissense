@@ -27,8 +27,6 @@
             return new VisSense(element, config);
         }
 
-        // currently only ELEMENT_NODEs are supported
-        // see https://developer.mozilla.org/en-US/docs/Web/API/Node.nodeType
         if ( !element || 1 !== element.nodeType ) {
             throw new Error('not an element node');
         }

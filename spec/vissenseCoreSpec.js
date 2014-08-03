@@ -93,9 +93,7 @@ describe('VisSense', function() {
             expect(visobj.fireIfFullyVisible(returnTrue)()).toBe(true);
         });
 
-
-
-        it('should detect element with 50% visibility as fullyvisible (config)', function () {
+        it('should detect element with 50% visibility as fullyvisible', function () {
             jasmine.getFixtures().load('visible_50_percent_top.html');
 
             var visobj = new VisSense($('#element')[0], {
@@ -105,6 +103,19 @@ describe('VisSense', function() {
             expect(visobj.isHidden()).toBe(false);
             expect(visobj.isVisible()).toBe(true);
             expect(visobj.isFullyVisible()).toBe(true);
+            expect(visobj.percentage()).toEqual(0.5);
+        });
+
+        it('should detect element with 50% visibility as hidden (config)', function () {
+            jasmine.getFixtures().load('visible_50_percent_top.html');
+
+            var visobj = new VisSense($('#element')[0], {
+                hidden: 0.6
+            });
+
+            expect(visobj.isHidden()).toBe(true);
+            expect(visobj.isVisible()).toBe(false);
+            expect(visobj.isFullyVisible()).toBe(false);
             expect(visobj.percentage()).toEqual(0.5);
         });
     });

@@ -54,7 +54,7 @@ module.exports = function(config) {
 
         coverageReporter: {
             reporters:[
-              {type: 'lcov', dir:'bin/coverage/'}
+              {type: 'lcov', dir:'./coverage/'}
             ]
         },
 

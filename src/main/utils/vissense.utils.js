@@ -17,7 +17,7 @@
     */
     function fireIf(when, callback) {
         return function() {
-            return when() ? callback() : undefined;
+            return (isFunction(when) ? when() : when) ? callback() : undefined;
         };
     }
 
@@ -53,6 +53,9 @@
 
     function isObject(obj) {
         return obj === Object(obj);
+    }
+    function isFunction(func) {
+        return typeof func === 'function';
     }
 
     function defaults(dest, source) {
@@ -250,6 +253,7 @@
         noop:noop,
         identity:identity,
         isObject:isObject,
+        isFunction:isFunction,
         defaults:defaults,
         extend:extend,
         now:now,

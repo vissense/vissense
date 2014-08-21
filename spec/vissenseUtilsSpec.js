@@ -1,4 +1,4 @@
-/*global VisSenseUtils,$,jasmine,describe,it,expect,_*/
+/*global VisSenseUtils,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
 /**
  * @license
  * VisSense <http://twyn.com/>
@@ -13,6 +13,10 @@ describe('VisSenseUtils', function(undefined) {
         expect(VisSenseUtils.identity(a)).toBe(a);
     });
 
+    it('should verify that now() returns a timestamp', function () {
+        expect(VisSenseUtils.now()).toBeGreaterThan(0);
+    });
+
     describe('_', function() {
 
         it('should verify that noop() returns undefined', function () {
@@ -22,6 +26,61 @@ describe('VisSenseUtils', function(undefined) {
         it('should verify that identity() returns the object passed', function () {
             var a = {};
             expect(VisSenseUtils.identity(a)).toBe(a);
+        });
+
+        describe('fireIf', function() {
+            var func;
+            beforeEach(function() {
+                func = {
+                  returnTrue: function() { return true; },
+                  returnFalse: function() { return false; }
+                };
+
+                spyOn(func, 'returnTrue').and.callThrough();
+            });
+
+            it('should fire if expression is function returning true', function () {
+                expect(VisSenseUtils.fireIf(true, func.returnTrue)()).toBe(true);
+                expect(VisSenseUtils.fireIf(function() { return true; }, func.returnTrue)()).toBe(true);
+                expect(func.returnTrue.calls.count()).toEqual(2);
+            });
+            it('should NOT fire if expression is false', function () {
+                expect(VisSenseUtils.fireIf(false, func.returnTrue)()).not.toBeDefined();
+                expect(VisSenseUtils.fireIf(func.returnFalse, func.returnTrue)()).not.toBeDefined();
+
+                expect(func.returnTrue.calls.count()).toEqual(0);
+            });
+        });
+
+        describe('defer', function() {
+            var timerCallback;
+            beforeEach(function() {
+                timerCallback = jasmine.createSpy('timerCallback');
+                jasmine.clock().install();
+            });
+            afterEach(function() {
+                jasmine.clock().uninstall();
+            });
+            it('should defer function', function () {
+                VisSenseUtils.defer(function() {
+                    timerCallback();
+                });
+
+                expect(timerCallback).not.toHaveBeenCalled();
+
+                jasmine.clock().tick(10);
+
+                expect(timerCallback).toHaveBeenCalled();
+            });
+        });
+
+        describe('isFunction', function() {
+            it('should detect `isFunction` as function', function () {
+                expect(VisSenseUtils.isFunction(VisSenseUtils.isFunction)).toBe(true);
+            });
+            it('should NOT detect {} as function', function () {
+                expect(VisSenseUtils.isFunction({})).toBe(false);
+            });
         });
 
         describe('isObject', function() {

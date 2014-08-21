@@ -2,6 +2,6 @@
 *.log
 *.iml
 .idea
-node_modules/
-bower_components/
-coverage/
+node_modules
+bower_components
+dist/coverage

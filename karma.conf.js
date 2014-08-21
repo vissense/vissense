@@ -36,11 +36,6 @@ module.exports = function(config) {
         logLevel: config.LOG_INFO,
  
         autoWatch: true,
-
-        preprocessors: {
-          'src/main/core/*.js': ['coverage'],
-          'src/main/utils/*.js': ['coverage']
-        },
  
         browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
         //browsers: ['PhantomJS'],
@@ -52,9 +47,14 @@ module.exports = function(config) {
           }
         },
 
+        preprocessors: {
+          'src/main/core/*.js': ['coverage'],
+          'src/main/utils/*.js': ['coverage']
+        },
+
         coverageReporter: {
             reporters:[
-              {type: 'lcov', dir:'./coverage/'}
+              {type: 'lcov', dir:'dist/coverage/'}
             ]
         },
 

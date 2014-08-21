@@ -13,9 +13,14 @@ module.exports = function (grunt) {
         '} */',
 
         dirs :{
-            coverage: './coverage'
+            dist: './dist',
+            coverage: '<%= dirs.dist %>/coverage'
         },
-
+        clean: {
+          build: {
+            src: ['<%= dirs.dist %>']
+          }
+        },
         concat: {
             options: {
                 banner: '<%= banner %>',
@@ -26,7 +31,7 @@ module.exports = function (grunt) {
                     'src/main/utils/vissense.utils.js',
                     'src/main/core/vissense.core.js'
                 ],
-                dest: 'dist/vissense.js'
+                dest: '<%= dirs.dist %>/vissense.js'
             }
         },
         uglify: {
@@ -39,7 +44,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: '<%= concat.dist.dest %>',
-                dest: 'dist/vissense.min.js'
+                dest: '<%= dirs.dist %>/vissense.min.js'
             }
         },
         jshint: {
@@ -88,11 +93,6 @@ module.exports = function (grunt) {
                                 type: 'html',
                                 options: {
                                     dir: '<%= dirs.coverage %>/html'
-                                }
-                            }, {
-                                type: 'cobertura',
-                                options: {
-                                    dir: '<%= dirs.coverage %>/cobertura'
                                 }
                             }, {
                                 type: 'lcov',
@@ -163,18 +163,19 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
 
-    grunt.registerTask('dist', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('dist', ['jshint', 'clean', 'concat', 'uglify']);
     grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);

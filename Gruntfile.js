@@ -10,28 +10,41 @@ module.exports = function (grunt) {
             '"version": "<%= pkg.version %>", ' +
             '<%= pkg.homepage ? "\\"homepage\\": \\"" + pkg.homepage + "\\"," : "" %>' +
             '"copyright": "(c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>" ' +
-        '} */',
+        '} */\n',
 
         dirs :{
+            tmp: './tmp',
             dist: './dist',
             coverage: '<%= dirs.dist %>/coverage'
         },
         clean: {
-          build: {
+          tmp: {
+            src: ['<%= dirs.tmp %>']
+          },
+          dist: {
             src: ['<%= dirs.dist %>']
           }
         },
         concat: {
-            options: {
-                banner: '<%= banner %>',
-                stripBanners: true
-            },
-            dist: {
+            tmp: {
+                options: {
+                    banner: ';(function(window, Math, Visibility, undefined) {\n\'use strict\';\n',
+                    footer: '\n})(window, Math, window.Visibility || null, undefined);',
+                    stripBanners: true
+                },
                 src: [
                     'src/main/utils/vissense.utils.js',
                     'src/main/core/vissense.core.js'
                 ],
-                dest: '<%= dirs.dist %>/vissense.js'
+                dest: '<%= dirs.tmp %>/<%= pkg.name %>.js'
+            },
+            dist: {
+                options: {
+                  banner: '<%= banner %>',
+                  stripBanners: true
+                },
+                src: '<%= concat.tmp.dest %>',
+                dest: '<%= dirs.dist %>/<%= pkg.name %>.js'
             }
         },
         uglify: {
@@ -44,7 +57,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: '<%= concat.dist.dest %>',
-                dest: '<%= dirs.dist %>/vissense.min.js'
+                dest: '<%= dirs.dist %>/<%= pkg.name %>.min.js'
             }
         },
         jshint: {
@@ -58,7 +71,7 @@ module.exports = function (grunt) {
                 src: 'karma.conf.js'
             },
             src_test: {
-                src: ['src/**/*.js', 'spec/**/*.js']
+                src: ['tmp/**/*.js', 'spec/**/*.js']
             }
         },
         qunit: {
@@ -175,7 +188,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
 
-    grunt.registerTask('dist', ['jshint', 'clean', 'concat', 'uglify']);
+    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'concat:dist', 'uglify', 'clean:tmp']);
     grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);

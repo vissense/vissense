@@ -4,95 +4,91 @@
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-;(function(window, Math, VisSenseUtils, undefined) {
-  'use strict';
 
-    /**
-     * Creates a `VisSense` object which wraps the given element to enable
-     * visibility operations
-     *
-     * @example
-     *
-     * var visElement = VisSense(element);
-     *
-     * visElement.isVisible();
-     * // => true
-     *
-     * visElement.percentage();
-     * // => 0.93
-     *
-     */
-    function VisSense(element, config) {
-        if (!(this instanceof VisSense)) {
-            return new VisSense(element, config);
-        }
-
-        if ( !element || 1 !== element.nodeType ) {
-            throw new Error('not an element node');
-        }
-
-        this._element = element;
-        this._config = VisSenseUtils.defaults(config, {
-            fullyvisible : 1,
-            hidden: 0
-        });
+/**
+ * Creates a `VisSense` object which wraps the given element to enable
+ * visibility operations
+ *
+ * @example
+ *
+ * var visElement = VisSense(element);
+ *
+ * visElement.isVisible();
+ * // => true
+ *
+ * visElement.percentage();
+ * // => 0.93
+ *
+ */
+function VisSense(element, config) {
+    if (!(this instanceof VisSense)) {
+        return new VisSense(element, config);
     }
 
-    VisSense.prototype.percentage = function() {
-      return VisSenseUtils.percentage(this._element);
-    };
+    if ( !element || 1 !== element.nodeType ) {
+        throw new Error('not an element node');
+    }
 
-    VisSense.prototype.isFullyVisible = function() {
-      return VisSenseUtils.percentage(this._element) >= this._config.fullyvisible;
-    };
+    this._element = element;
+    this._config = defaults(config, {
+        fullyvisible : 1,
+        hidden: 0
+    });
+}
 
-    VisSense.prototype.isVisible = function() {
-      return !this.isHidden();
-    };
+VisSense.prototype.percentage = function() {
+  return percentage(this._element);
+};
 
-    VisSense.prototype.isHidden = function() {
-      return VisSenseUtils.percentage(this._element) <= this._config.hidden;
-    };
+VisSense.prototype.isFullyVisible = function() {
+  return percentage(this._element) >= this._config.fullyvisible;
+};
 
-    /*--------------------------------------------------------------------------*/
+VisSense.prototype.isVisible = function() {
+  return !this.isHidden();
+};
 
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    VisSense.prototype.fireIfFullyVisible = function(callback) {
-        var me = this;
-        return VisSenseUtils.fireIf(function() {
-            return me.isFullyVisible();
-        }, callback);
-    };
+VisSense.prototype.isHidden = function() {
+  return percentage(this._element) <= this._config.hidden;
+};
 
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    VisSense.prototype.fireIfVisible = function(callback) {
-        var me = this;
-        return VisSenseUtils.fireIf(function() {
-            return me.isVisible();
-        }, callback);
-    };
+/*--------------------------------------------------------------------------*/
 
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    VisSense.prototype.fireIfHidden = function (callback) {
-        var me = this;
-        return VisSenseUtils.fireIf(function() {
-            return me.isHidden();
-        }, callback);
-    };
+/**
+* Returns a function that invokes callback only if element is hidden
+*/
+VisSense.prototype.fireIfFullyVisible = function(callback) {
+    var me = this;
+    return fireIf(function() {
+        return me.isFullyVisible();
+    }, callback);
+};
 
-    VisSense.fn = VisSense.prototype;
-    VisSense.version = '0.1.0-rc1';
-    VisSense.of = function(element, config) {
-        return new VisSense(element, config);
-    };
+/**
+* Returns a function that invokes callback only if element is hidden
+*/
+VisSense.prototype.fireIfVisible = function(callback) {
+    var me = this;
+    return fireIf(function() {
+        return me.isVisible();
+    }, callback);
+};
 
-    // export VisSense
-    window.VisSense = VisSense;
+/**
+* Returns a function that invokes callback only if element is hidden
+*/
+VisSense.prototype.fireIfHidden = function (callback) {
+    var me = this;
+    return fireIf(function() {
+        return me.isHidden();
+    }, callback);
+};
 
-}(window, Math, window.VisSenseUtils));
+VisSense.fn = VisSense.prototype;
+VisSense.version = '0.1.0-rc1';
+VisSense.of = function(element, config) {
+    return new VisSense(element, config);
+};
+
+// export VisSense
+window.VisSense = VisSense;

@@ -41,21 +41,37 @@ function isHiddenInputElement(element) {
 }
 ```
 
-
-
 ## core
 ### What it does
  * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
 
 ### What it does *not*
+* detect if element is overlapped by other content
+* parts of elements behind scrollbars are considered visible
+* elements opacity has no impact on visibility
 
+##monitor
 
-## vistimer
 ### What it does
- * provides a convenience class for periodically tasks based on elements visibility
- * updates a vismon object every X milliseconds and triggers registered handlers
+ * provides a convenience class for detecting changes in visibility
+ * memoizes current and previous computed results
 
 ### What it does *not*
- * being a hundred percent accurate timer. since it updates a vismon object every X milliseconds
-   it can callback your handler X milliseconds "too late". if you want an other strategy you must
-   provide it yourself (like updating the vismon instance yourself based on user events).
+ * update automatically. this is up to you - hence giving you the freedom to decide when
+   to trigger updates. here is what this could look like:
+
+```
+#!javascript
+var element = document.getElementById('my-element');
+var vismon = VisSense(element).monitor();
+
+(function initVisMonUpdateStrategy() {
+    ['readystatechange', 'scroll', 'resize'].forEach(function(event) {
+        window.addEventListener(event, vismon.update);
+    });
+
+    // triggers update if mouse moves over element
+    // this is important for example if the element is draggable
+    element.addEventListener('mousemove', vismon.update);
+}());
+```

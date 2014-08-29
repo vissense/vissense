@@ -22,7 +22,7 @@
     "grunt-contrib-qunit": "0.5.2",
     "time-grunt": "~1.0.0",
     "grunt-notify": "~0.3.1",
-    "karma": "~0.12.22",
+    "karma": "~0.12.23",
     "karma-jasmine": "~0.2.2",
     "karma-cli": "0.0.4",
     "karma-chrome-launcher": "~0.1.4",

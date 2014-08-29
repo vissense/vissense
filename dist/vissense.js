@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.1.0-rc1", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.1.0", "copyright": "(c) 2014 tbk" } */
 ;(function(window, Math, Visibility, undefined) {
 'use strict';
 function _window(element) {
@@ -361,7 +361,7 @@ VisSense.prototype.fireIfHidden = function (callback) {
 };
 
 VisSense.fn = VisSense.prototype;
-VisSense.version = '0.1.0-rc1';
+VisSense.version = '0.1.0';
 VisSense.of = function(element, config) {
     return new VisSense(element, config);
 };

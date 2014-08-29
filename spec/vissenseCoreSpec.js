@@ -11,7 +11,7 @@ describe('VisSense', function() {
     var returnTrue = function() { return true; };
 
     it('should get the version of VisSense', function () {
-        expect(VisSense.version).toBe('0.1.0-rc1');
+        expect(VisSense.version).toBe('0.1.0');
     });
 
     describe('vissense.core.js', function() {

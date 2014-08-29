@@ -28,7 +28,8 @@
  *
  */
 function nextState(visobj, previousState) {
-    var percentage = visobj.percentage();
+    var state = visobj.state();
+    var percentage = state.percentage;
 
     // check if nothing changed
     if(!!previousState && percentage === previousState.percentage()) {
@@ -37,10 +38,10 @@ function nextState(visobj, previousState) {
       }
     }
 
-    if(visobj.isHidden()) {
+    if(state.hidden) {
         return VisSense.VisState.hidden(percentage, previousState);
     }
-    else if (visobj.isFullyVisible()) {
+    else if (state.fullyvisible) {
          return VisSense.VisState.fullyvisible(percentage, previousState);
     }
 

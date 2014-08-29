@@ -311,21 +311,30 @@ function VisSense(element, config) {
         hidden: 0
     });
 }
+VisSense.prototype.state = function() {
+  var percentage = this.percentage();
+  return {
+    percentage: percentage,
+    hidden: percentage <= this._config.hidden,
+    visible: percentage > this._config.hidden,
+    fullyvisible: percentage >= this._config.fullyvisible
+  };
+};
 
 VisSense.prototype.percentage = function() {
   return percentage(this._element);
 };
 
 VisSense.prototype.isFullyVisible = function() {
-  return percentage(this._element) >= this._config.fullyvisible;
+  return this.state().fullyvisible;
 };
 
 VisSense.prototype.isVisible = function() {
-  return !this.isHidden();
+  return this.state().visible;
 };
 
 VisSense.prototype.isHidden = function() {
-  return percentage(this._element) <= this._config.hidden;
+  return this.state().hidden;
 };
 
 /*--------------------------------------------------------------------------*/
@@ -392,7 +401,8 @@ window.VisSense = VisSense;
  *
  */
 function nextState(visobj, previousState) {
-    var percentage = visobj.percentage();
+    var state = visobj.state();
+    var percentage = state.percentage;
 
     // check if nothing changed
     if(!!previousState && percentage === previousState.percentage()) {
@@ -401,10 +411,10 @@ function nextState(visobj, previousState) {
       }
     }
 
-    if(visobj.isHidden()) {
+    if(state.hidden) {
         return VisSense.VisState.hidden(percentage, previousState);
     }
-    else if (visobj.isFullyVisible()) {
+    else if (state.fullyvisible) {
          return VisSense.VisState.fullyvisible(percentage, previousState);
     }
 

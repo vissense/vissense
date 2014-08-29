@@ -15,9 +15,7 @@ module.exports = function(config) {
 
             'bower_components/visibilityjs/lib/visibility.core.js',
 
-            'src/main/vissense.polyfill.js',
-            'src/main/utils/vissense.utils.js',
-            'src/main/core/vissense.core.js',
+            'dist/vissense.js',
 
             'spec/**/*.js',
             // fixtures
@@ -37,7 +35,8 @@ module.exports = function(config) {
  
         autoWatch: true,
  
-        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
+        browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+        //browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
         //browsers: ['PhantomJS'],
 
         customLaunchers: {
@@ -48,8 +47,7 @@ module.exports = function(config) {
         },
 
         preprocessors: {
-          'src/main/core/*.js': ['coverage'],
-          'src/main/utils/*.js': ['coverage']
+          'tmp/vissense.js': ['coverage']
         },
 
         coverageReporter: {

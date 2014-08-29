@@ -69,6 +69,16 @@ function defaults(dest, source) {
     return dest;
 }
 
+function debounce(fn, delay) {
+    var timer = null;
+    return function () {
+        var self = this, args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            fn.apply(self, args);
+        }, delay);
+    };
+}
 /********************************************************** element-position */
 
 function _getBoundingClientRect(element) {
@@ -255,6 +265,7 @@ window.VisSenseUtils = extend({}, {
     extend:extend,
     now:now,
     defer:defer,
+    debounce:debounce,
 
     isPageVisibilityAPIAvailable : isPageVisibilityAPIAvailable,
     isPageVisible : isPageVisible,

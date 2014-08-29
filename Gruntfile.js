@@ -10,7 +10,7 @@ module.exports = function (grunt) {
             '"version": "<%= pkg.version %>", ' +
             '<%= pkg.homepage ? "\\"homepage\\": \\"" + pkg.homepage + "\\"," : "" %>' +
             '"copyright": "(c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>" ' +
-        '} */\n',
+        '} */',
 
         dirs :{
             tmp: './tmp',
@@ -28,13 +28,16 @@ module.exports = function (grunt) {
         concat: {
             tmp: {
                 options: {
-                    banner: ';(function(window, Math, Visibility, undefined) {\n\'use strict\';\n',
+                    banner: '\n;(function(window, Math, Visibility, undefined) {\n\'use strict\';\n',
                     footer: '\n})(window, Math, window.Visibility || null, undefined);',
                     stripBanners: true
                 },
                 src: [
                     'src/main/utils/vissense.utils.js',
-                    'src/main/core/vissense.core.js'
+                    'src/main/core/vissense.core.js',
+                    'src/main/monitor/vissense.monitor.js',
+                    'src/main/monitor/vissense.monitor.state.js',
+                    'src/main/monitor/vissense.monitor.strategy.js'
                 ],
                 dest: '<%= dirs.tmp %>/<%= pkg.name %>.js'
             },
@@ -83,13 +86,14 @@ module.exports = function (grunt) {
         jasmine: {
             coverage: {
                 src: [
-                    'src/main/utils/vissense.utils.js',
-                    'src/main/core/vissense.core.js'
+                    '<%= concat.dist.dest %>'
                 ],
                 options: {
                     display: 'full',
                     summary: true,
-                    specs: ['spec/*Spec.js'],
+                    specs: [
+                        'spec/*Spec.js'
+                    ],
                     helpers: [
                         'spec/*Helper.js'
                     ],

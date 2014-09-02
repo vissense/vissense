@@ -472,15 +472,36 @@ describe('VisSenseUtils', function(undefined) {
                     expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
-                it('should detect element with ´visibility´ "hidden" as hidden', function () {
-                    jasmine.getFixtures().load('hidden_styling-visibility-collapse.html');
+                it('should detect nested element with parent ´display´ "none" as hidden', function () {
+                    jasmine.getFixtures().load('hidden_styling-display-none_nested.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                     expect($('#element')[0]).not.toBeVisSenseVisible();
                     expect($('#element')[0]).toHaveVisSensePercentageOf(0);
                 });
 
                 it('should detect element with ´visibility´ "collapse" as hidden', function () {
+                    jasmine.getFixtures().load('hidden_styling-visibility-collapse.html');
+                    expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
+                });
+
+                it('should detect nested element with parent ´visibility´ "collapse" as hidden', function () {
+                    jasmine.getFixtures().load('hidden_styling-visibility-collapse_nested.html');
+                    expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
+                });
+
+                it('should detect element with ´visibility´ "hidden" as hidden', function () {
                     jasmine.getFixtures().load('hidden_styling-visibility-hidden.html');
+                    expect($('#element')[0]).toBeVisSenseHidden();
+                    expect($('#element')[0]).not.toBeVisSenseVisible();
+                    expect($('#element')[0]).toHaveVisSensePercentageOf(0);
+                });
+
+                it('should detect nested element with parent ´visibility´ "hidden" as hidden', function () {
+                    jasmine.getFixtures().load('hidden_styling-visibility-hidden_nested.html');
                     expect($('#element')[0]).toBeVisSenseHidden();
                     expect($('#element')[0]).not.toBeVisSenseVisible();
                     expect($('#element')[0]).toHaveVisSensePercentageOf(0);

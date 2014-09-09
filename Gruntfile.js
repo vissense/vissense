@@ -77,11 +77,6 @@ module.exports = function (grunt) {
                 src: ['tmp/**/*.js', 'spec/**/*.js']
             }
         },
-        qunit: {
-            files: [
-                'src/test/**/*.html'
-            ]
-        },
 
         jasmine: {
             coverage: {
@@ -162,6 +157,14 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js'
             }
         },
+        coveralls: {
+            options: {
+                force: true
+            },
+            target: {
+                src: '<%= dirs.coverage %>/lcov/lcov.info'
+            }
+        },
         notify: {
             js: {
                 options: {
@@ -188,6 +191,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
 
@@ -195,6 +199,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'jasmine', 'karma', /*'qunit',*/ 'notify:test']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'coveralls', 'notify:test']);
 };
 

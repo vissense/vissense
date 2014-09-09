@@ -1,6 +1,6 @@
 {
   "name": "vissense",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://example.com",
   "authors": [
     "tbk"
@@ -29,8 +29,5 @@
     "lodash": "2.4.1",
     "jquery": "2.1.1",
     "jasmine-jquery": "velesin/jasmine-jquery#2.0.5"
-  },
-  "dependencies": {
-    "visibilityjs": "~1.2.1"
   }
 }

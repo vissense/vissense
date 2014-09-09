@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/theborakompanioni/vissense.png?branch=master)](https://api.travis-ci.org/theborakompanioni/vissense)
+[![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://api.travis-ci.org/vissense/vissense)
 
 # VisSense.js
 

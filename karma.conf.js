@@ -33,9 +33,8 @@ module.exports = function(config) {
  
         autoWatch: true,
  
-        browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+        browsers: ['PhantomJS', 'Firefox'],
         //browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
-        //browsers: ['PhantomJS'],
 
         customLaunchers: {
           Chrome_without_security: {

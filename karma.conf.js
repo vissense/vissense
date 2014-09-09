@@ -13,8 +13,6 @@ module.exports = function(config) {
             'bower_components/lodash/dist/lodash.min.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
 
-            'bower_components/visibilityjs/lib/visibility.core.js',
-
             'dist/vissense.js',
 
             'spec/**/*.js',

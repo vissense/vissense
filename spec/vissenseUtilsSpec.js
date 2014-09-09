@@ -1,8 +1,8 @@
 /*global VisSenseUtils,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
 /**
  * @license
- * VisSense <http://twyn.com/>
- * Copyright 2014 twyn group IT solutions & marketing services AG <vissense@twyn.com>
+ * Vissense <http://vissense.com/>
+ * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 describe('VisSenseUtils', function(undefined) {
@@ -336,11 +336,11 @@ describe('VisSenseUtils', function(undefined) {
 
         describe('effective style', function() {
 
-            it('should be pres simple element', function () {
+            it('should get style property of simple element', function () {
                 jasmine.getFixtures().set('<div id="element"></div>');
 
-                var style = VisSenseUtils._findEffectiveStyleProperty($('#element')[0]);
-                expect(style).toBeDefined();
+                var border = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'border');
+                expect(border).toBeDefined();
             });
 
             it('should find inherit "visibility" property of simple element', function () {

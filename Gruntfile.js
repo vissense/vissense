@@ -28,8 +28,8 @@ module.exports = function (grunt) {
         concat: {
             tmp: {
                 options: {
-                    banner: '\n;(function(window, Math, Visibility, undefined) {\n\'use strict\';\n',
-                    footer: '\n})(window, Math, window.Visibility || null, undefined);',
+                    banner: '\n;(function(window, undefined) {\n\'use strict\';\n',
+                    footer: '\n})(window);',
                     stripBanners: true
                 },
                 src: [
@@ -100,8 +100,7 @@ module.exports = function (grunt) {
                     vendor: [
                         'bower_components/jquery/dist/jquery.min.js',
                         'bower_components/lodash/dist/lodash.min.js',
-                        'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
-                        'bower_components/visibilityjs/lib/visibility.core.js'
+                        'bower_components/jasmine-jquery/lib/jasmine-jquery.js'
                     ],
                     template: require('grunt-template-jasmine-istanbul'),
                     templateOptions: {

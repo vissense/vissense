@@ -1,8 +1,8 @@
 /* global VisSenseUtils,VisSense,jasmine,beforeEach*/
 /**
  * @license
- * VisSense <http://twyn.com/>
- * Copyright 2014 twyn group IT solutions & marketing services AG <vissense@twyn.com>
+ * Vissense <http://vissense.com/>
+ * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 beforeEach(function () {

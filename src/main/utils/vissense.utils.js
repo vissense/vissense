@@ -1,9 +1,7 @@
 /**
-* @license
-* Vissense <http://vissense.com/>
-* Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
-* Available under MIT license <http://opensource.org/licenses/MIT>
-*/
+ * @license
+ * Available under MIT license <http://opensource.org/licenses/MIT>
+ */
 function _window(element) {
     var doc = element && element.ownerDocument;
     return doc ? doc.defaultView || doc.parentWindow : window;
@@ -235,22 +233,35 @@ function percentage(element) {
 
 /********************************************************** element visibility end */
 
-/********************************************************** page visibility - hard dependency to Visibilityjs*/
-var PageVisibilityAPIAvailable = Visibility && Visibility.change && Visibility.isSupported && Visibility.isSupported();
+/********************************************************** page visibility */
+var _visibilityapi = (function(undefined) {
+    var event = 'visibilitychange';
+    var dict = [
+        ['hidden', event],
+        ['mozHidden', 'moz' + event],
+        ['webkitHidden', 'webkit' + event],
+        ['msHidden', 'ms' + event]
+    ];
 
-function isPageVisibilityAPIAvailable() {
-    return !!PageVisibilityAPIAvailable;
-}
-
-function isPageVisible() {
-    return PageVisibilityAPIAvailable ? !Visibility.hidden() : true;
-}
-
-function onPageVisibilityChange(callback) {
-    if(PageVisibilityAPIAvailable) {
-        Visibility.change(callback);
+    for (var i = 0, n = dict.length; i < n; i++) {
+        if (document[dict[i][0]] !== undefined) {
+            return dict[i];
+        }
     }
-}
+})();
+
+var isPageVisible = function() {
+    return _visibilityapi ? !document[_visibilityapi[0]] : true;
+};
+
+var onPageVisibilityChange = function(callback) {
+     if(_visibilityapi) {
+         return addEventListener(_visibilityapi[1], function() {
+             callback(isPageVisible());
+         });
+     }
+};
+
 /********************************************************** page visibility end */
 
 window.VisSenseUtils = extend({}, {
@@ -267,7 +278,6 @@ window.VisSenseUtils = extend({}, {
     defer:defer,
     debounce:debounce,
 
-    isPageVisibilityAPIAvailable : isPageVisibilityAPIAvailable,
     isPageVisible : isPageVisible,
     onPageVisibilityChange : onPageVisibilityChange,
 

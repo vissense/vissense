@@ -1,9 +1,8 @@
-/* global jasmine,beforeEach,afterEach */
-
+/* global jasmine,beforeEach */
 /**
  * @license
- * VisSense <http://twyn.com/>
- * Copyright 2014 twyn group IT solutions & marketing services AG <vissense@twyn.com>
+ * Vissense <http://vissense.com/>
+ * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 ;(function() {
@@ -19,11 +18,11 @@
     beforeEach(function () {
         var path = karma() ? 'base/' : '';
 
+        if(window.VisSenseSpecRunner === 42) {
+            path = 'http://localhost:3000/';
+        }
+
         jasmine.getFixtures().fixturesPath = path + 'spec/javascripts/fixtures';
-    });
-
-    afterEach(function() {
-
     });
 
 }());

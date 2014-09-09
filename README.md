@@ -16,17 +16,21 @@ Build Project
 
 Run Tests
 
-Open `SpecRunner.html` in your browser and test with jasmine.
-(Run chrome with --disable-web-security to allow local file access)
+`grunt connect watch`
 
-## utils
+Open `http://localhost:3000/SpecRunner.html` in your browser and test with jasmine.
+
+
 ### What it does
  * provides methods for detecting visibility of DOM elements
+ * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
+ * provides a convenience class for detecting changes in visibility
 
 ### What it does *not*
  * detect if an element is overlapped by others
  * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
  * detect if the active browser window is off screen
+ * take elements opacity into account
  * detect if element is a hidden input element
    you can really do that yourself. e.g.:
 
@@ -39,39 +43,4 @@ function isHiddenInputElement(element) {
    }
    return false;
 }
-```
-
-## core
-### What it does
- * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
-
-### What it does *not*
-* detect if element is overlapped by other content
-* parts of elements behind scrollbars are considered visible
-* elements opacity has no impact on visibility
-
-##monitor
-
-### What it does
- * provides a convenience class for detecting changes in visibility
- * memoizes current and previous computed results
-
-### What it does *not*
- * update automatically. this is up to you - hence giving you the freedom to decide when
-   to trigger updates. here is what this could look like:
-
-```
-#!javascript
-var element = document.getElementById('my-element');
-var vismon = VisSense(element).monitor();
-
-(function initVisMonUpdateStrategy() {
-    ['readystatechange', 'scroll', 'resize'].forEach(function(event) {
-        window.addEventListener(event, vismon.update);
-    });
-
-    // triggers update if mouse moves over element
-    // this is important for example if the element is draggable
-    element.addEventListener('mousemove', vismon.update);
-}());
 ```

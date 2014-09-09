@@ -30,7 +30,7 @@
     "karma-ie-launcher": "~0.1.5",
     "karma-opera-launcher": "~0.1.0",
     "karma-safari-launcher": "~0.1.1",
-    "grunt-karma": "~0.8.3",
+    "grunt-karma": "~0.9.0",
     "grunt-bump": "0.0.15",
     "karma-coverage": "~0.2.6",
     "karma-spec-reporter": "0.0.13",

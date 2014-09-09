@@ -228,7 +228,7 @@ function percentage(element) {
     } */
 
     // rect's height and width are greater than 0 because element is in viewport
-    return (vh * vw) / (rect.height * rect.width);
+    return Math.round( (vh * vw) / (rect.height * rect.width) * 1000) / 1000;
 }
 
 /********************************************************** element visibility end */

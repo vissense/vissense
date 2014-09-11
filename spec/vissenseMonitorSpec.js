@@ -1,4 +1,4 @@
-/*global VisSense,VisSenseUtils,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach*/
 /**
  * @license
  * Vissense <http://vissense.com/>
@@ -57,7 +57,7 @@ describe('VisSense Monitor', function() {
             });
 
             it('should idle on start()', function () {
-                expect(strategy.start({ update: VisSenseUtils.noop })).not.toBeDefined();
+                expect(strategy.start({ update: VisSense.Utils.noop })).not.toBeDefined();
             });
 
             it('should idle on stop()', function () {
@@ -73,11 +73,11 @@ describe('VisSense Monitor', function() {
             });
 
             it('should return true on start()', function () {
-                expect(strategy.start({ update: VisSenseUtils.noop })).toBe(true);
+                expect(strategy.start({ update: VisSense.Utils.noop })).toBe(true);
             });
 
             it('should return true on stop()', function () {
-                strategy.start({ update: VisSenseUtils.noop });
+                strategy.start({ update: VisSense.Utils.noop });
                 expect(strategy.stop()).toBe(true);
             });
             it('should return false on stop() when not running', function () {
@@ -93,11 +93,11 @@ describe('VisSense Monitor', function() {
             });
 
             it('should return true on start()', function () {
-                expect(strategy.start({ update: VisSenseUtils.noop })).toBe(true);
+                expect(strategy.start({ update: VisSense.Utils.noop })).toBe(true);
             });
 
             it('should return true on stop()', function () {
-                strategy.start({ update: VisSenseUtils.noop });
+                strategy.start({ update: VisSense.Utils.noop });
                 expect(strategy.stop()).toBe(true);
             });
             it('should return false on stop() when not running', function () {
@@ -129,12 +129,12 @@ describe('VisSense Monitor', function() {
             var vismon = visobj.monitor();
 
             var vismon2 = visobj.monitor({
-                update : VisSenseUtils.noop,
-                hidden : VisSenseUtils.noop,
-                visible : VisSenseUtils.noop,
-                fullyvisible : VisSenseUtils.noop,
-                percentagechange : VisSenseUtils.noop,
-                visibilitychange : VisSenseUtils.noop
+                update : VisSense.Utils.noop,
+                hidden : VisSense.Utils.noop,
+                visible : VisSense.Utils.noop,
+                fullyvisible : VisSense.Utils.noop,
+                percentagechange : VisSense.Utils.noop,
+                visibilitychange : VisSense.Utils.noop
             });
 
             expect(vismon).toBeDefined();

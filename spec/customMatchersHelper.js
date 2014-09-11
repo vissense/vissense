@@ -1,4 +1,4 @@
-/* global VisSenseUtils,VisSense,jasmine,beforeEach*/
+/* global VisSense,jasmine,beforeEach*/
 /**
  * @license
  * Vissense <http://vissense.com/>
@@ -24,7 +24,7 @@ beforeEach(function () {
             return {
                 compare: function (element, expected) {
                     var result = {};
-                    var actual = VisSenseUtils.percentage(element);
+                    var actual = VisSense.Utils.percentage(element);
 
                     result.pass = (actual === expected);
                     result.message = getMessage('visibility percentage', result, actual, expected);

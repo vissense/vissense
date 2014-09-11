@@ -1,31 +1,31 @@
-/*global VisSenseUtils,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
+/*global VisSense,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
 /**
  * @license
  * Vissense <http://vissense.com/>
  * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
-describe('VisSenseUtils', function(undefined) {
+describe('VisSense.Utils', function(undefined) {
     'use strict';
 
     it('should verify that identity() returns the object passed', function () {
         var a = {};
-        expect(VisSenseUtils.identity(a)).toBe(a);
+        expect(VisSense.Utils.identity(a)).toBe(a);
     });
 
     it('should verify that now() returns a timestamp', function () {
-        expect(VisSenseUtils.now()).toBeGreaterThan(0);
+        expect(VisSense.Utils.now()).toBeGreaterThan(0);
     });
 
     describe('_', function() {
 
         it('should verify that noop() returns undefined', function () {
-            expect(VisSenseUtils.noop()).not.toBeDefined();
+            expect(VisSense.Utils.noop()).not.toBeDefined();
         });
 
         it('should verify that identity() returns the object passed', function () {
             var a = {};
-            expect(VisSenseUtils.identity(a)).toBe(a);
+            expect(VisSense.Utils.identity(a)).toBe(a);
         });
 
         describe('fireIf', function() {
@@ -40,13 +40,13 @@ describe('VisSenseUtils', function(undefined) {
             });
 
             it('should fire if expression is function returning true', function () {
-                expect(VisSenseUtils.fireIf(true, func.returnTrue)()).toBe(true);
-                expect(VisSenseUtils.fireIf(function() { return true; }, func.returnTrue)()).toBe(true);
+                expect(VisSense.Utils.fireIf(true, func.returnTrue)()).toBe(true);
+                expect(VisSense.Utils.fireIf(function() { return true; }, func.returnTrue)()).toBe(true);
                 expect(func.returnTrue.calls.count()).toEqual(2);
             });
             it('should NOT fire if expression is false', function () {
-                expect(VisSenseUtils.fireIf(false, func.returnTrue)()).not.toBeDefined();
-                expect(VisSenseUtils.fireIf(func.returnFalse, func.returnTrue)()).not.toBeDefined();
+                expect(VisSense.Utils.fireIf(false, func.returnTrue)()).not.toBeDefined();
+                expect(VisSense.Utils.fireIf(func.returnFalse, func.returnTrue)()).not.toBeDefined();
 
                 expect(func.returnTrue.calls.count()).toEqual(0);
             });
@@ -62,7 +62,7 @@ describe('VisSenseUtils', function(undefined) {
                 jasmine.clock().uninstall();
             });
             it('should defer function', function () {
-                VisSenseUtils.defer(function() {
+                VisSense.Utils.defer(function() {
                     timerCallback();
                 });
 
@@ -76,42 +76,42 @@ describe('VisSenseUtils', function(undefined) {
 
         describe('isFunction', function() {
             it('should detect `isFunction` as function', function () {
-                expect(VisSenseUtils.isFunction(VisSenseUtils.isFunction)).toBe(true);
+                expect(VisSense.Utils.isFunction(VisSense.Utils.isFunction)).toBe(true);
             });
             it('should NOT detect {} as function', function () {
-                expect(VisSenseUtils.isFunction({})).toBe(false);
+                expect(VisSense.Utils.isFunction({})).toBe(false);
             });
         });
 
         describe('isObject', function() {
             it('should detect {} as object', function () {
-                expect(VisSenseUtils.isObject({})).toBe(true);
+                expect(VisSense.Utils.isObject({})).toBe(true);
             });
 
             it('should detect [] as object', function () {
-                expect(VisSenseUtils.isObject([])).toBe(true);
+                expect(VisSense.Utils.isObject([])).toBe(true);
             });
 
             it('should detect a function as object', function () {
-                expect(VisSenseUtils.isObject(VisSenseUtils.isObject)).toBe(true);
+                expect(VisSense.Utils.isObject(VisSense.Utils.isObject)).toBe(true);
             });
 
             it('should NOT detect null/undefined/number/string/etc. as object', function () {
-                expect(VisSenseUtils.isObject(null)).toBe(false);
-                expect(VisSenseUtils.isObject(undefined)).toBe(false);
-                expect(VisSenseUtils.isObject(0/0)).toBe(false);
-                expect(VisSenseUtils.isObject(13)).toBe(false);
-                expect(VisSenseUtils.isObject('string')).toBe(false);
+                expect(VisSense.Utils.isObject(null)).toBe(false);
+                expect(VisSense.Utils.isObject(undefined)).toBe(false);
+                expect(VisSense.Utils.isObject(0/0)).toBe(false);
+                expect(VisSense.Utils.isObject(13)).toBe(false);
+                expect(VisSense.Utils.isObject('string')).toBe(false);
             });
         });
 
         describe('extend', function() {
             it('should throw errors on non-objects', function () {
-                expect(function() { VisSenseUtils.extend(null); }).toThrow();
-                expect(function() { VisSenseUtils.extend(undefined); }).toThrow();
-                expect(function() { VisSenseUtils.extend(0/0); }).toThrow();
-                expect(function() { VisSenseUtils.extend(13); }).toThrow();
-                expect(function() { VisSenseUtils.extend('string'); }).toThrow();
+                expect(function() { VisSense.Utils.extend(null); }).toThrow();
+                expect(function() { VisSense.Utils.extend(undefined); }).toThrow();
+                expect(function() { VisSense.Utils.extend(0/0); }).toThrow();
+                expect(function() { VisSense.Utils.extend(13); }).toThrow();
+                expect(function() { VisSense.Utils.extend('string'); }).toThrow();
             });
 
             it('should extend an object with given values', function () {
@@ -132,7 +132,7 @@ describe('VisSenseUtils', function(undefined) {
                     'fEnabled': false
                 };
 
-                expect(VisSenseUtils.extend(dest, source)).toEqual({
+                expect(VisSense.Utils.extend(dest, source)).toEqual({
                     'aEnabled': true,
                     'bEnabled': false,
                     'cEnabled': false,
@@ -163,7 +163,7 @@ describe('VisSenseUtils', function(undefined) {
                     false
                 ];
 
-                expect(VisSenseUtils.extend(dest, source)).toEqual([
+                expect(VisSense.Utils.extend(dest, source)).toEqual([
                     true,
                     false,
                     false,
@@ -197,7 +197,7 @@ describe('VisSenseUtils', function(undefined) {
                     return sourceVal;
                 };
 
-                expect(VisSenseUtils.extend(dest, source, callback)).toEqual({
+                expect(VisSense.Utils.extend(dest, source, callback)).toEqual({
                     'aEnabled': 42,
                     'bEnabled': {},
                     'cEnabled': true
@@ -207,8 +207,8 @@ describe('VisSenseUtils', function(undefined) {
 
         describe('defaults', function() {
             it('should immediately return on non-object values', function () {
-                expect(VisSenseUtils.defaults(true, false)).toBe(false);
-                expect(VisSenseUtils.defaults(null, false)).toBe(false);
+                expect(VisSense.Utils.defaults(true, false)).toBe(false);
+                expect(VisSense.Utils.defaults(null, false)).toBe(false);
             });
 
             it('should add default values to object', function () {
@@ -228,7 +228,7 @@ describe('VisSenseUtils', function(undefined) {
                     'fEnabled': false
                 };
 
-                expect(VisSenseUtils.defaults(dest, defaults)).toEqual({
+                expect(VisSense.Utils.defaults(dest, defaults)).toEqual({
                     'aEnabled': 13,
                     'bEnabled': {},
                     'cEnabled': false,
@@ -256,7 +256,7 @@ describe('VisSenseUtils', function(undefined) {
                     false
                 ];
 
-                expect(VisSenseUtils.defaults(dest, defaults)).toEqual([
+                expect(VisSense.Utils.defaults(dest, defaults)).toEqual([
                     false,
                     true,
                     false,
@@ -270,7 +270,7 @@ describe('VisSenseUtils', function(undefined) {
 
     describe('window', function() {
         it('should verify defined values from window()', function () {
-            var win = VisSenseUtils._window();
+            var win = VisSense.Utils._window();
 
             expect(win).toBe(window);
         });
@@ -278,7 +278,7 @@ describe('VisSenseUtils', function(undefined) {
         it('should verify defined values from window(element)', function () {
             jasmine.getFixtures().set('<div id="element"></div>');
 
-            var win = VisSenseUtils._window($('#element')[0]);
+            var win = VisSense.Utils._window($('#element')[0]);
 
             expect(win).toBe(window);
         });
@@ -287,7 +287,7 @@ describe('VisSenseUtils', function(undefined) {
     describe('viewport', function() {
 
         it('should verify defined values from viewport()', function () {
-            var viewport = VisSenseUtils._viewport();
+            var viewport = VisSense.Utils._viewport();
 
             expect(viewport.height).toBeDefined();
             expect(viewport.width).toBeDefined();
@@ -296,7 +296,7 @@ describe('VisSenseUtils', function(undefined) {
         it('should verify defined values from viewport(element)', function () {
             jasmine.getFixtures().set('<div id="element"></div>');
 
-            var viewport = VisSenseUtils._viewport($('#element')[0]);
+            var viewport = VisSense.Utils._viewport($('#element')[0]);
 
             expect(viewport.height).toBeDefined();
             expect(viewport.width).toBeDefined();
@@ -306,7 +306,7 @@ describe('VisSenseUtils', function(undefined) {
     describe('element position', function() {
         it('should verify _getBoundingClientRect gives 0 values for elements not appended to DOM', function () {
             var elementNotInDom = $('<div></div>')[0];
-            var rect = VisSenseUtils._getBoundingClientRect(elementNotInDom);
+            var rect = VisSense.Utils._getBoundingClientRect(elementNotInDom);
             expect(rect.bottom).toBe(0);
             expect(rect.top).toBe(0);
             expect(rect.left).toBe(0);
@@ -316,12 +316,12 @@ describe('VisSenseUtils', function(undefined) {
         });
 
         it('should test _getBoundingClientRect with concrete values', function () {
-            var viewport = VisSenseUtils._viewport();
+            var viewport = VisSense.Utils._viewport();
 
             jasmine.getFixtures().set('<div id="element" ' +
                 'style="top:0; left:0; position: fixed; width: '+viewport.width+'px; height: '+viewport.height+'px"></div>');
 
-            var rect = VisSenseUtils._getBoundingClientRect($('#element')[0]);
+            var rect = VisSense.Utils._getBoundingClientRect($('#element')[0]);
             expect(rect.top).toBe(0);
             expect(rect.right).toBe(viewport.width);
             expect(rect.bottom).toBe(viewport.height);
@@ -339,7 +339,7 @@ describe('VisSenseUtils', function(undefined) {
             it('should get style property of simple element', function () {
                 jasmine.getFixtures().set('<div id="element"></div>');
 
-                var border = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'border');
+                var border = VisSense.Utils._findEffectiveStyleProperty($('#element')[0], 'border');
                 expect(border).toBeDefined();
             });
 
@@ -351,13 +351,13 @@ describe('VisSenseUtils', function(undefined) {
                     '<div style="visibility: collapse"></div>' +
                 '</div>');
 
-                var parentStyle = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'visibility');
+                var parentStyle = VisSense.Utils._findEffectiveStyleProperty($('#element')[0], 'visibility');
                 var children = $('#element').children();
 
-                var style0 = VisSenseUtils._findEffectiveStyleProperty(children[0], 'visibility');
-                var style1 = VisSenseUtils._findEffectiveStyleProperty(children[1], 'visibility');
-                var style2 = VisSenseUtils._findEffectiveStyleProperty(children[2], 'visibility');
-                var style3 = VisSenseUtils._findEffectiveStyleProperty(children[3], 'visibility');
+                var style0 = VisSense.Utils._findEffectiveStyleProperty(children[0], 'visibility');
+                var style1 = VisSense.Utils._findEffectiveStyleProperty(children[1], 'visibility');
+                var style2 = VisSense.Utils._findEffectiveStyleProperty(children[2], 'visibility');
+                var style3 = VisSense.Utils._findEffectiveStyleProperty(children[3], 'visibility');
 
                 expect(parentStyle).toEqual('hidden');
                 expect(style0).toEqual('hidden');
@@ -373,12 +373,12 @@ describe('VisSenseUtils', function(undefined) {
                     '<div style="display: inline-block"></div>' +
                 '</div>');
 
-                var parentStyle = VisSenseUtils._findEffectiveStyleProperty($('#element')[0], 'display');
+                var parentStyle = VisSense.Utils._findEffectiveStyleProperty($('#element')[0], 'display');
 
                 var children = $('#element').children();
-                var style0 = VisSenseUtils._findEffectiveStyleProperty(children[0], 'display');
-                var style1 = VisSenseUtils._findEffectiveStyleProperty(children[1], 'display');
-                var style2 = VisSenseUtils._findEffectiveStyleProperty(children[2], 'display');
+                var style0 = VisSense.Utils._findEffectiveStyleProperty(children[0], 'display');
+                var style1 = VisSense.Utils._findEffectiveStyleProperty(children[1], 'display');
+                var style2 = VisSense.Utils._findEffectiveStyleProperty(children[2], 'display');
 
                 expect(parentStyle).toEqual('none');
                 expect(style0).toEqual('none');
@@ -397,12 +397,12 @@ describe('VisSenseUtils', function(undefined) {
                     '<div style="visibility: visible"></div>' +
                 '</div>');
 
-                expect(VisSenseUtils._isDisplayed($('#element')[0])).toBe(false);
-                expect(VisSenseUtils.isVisibleByStyling($('#element')[0])).toBe(false);
+                expect(VisSense.Utils._isDisplayed($('#element')[0])).toBe(false);
+                expect(VisSense.Utils.isVisibleByStyling($('#element')[0])).toBe(false);
 
                 _.forEach($('#element').children(), function(child) {
-                    expect(VisSenseUtils._isDisplayed(child)).toBe(false);
-                    expect(VisSenseUtils.isVisibleByStyling(child)).toBe(false);
+                    expect(VisSense.Utils._isDisplayed(child)).toBe(false);
+                    expect(VisSense.Utils.isVisibleByStyling(child)).toBe(false);
                 });
 
             });
@@ -417,22 +417,22 @@ describe('VisSenseUtils', function(undefined) {
 
                 var children = $('#element').children();
 
-                expect(VisSenseUtils._isDisplayed($('#element')[0])).toBe(true);
-                expect(VisSenseUtils._isDisplayed(children[0])).toBe(true);
-                expect(VisSenseUtils._isDisplayed(children[1])).toBe(true);
-                expect(VisSenseUtils._isDisplayed(children[2])).toBe(false);
+                expect(VisSense.Utils._isDisplayed($('#element')[0])).toBe(true);
+                expect(VisSense.Utils._isDisplayed(children[0])).toBe(true);
+                expect(VisSense.Utils._isDisplayed(children[1])).toBe(true);
+                expect(VisSense.Utils._isDisplayed(children[2])).toBe(false);
 
-                expect(VisSenseUtils.isVisibleByStyling($('#element')[0])).toBe(true);
-                expect(VisSenseUtils.isVisibleByStyling(children[0])).toBe(true);
-                expect(VisSenseUtils.isVisibleByStyling(children[1])).toBe(true);
-                expect(VisSenseUtils.isVisibleByStyling(children[2])).toBe(false);
+                expect(VisSense.Utils.isVisibleByStyling($('#element')[0])).toBe(true);
+                expect(VisSense.Utils.isVisibleByStyling(children[0])).toBe(true);
+                expect(VisSense.Utils.isVisibleByStyling(children[1])).toBe(true);
+                expect(VisSense.Utils.isVisibleByStyling(children[2])).toBe(false);
             });
 
             it('should detect "document" has visible by styling', function () {
-                expect(VisSenseUtils.isVisibleByStyling(document)).toBe(true);
+                expect(VisSense.Utils.isVisibleByStyling(document)).toBe(true);
             });
             it('should detect "null" has hidden by styling', function () {
-                expect(VisSenseUtils.isVisibleByStyling(null)).toBe(false);
+                expect(VisSense.Utils.isVisibleByStyling(null)).toBe(false);
             });
 
         });
@@ -574,7 +574,7 @@ describe('VisSenseUtils', function(undefined) {
                 expect($('#element')[0]).not.toBeVisSenseFullyVisible();
 
                 /* we really dont know what the viewport size will be */
-                var percentage = VisSenseUtils.percentage($('#element')[0]);
+                var percentage = VisSense.Utils.percentage($('#element')[0]);
                 expect(percentage).toBeLessThan(1);
                 expect(percentage).toBeGreaterThan(0);
 

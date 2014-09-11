@@ -15,16 +15,14 @@
     "bower_components",
     "node_modules",
     "Gruntfile.js",
-    "karma.conf.html",
+    "karma.conf.js",
     "SpecRunner.html",
     "package.json",
     "bower.json",
-    "src/test",
     "dist/coverage",
     "**/.*"
   ],
   "devDependencies": {
-    "qunit": "1.14.0",
     "jasmine": "2.0.1",
     "lodash": "2.4.1",
     "jquery": "2.1.1",

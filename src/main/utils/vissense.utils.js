@@ -250,21 +250,21 @@ var _visibilityapi = (function(undefined) {
     }
 })();
 
-var isPageVisible = function() {
+function isPageVisible() {
     return _visibilityapi ? !document[_visibilityapi[0]] : true;
-};
+}
 
-var onPageVisibilityChange = function(callback) {
+function onPageVisibilityChange(callback) {
      if(_visibilityapi) {
          return addEventListener(_visibilityapi[1], function() {
              callback(isPageVisible());
          });
      }
-};
+}
 
 /********************************************************** page visibility end */
 
-window.VisSenseUtils = extend({}, {
+VisSense.Utils = extend({}, {
 
     fireIf: fireIf,
 

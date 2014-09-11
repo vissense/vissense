@@ -94,7 +94,6 @@ VisSense.prototype.fireIfHidden = function (callback) {
 };
 
 VisSense.fn = VisSense.prototype;
-VisSense.version = '0.1.0';
 VisSense.of = function(element, config) {
     return new VisSense(element, config);
 };

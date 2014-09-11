@@ -254,14 +254,6 @@ function isPageVisible() {
     return _visibilityapi ? !document[_visibilityapi[0]] : true;
 }
 
-function onPageVisibilityChange(callback) {
-     if(_visibilityapi) {
-         return addEventListener(_visibilityapi[1], function() {
-             callback(isPageVisible());
-         });
-     }
-}
-
 /********************************************************** page visibility end */
 
 VisSense.Utils = extend({}, {
@@ -279,7 +271,6 @@ VisSense.Utils = extend({}, {
     debounce:debounce,
 
     isPageVisible : isPageVisible,
-    onPageVisibilityChange : onPageVisibilityChange,
 
     percentage : percentage,
     isVisibleByStyling : isVisibleByStyling,

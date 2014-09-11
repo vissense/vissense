@@ -44,7 +44,7 @@ module.exports = function(config) {
         },
 
         preprocessors: {
-          'tmp/vissense.js': ['coverage']
+          'dist/vissense.js': ['coverage']
         },
 
         coverageReporter: {

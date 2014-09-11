@@ -29,7 +29,7 @@ module.exports = function (grunt) {
             tmp: {
                 options: {
                     banner: '\n;(function(window, undefined) {\n\'use strict\';\n',
-                    footer: '\n})(window);',
+                    footer: '\nVisSense.version = \'<%= pkg.version %>\';\n})(window);',
                     stripBanners: true
                 },
                 src: [

@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.1.2", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.1.3", "copyright": "(c) 2014 tbk" } */
 ;(function(window, undefined) {
 'use strict';
 function _window(element) {
@@ -497,8 +497,11 @@ VisMon.prototype.use = function(strategy) {
 //   doSomething();
 // });
 VisMon.prototype.onUpdate = function(callback) {
+    if(!isFunction(callback)) {
+        return -1;
+    }
     this._lastListenerId += 1;
-    this._listeners[this._lastListenerId] = callback;
+    this._listeners[this._lastListenerId] = callback.bind(undefined, this);
     return this._lastListenerId;
 };
 
@@ -510,8 +513,6 @@ VisMon.prototype.update = function() {
     this._status = nextState(this._visobj, this._status);
     // notify listeners
     fireListeners(this._listeners, this);
-
-
 };
 
 /**

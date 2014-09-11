@@ -1,15 +1,18 @@
 {
   "name": "vissense",
   "version": "0.1.3",
+  "license": "MIT",
+  "main": "dist/vissense.min.js",
+  "description": "",
+  "keywords": [],
   "homepage": "https://example.com",
   "authors": [
     "tbk"
   ],
-  "moduleType": [
-    "globals"
-  ],
-  "license": "MIT",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vissense/vissense.git"
+  },
   "ignore": [
     "spec",
     "bower_components",

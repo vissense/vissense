@@ -142,7 +142,7 @@ describe('VisSense Monitor', function() {
         });
 
 
-        it('should update instance state with update()', function () {
+        it('should update state when update() is executed', function () {
             var config = {
                  update : function() {
                  }
@@ -155,6 +155,19 @@ describe('VisSense Monitor', function() {
 
             expect(vismon.status()).toBeDefined();
 
+        });
+
+        it('should update verify that first update() argument is a monitor', function () {
+            var counter = 0;
+            var config = {
+                 update : function(monitor) {
+                    expect(vismon === monitor);
+                    counter++;
+                 }
+            };
+            var vismon = visobj.monitor(config);
+            vismon.update();
+            expect(counter === 1);
         });
 
         it('should verify that state instances are cached if nothing changes', function () {

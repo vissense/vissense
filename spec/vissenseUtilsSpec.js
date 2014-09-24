@@ -303,35 +303,6 @@ describe('VisSense.Utils', function(undefined) {
         });
     });
 
-    describe('element position', function() {
-        it('should verify _getBoundingClientRect gives 0 values for elements not appended to DOM', function () {
-            var elementNotInDom = $('<div></div>')[0];
-            var rect = VisSense.Utils._getBoundingClientRect(elementNotInDom);
-            expect(rect.bottom).toBe(0);
-            expect(rect.top).toBe(0);
-            expect(rect.left).toBe(0);
-            expect(rect.right).toBe(0);
-            expect(rect.height).toBe(0);
-            expect(rect.width).toBe(0);
-        });
-
-        it('should test _getBoundingClientRect with concrete values', function () {
-            var viewport = VisSense.Utils._viewport();
-
-            jasmine.getFixtures().set('<div id="element" ' +
-                'style="top:0; left:0; position: fixed; width: '+viewport.width+'px; height: '+viewport.height+'px"></div>');
-
-            var rect = VisSense.Utils._getBoundingClientRect($('#element')[0]);
-            expect(rect.top).toBe(0);
-            expect(rect.right).toBe(viewport.width);
-            expect(rect.bottom).toBe(viewport.height);
-            expect(rect.left).toBe(0);
-            expect(rect.height).toBe(viewport.height);
-            expect(rect.width).toBe(viewport.width);
-        });
-
-    });
-
     describe('elements visibility', function() {
 
         describe('effective style', function() {

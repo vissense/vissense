@@ -94,20 +94,6 @@
     }
 
     /********************************************************** element-position */
-
-    function _getBoundingClientRect(element) {
-        var r = element.getBoundingClientRect();
-        // height and width are not standard elements - so lets add them
-        if(r.height === undefined || r.width === undefined) {
-            // copying object because attributes cannot be added to 'r'
-            return extend({
-                height: element.clientHeight,
-                width: element.clientWidth
-            }, r);
-        }
-        return r;
-    }
-
     /**
     * return the viewport (does *not* subtract scrollbar size)
     */
@@ -215,7 +201,7 @@
             return 0;
         }
 
-        var rect = _getBoundingClientRect(element);
+        var rect = element.getBoundingClientRect();
         var view = _viewport(element);
 
         if(!_isInViewport(rect, view) || !isVisibleByStyling(element)) {
@@ -827,7 +813,6 @@
         _viewport : _viewport,
         _isInViewport : _isInViewport,
 
-        _getBoundingClientRect : _getBoundingClientRect,
         _isDisplayed : _isDisplayed,
         _findEffectiveStyleProperty:_findEffectiveStyleProperty
     };

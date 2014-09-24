@@ -89,7 +89,19 @@ describe('VisSense', function() {
             expect(visobj.fireIfFullyVisible(returnTrue)()).toBe(true);
         });
 
-        it('should detect element with 50% visibility as fullyvisible', function () {
+        it('should detect an element streching the whole viewport as fully visible', function () {
+            var viewport = VisSense.Utils._viewport();
+
+            jasmine.getFixtures().set('<div id="element" ' +
+                'style="top:0; left:0; position: fixed; width: '+viewport.width+'px; height: '+viewport.height+'px"></div>');
+
+            var visobj = new VisSense($('#element')[0]);
+
+            expect(visobj.isFullyVisible()).toBe(true);
+            expect(visobj.percentage()).toEqual(1);
+        });
+
+        it('should detect element with 50% visibility as fully visible', function () {
             jasmine.getFixtures().load('visible_50_percent_top.html');
 
             var visobj = new VisSense($('#element')[0], {

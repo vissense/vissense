@@ -18,7 +18,6 @@ describe('VisSense Monitor', function() {
     describe('VisState', function() {
 
         it('should create all 3 VisState objects', function () {
-
             expect(VisSense.VisState.hidden(0)).toBeDefined();
             expect(VisSense.VisState.visible(0.1)).toBeDefined();
             expect(VisSense.VisState.fullyvisible(1)).toBeDefined();
@@ -161,13 +160,13 @@ describe('VisSense Monitor', function() {
             var counter = 0;
             var config = {
                  update : function(monitor) {
-                    expect(vismon === monitor);
+                    expect(monitor).toBe(vismon);
                     counter++;
                  }
             };
             var vismon = visobj.monitor(config);
             vismon.update();
-            expect(counter === 1);
+            expect(counter).toBe(1);
         });
 
         it('should verify that state instances are cached if nothing changes', function () {

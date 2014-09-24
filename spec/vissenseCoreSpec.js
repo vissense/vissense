@@ -10,10 +10,6 @@ describe('VisSense', function() {
 
     var returnTrue = function() { return true; };
 
-    it('should get the version of VisSense', function () {
-        expect(VisSense.version).toBeDefined();
-    });
-
     describe('vissense.core.js', function() {
 
         it('should throw error when not initialized with element node', function () {

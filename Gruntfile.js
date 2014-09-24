@@ -28,16 +28,10 @@ module.exports = function (grunt) {
         concat: {
             tmp: {
                 options: {
-                    banner: '\n;(function(window, undefined) {\n\'use strict\';\n',
-                    footer: '\nVisSense.version = \'<%= pkg.version %>\';\n})(window);',
                     stripBanners: true
                 },
                 src: [
-                    'src/main/utils/vissense.utils.js',
-                    'src/main/core/vissense.core.js',
-                    'src/main/monitor/vissense.monitor.js',
-                    'src/main/monitor/vissense.monitor.state.js',
-                    'src/main/monitor/vissense.monitor.strategy.js'
+                    'lib/vissense.js'
                 ],
                 dest: '<%= dirs.tmp %>/<%= pkg.name %>.js'
             },
@@ -199,6 +193,6 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'watch']);
-    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'coveralls', 'notify:test']);
+    grunt.registerTask('test', ['connect', 'jasmine', 'karma', 'notify:test']);
 };
 

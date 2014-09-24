@@ -34,6 +34,9 @@
     "maxerr": 10,
     "sub": false,
     /* Environment options */
-    "node": true, /* only for Gruntfile */
-    "browser": true
+    "node": true, 
+    "browser": true,
+    "globals": {
+        "define": true
+    }
 }

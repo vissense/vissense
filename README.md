@@ -29,19 +29,6 @@ Open `http://localhost:3000/SpecRunner.html` in your browser and test with jasmi
 
 ### What it does *not*
  * detect if an element is overlapped by others
- * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
- * detect if the active browser window is off screen
+ * detect if an element is a hidden input element
  * take elements opacity into account
- * detect if element is a hidden input element
-   you can really do that yourself. e.g.:
-
-```
-#!javascript
-
-function isHiddenInputElement(element) {
-   if (element.tagName && String(element.tagName).toLowerCase() === 'input') {
-       return element.type && String(element.type).toLowerCase() === 'hidden';
-   }
-   return false;
-}
-```
+ * take scrollbars into account - elements "hidden" behind scrollbars are considered visible

@@ -49,8 +49,7 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
                 report: 'gzip',
                 drop_console: true,
-                sourceMap: true,
-                sourceMapName: '<%= uglify.dist.dest %>.map'
+                sourceMap: false
             },
             dist: {
                 src: '<%= concat.dist.dest %>',

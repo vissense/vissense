@@ -148,11 +148,11 @@ describe('VisSense Monitor', function() {
             };
             var vismon = visobj.monitor(config);
 
-            expect(vismon.status()).toBe(null);
+            expect(vismon.state()).toEqual({});
 
             vismon.update();
 
-            expect(vismon.status()).toBeDefined();
+            expect(vismon.state()).toBeDefined();
 
         });
 
@@ -176,20 +176,25 @@ describe('VisSense Monitor', function() {
             };
             var vismon = visobj.monitor(config);
 
-            expect(vismon.status()).toBe(null);
+            expect(vismon.state()).toEqual({});
 
             vismon.update();
 
-            expect(vismon.status()).toBeDefined();
+            expect(vismon.state().state).toBeDefined();
+            expect(vismon.state().hidden).toBeDefined();
+            expect(vismon.state().visible).toBeDefined();
+            expect(vismon.state().fullyvisible).toBeDefined();
+            expect(vismon.state().percentage).toBeDefined();
+            expect(vismon.state().previous).toBeDefined();
 
             vismon.update();
 
-            var cachedState = vismon.status();
-            expect(cachedState).toBeDefined();
+            var cachedState = vismon.state();
+            expect(cachedState.hidden).toBeDefined();
 
             vismon.update();
 
-            expect(vismon.status()).toBe(cachedState);
+            expect(vismon.state()).toBe(cachedState);
 
         });
 
@@ -202,11 +207,13 @@ describe('VisSense Monitor', function() {
 
             var vismon = visobj.monitor(config);
 
-            expect(vismon.status()).toBe(null);
+            expect(vismon.state()).toEqual({});
 
             vismon.start();
 
-            expect(vismon.status()).toBeDefined();
+            expect(vismon.state()).toBeDefined();
+            expect(vismon.state().hidden).toBeDefined();
+            expect(vismon.state().previous).toEqual({});
 
             vismon.update();
             vismon.stop();
@@ -241,32 +248,32 @@ describe('VisSense Monitor', function() {
 
             vismon.start();
 
-            var firstState  = vismon.status();
+            var firstState  = vismon.state();
 
-            expect(firstState.isHidden()).toBe(true);
-            expect(firstState.isVisible()).toBe(false);
-            expect(firstState.isFullyVisible()).toBe(false);
+            expect(firstState.hidden).toBe(true);
+            expect(firstState.visible).toBe(false);
+            expect(firstState.fullyvisible).toBe(false);
 
-            expect(firstState.wasHidden()).toBe(false);
-            expect(firstState.wasVisible()).toBe(false);
-            expect(firstState.wasFullyVisible()).toBe(false);
+            expect(firstState.previous.hidden).toBeUndefined();
+            expect(firstState.previous.visible).toBeUndefined();
+            expect(firstState.previous.fullyvisible).toBeUndefined();
 
             // from undefined to 'hidden'
-            expect(firstState.hasVisibilityChanged()).toBe(true);
+            expect(firstState.state !== firstState.previous.state).toBe(true);
 
             vismon.update();
 
-            var secondState  = vismon.status();
+            var secondState  = vismon.state();
 
-            expect(secondState.isHidden()).toBe(true);
-            expect(secondState.isVisible()).toBe(false);
-            expect(secondState.isFullyVisible()).toBe(false);
+            expect(secondState.hidden).toBe(true);
+            expect(secondState.visible).toBe(false);
+            expect(secondState.fullyvisible).toBe(false);
 
-            expect(secondState.wasHidden()).toBe(true);
-            expect(secondState.wasVisible()).toBe(false);
-            expect(secondState.wasFullyVisible()).toBe(false);
+            expect(secondState.previous.hidden).toBe(true);
+            expect(secondState.previous.visible).toBe(false);
+            expect(secondState.previous.fullyvisible).toBe(false);
 
-            expect(secondState.hasVisibilityChanged()).toBe(false);
+            expect(secondState.state !== secondState.previous.state).toBe(false);
         });
 
     });

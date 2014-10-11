@@ -13,7 +13,7 @@
         // Browser globals
         root.VisSense = factory();
     }
-    
+
 }(this, function (undefined) {
     'use strict';
 
@@ -313,36 +313,6 @@
       return this.state().hidden;
     };
 
-    /**
-    * Returns a function that invokes callback only if element is fully visible
-    */
-    VisSense.prototype.fireIfFullyVisible = function(callback) {
-        var me = this;
-        return fireIf(function() {
-            return me.isFullyVisible();
-        }, callback);
-    };
-
-    /**
-    * Returns a function that invokes callback only if element is visible
-    */
-    VisSense.prototype.fireIfVisible = function(callback) {
-        var me = this;
-        return fireIf(function() {
-            return me.isVisible();
-        }, callback);
-    };
-
-    /**
-    * Returns a function that invokes callback only if element is hidden
-    */
-    VisSense.prototype.fireIfHidden = function (callback) {
-        var me = this;
-        return fireIf(function() {
-            return me.isHidden();
-        }, callback);
-    };
-
     VisSense.fn = VisSense.prototype;
 
     VisSense.of = function(element, config) {
@@ -383,7 +353,7 @@
         }
     }
     /*--------------------------------------------------------------------------*/
-     
+
     /**
      * detects visibility changes of an element.
      *

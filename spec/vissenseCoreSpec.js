@@ -8,8 +8,6 @@
 describe('VisSense', function() {
     'use strict';
 
-    var returnTrue = function() { return true; };
-
     describe('vissense.core.js', function() {
 
         it('should throw error when not initialized with element node', function () {
@@ -58,9 +56,6 @@ describe('VisSense', function() {
             expect(visobj.isVisible()).toBe(false);
             expect(visobj.isFullyVisible()).toBe(false);
             expect(visobj.percentage()).toBe(0);
-            expect(visobj.fireIfHidden(returnTrue)()).toBe(true);
-            expect(visobj.fireIfVisible(returnTrue)()).not.toBeDefined();
-            expect(visobj.fireIfFullyVisible(returnTrue)()).not.toBeDefined();
         });
 
         it('should create and test for a visible object', function () {
@@ -71,9 +66,6 @@ describe('VisSense', function() {
             expect(visobj.isVisible()).toBe(true);
             expect(visobj.isFullyVisible()).toBe(false);
             expect(visobj.percentage()).toBe(0.25);
-            expect(visobj.fireIfHidden(returnTrue)()).not.toBeDefined();
-            expect(visobj.fireIfVisible(returnTrue)()).toBe(true);
-            expect(visobj.fireIfFullyVisible(returnTrue)()).not.toBeDefined();
         });
 
         it('should create and test for a fully visible object', function () {
@@ -84,9 +76,6 @@ describe('VisSense', function() {
             expect(visobj.isVisible()).toBe(true);
             expect(visobj.isFullyVisible()).toBe(true);
             expect(visobj.percentage()).toBe(1);
-            expect(visobj.fireIfHidden(returnTrue)()).not.toBeDefined();
-            expect(visobj.fireIfVisible(returnTrue)()).toBe(true);
-            expect(visobj.fireIfFullyVisible(returnTrue)()).toBe(true);
         });
 
         it('should detect an element streching the whole viewport as fully visible', function () {

@@ -92,7 +92,7 @@
     /**
     * return the viewport (does *not* subtract scrollbar size)
     */
-    function _viewport() {
+    function viewport() {
         if(window.innerWidth === undefined) {
             return {
                 height: window.document.documentElement.clientHeight,
@@ -119,7 +119,7 @@
     *
     * more info: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
     */
-    function _isVisibleByOffsetParentCheck(element, computedStyle) {
+    function isVisibleByOffsetParentCheck(element, computedStyle) {
         if(!element.offsetParent) {
             var position = styleProperty(computedStyle, 'position');
             if(position !== 'fixed') {
@@ -140,7 +140,7 @@
         return style ? style.getPropertyValue(property) : undefined;
     }
 
-    function _isDisplayed(element, style) {
+    function isDisplayed(element, style) {
         if(!style) {
             style = computedStyle(element);
         }
@@ -156,7 +156,7 @@
         }
 
         if (element.parentNode && element.parentNode.style) {
-            return _isDisplayed(element.parentNode, computedStyle(element));
+            return isDisplayed(element.parentNode, computedStyle(element));
         }
 
         return true;
@@ -172,11 +172,11 @@
         }
 
         var style = computedStyle(element);
-        if(!_isVisibleByOffsetParentCheck(element, style)) {
+        if(!isVisibleByOffsetParentCheck(element, style)) {
             return false;
         }
 
-        var displayed = _isDisplayed(element, style);
+        var displayed = isDisplayed(element, style);
         if(displayed !== true) {
             return false;
         }
@@ -187,7 +187,7 @@
 
     /********************************************************** element visibility */
 
-    function _isInViewport(rect, viewport) {
+    function isInViewport(rect, viewport) {
         if(!rect || (rect.width <= 0 || rect.height <= 0)) {
             return false;
         }
@@ -203,9 +203,9 @@
         }
 
         var rect = element.getBoundingClientRect();
-        var view = _viewport();
+        var view = viewport();
 
-        if(!_isInViewport(rect, view) || !isVisibleByStyling(element)) {
+        if(!isInViewport(rect, view) || !isVisibleByStyling(element)) {
            return 0;
         }
 
@@ -235,7 +235,7 @@
     /********************************************************** element visibility end */
 
     /********************************************************** page visibility */
-    var _visibilityapi = (function(undefined) {
+    var VisibilityApi = (function(undefined) {
         var event = 'visibilitychange';
         var dict = [
             ['hidden', event],
@@ -252,7 +252,7 @@
     })();
 
     function isPageVisible() {
-        return _visibilityapi ? !document[_visibilityapi[0]] : true;
+        return VisibilityApi ? !document[VisibilityApi[0]] : true;
     }
 
     /********************************************************** page visibility end */
@@ -672,10 +672,10 @@
         percentage : percentage,
         isVisibleByStyling : isVisibleByStyling,
 
-        _viewport : _viewport,
-        _isInViewport : _isInViewport,
+        _viewport : viewport,
+        _isInViewport : isInViewport,
 
-        _isDisplayed : _isDisplayed,
+        _isDisplayed : isDisplayed,
 
         _computedStyle: computedStyle,
         _styleProperty: styleProperty

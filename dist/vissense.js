@@ -8,10 +8,10 @@
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory();
+        module.exports = factory(root, root.document);
     } else {
         // Browser globals
-        root.VisSense = factory(window, document);
+        root.VisSense = factory(root, root.document);
     }
 
 }(this, function (window, document, undefined) {

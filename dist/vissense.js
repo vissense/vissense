@@ -11,16 +11,11 @@
         module.exports = factory();
     } else {
         // Browser globals
-        root.VisSense = factory();
+        root.VisSense = factory(window, document);
     }
 
-}(this, function (undefined) {
+}(this, function (window, document, undefined) {
     'use strict';
-
-    function _window(element) {
-        var doc = element && element.ownerDocument;
-        return doc ? doc.defaultView || doc.parentWindow : window;
-    }
 
     /**
     * Returns a function that invokes callback only if call to when() is true
@@ -97,17 +92,16 @@
     /**
     * return the viewport (does *not* subtract scrollbar size)
     */
-    function _viewport(element) {
-        var w = element ? _window(element) : window;
-        if(w.innerWidth === undefined) {
+    function _viewport() {
+        if(window.innerWidth === undefined) {
             return {
-                height: w.document.documentElement.clientHeight,
-                width: w.document.documentElement.clientWidth
+                height: window.document.documentElement.clientHeight,
+                width: window.document.documentElement.clientWidth
             };
         }
         return {
-            height: w.innerHeight,
-            width: w.innerWidth
+            height: window.innerHeight,
+            width: window.innerWidth
         };
     }
     /********************************************************** element-position end */
@@ -125,9 +119,9 @@
     *
     * more info: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent
     */
-    function _isVisibleByOffsetParentCheck(element) {
+    function _isVisibleByOffsetParentCheck(element, computedStyle) {
         if(!element.offsetParent) {
-            var position = _findEffectiveStyleProperty(element, 'position');
+            var position = styleProperty(computedStyle, 'position');
             if(position !== 'fixed') {
                 return false;
             }
@@ -135,35 +129,41 @@
         return true;
     }
 
-    function _findEffectiveStyleProperty(element, property, computedStyleProvider) {
+    function computedStyle(element) {
         if (element.style === undefined) {
-            return; // not a styled element, e.g. document
+            return null; // not a styled element, e.g. document
         }
-        var w =  computedStyleProvider || _window(element);
-        var effectiveStyle =  w.getComputedStyle(element, null);
-        return effectiveStyle && effectiveStyle.getPropertyValue(property);
+        return window.getComputedStyle(element, null);
     }
 
-    function _isDisplayed(element) {
-        var display = _findEffectiveStyleProperty(element, 'display', _window(element));
+    function styleProperty(style, property) {
+        return style ? style.getPropertyValue(property) : undefined;
+    }
+
+    function _isDisplayed(element, style) {
+        if(!style) {
+            style = computedStyle(element);
+        }
+
+        var display = styleProperty(style, 'display');
         if (display === 'none') {
             return false;
         }
 
-        var visibility = _findEffectiveStyleProperty(element, 'visibility', _window(element));
+        var visibility = styleProperty(style, 'visibility');
         if (visibility === 'hidden' || visibility === 'collapse') {
             return false;
         }
 
         if (element.parentNode && element.parentNode.style) {
-            return _isDisplayed(element.parentNode);
+            return _isDisplayed(element.parentNode, computedStyle(element));
         }
 
         return true;
     }
 
     function isVisibleByStyling(element) {
-        if (element ===  _window(element).document) {
+        if (element ===  document) {
             return true;
         }
 
@@ -171,11 +171,12 @@
             return false;
         }
 
-        if(!_isVisibleByOffsetParentCheck(element)) {
+        var style = computedStyle(element);
+        if(!_isVisibleByOffsetParentCheck(element, style)) {
             return false;
         }
 
-        var displayed = _isDisplayed(element);
+        var displayed = _isDisplayed(element, style);
         if(displayed !== true) {
             return false;
         }
@@ -202,7 +203,7 @@
         }
 
         var rect = element.getBoundingClientRect();
-        var view = _viewport(element);
+        var view = _viewport();
 
         if(!_isInViewport(rect, view) || !isVisibleByStyling(element)) {
            return 0;
@@ -671,13 +672,13 @@
         percentage : percentage,
         isVisibleByStyling : isVisibleByStyling,
 
-        _window : _window,
-
         _viewport : _viewport,
         _isInViewport : _isInViewport,
 
         _isDisplayed : _isDisplayed,
-        _findEffectiveStyleProperty:_findEffectiveStyleProperty
+
+        _computedStyle: computedStyle,
+        _styleProperty: styleProperty
     };
 
     return VisSense;

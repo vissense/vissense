@@ -181,6 +181,7 @@ describe('VisSense Monitor', function() {
             vismon.update();
 
             expect(vismon.state().state).toBeDefined();
+            expect(vismon.state().code).toBeDefined();
             expect(vismon.state().hidden).toBeDefined();
             expect(vismon.state().visible).toBeDefined();
             expect(vismon.state().fullyvisible).toBeDefined();
@@ -211,11 +212,18 @@ describe('VisSense Monitor', function() {
 
             vismon.start();
 
-            expect(vismon.state()).toBeDefined();
-            expect(vismon.state().hidden).toBeDefined();
-            expect(vismon.state().previous).toEqual({});
+            var firstState = vismon.state();
+            expect(firstState).toBeDefined();
+            expect(firstState).toBeDefined();
+            expect(firstState.previous).toEqual({});
 
             vismon.update();
+
+            var secondState = vismon.state();
+            expect(secondState).toBeDefined();
+            expect(secondState.hidden).toBeDefined();
+            expect(secondState.previous).not.toEqual({});
+
             vismon.stop();
 
             vismon.use(config.strategy);
@@ -250,30 +258,32 @@ describe('VisSense Monitor', function() {
 
             var firstState  = vismon.state();
 
+            expect(firstState.state).toBe('hidden');
             expect(firstState.hidden).toBe(true);
             expect(firstState.visible).toBe(false);
             expect(firstState.fullyvisible).toBe(false);
 
-            expect(firstState.previous.hidden).toBeUndefined();
-            expect(firstState.previous.visible).toBeUndefined();
-            expect(firstState.previous.fullyvisible).toBeUndefined();
+            expect(firstState.previous).toEqual({});
+            expect(firstState.previous.state).toBeUndefined();
 
             // from undefined to 'hidden'
-            expect(firstState.state !== firstState.previous.state).toBe(true);
+            expect(firstState.code !== firstState.previous.code).toBe(true);
 
             vismon.update();
 
             var secondState  = vismon.state();
 
+            expect(secondState.state).toBe('hidden');
             expect(secondState.hidden).toBe(true);
             expect(secondState.visible).toBe(false);
             expect(secondState.fullyvisible).toBe(false);
 
+            expect(secondState.previous.state).toBe('hidden');
             expect(secondState.previous.hidden).toBe(true);
             expect(secondState.previous.visible).toBe(false);
             expect(secondState.previous.fullyvisible).toBe(false);
 
-            expect(secondState.state !== secondState.previous.state).toBe(false);
+            expect(secondState.code !== secondState.previous.code).toBe(false);
         });
 
     });

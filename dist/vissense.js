@@ -423,7 +423,7 @@
     VisMon.prototype.onVisibilityChange = function (callback) {
         var me = this;
         return this.onUpdate(function() {
-            if(me._state.state !== me._state.previous.state) {
+            if(me._state.code !== me._state.previous.code) {
                 callback(me);
             }
         });
@@ -502,9 +502,9 @@
     };
 
     var STATES = {
-        HIDDEN: 0,
-        VISIBLE: 1,
-        FULLY_VISIBLE: 2
+        HIDDEN: [0, 'hidden'],
+        VISIBLE: [1, 'visible'],
+        FULLY_VISIBLE: [2, 'fullyvisible']
     };
 
     function newVisState(state, percentage, previous) {
@@ -514,12 +514,13 @@
 
         return (function(state, percentage, previous) {
             return {
-               state: state,
+               code: state[0],
+               state: state[1],
                percentage: percentage,
                previous: previous,
-               fullyvisible: state ===  STATES.FULLY_VISIBLE,
-               visible: state ===  STATES.VISIBLE || state ===  STATES.FULLY_VISIBLE,
-               hidden: state ===  STATES.HIDDEN
+               fullyvisible: state[0] ===  STATES.FULLY_VISIBLE[0],
+               visible: state[0] ===  STATES.VISIBLE[0] || state ===  STATES.FULLY_VISIBLE[0],
+               hidden: state[0] ===  STATES.HIDDEN[0]
             };
         })(state, percentage, previous);
     }

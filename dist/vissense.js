@@ -98,7 +98,7 @@
     * return the viewport (does *not* subtract scrollbar size)
     */
     function _viewport(element) {
-        var w = element ?   _window(element) : window;
+        var w = element ? _window(element) : window;
         if(w.innerWidth === undefined) {
             return {
                 height: w.document.documentElement.clientHeight,
@@ -354,28 +354,6 @@
     }
     /*--------------------------------------------------------------------------*/
 
-    /**
-     * detects visibility changes of an element.
-     *
-     * example:
-     * var elem = document.getElementById('myElement');
-     * var visobj = VisSense(eleme):
-     * var vismon = visobj.monitor();
-     *
-     * vismon.onVisibilityChange(function() { ... });
-     * vismon.onPercentageChange(function() { ... });
-     * vismon.onVisible(function() { ... });
-     * vismon.onFullyVisible(function() { ... });
-     * vismon.onHidden(function() { ... });
-     *
-     *
-     * hasVisibilityChanged() // => true
-     * hasVisibilityPercentageChanged // => true
-     *
-     * fireIfVisibilityChanged(function() { ... });
-     * fireIfPercentageChanged(function() { ... });
-     *
-     */
     function VisMon(visobj, inConfig) {
         var me = this;
         var config = defaults(inConfig, {
@@ -396,14 +374,10 @@
         }
     }
 
-    // "read-only" access to VisSense instance
     VisMon.prototype.visobj = function() {
         return this._visobj;
     };
 
-    /**
-    * "read-only" access to state
-    */
     VisMon.prototype.state = function() {
         return this._state;
     };
@@ -423,20 +397,6 @@
         this._strategy.start(this);
     };
 
-    // Adds a listener that will be called on update().
-    //
-    // var id = visobj.monitor().onUpdate(function() {
-    //   doSomething();
-    // });
-    VisMon.prototype.onUpdate = function(callback) {
-        if(!isFunction(callback)) {
-            return -1;
-        }
-        this._lastListenerId += 1;
-        this._listeners[this._lastListenerId] = callback.bind(undefined, this);
-        return this._lastListenerId;
-    };
-
     /**
     * update state and notify listeners
     */
@@ -447,57 +407,43 @@
         fireListeners(this._listeners, this);
     };
 
-    /**
-    * Returns a function that invokes callback only
-    * if the visibility state changes.
-    *
-    * shorthand for
-    * if(visobj.hasVisibilityChanged()) {
-    *   callback();
-    * }
-    * visobj.fireIfVisibilityChanged(callback)
-    */
-    VisMon.prototype.fireIfVisibilityChanged = function(callback) {
-        var me = this;
-
-        return fireIf(function() {
-            return me._state.state !== me._state.previous.state;
-        }, callback);
-    };
-
-    /**
-    * Returns a function that invokes callback only
-    * if visibility rate changes.
-    * This does not occur when element is hidden but may
-    * be called multiple times if element is in state
-    * `VISIBLE` and (depending on the config) `FULLY_VISIBLE`
-    */
-    VisMon.prototype.fireIfPercentageChanged = function(callback) {
-        var me = this;
-
-        return fireIf(function() {
-            return me._state.percentage !== me._state.previous.percentage;
-        }, callback);
+    VisMon.prototype.onUpdate = function(callback) {
+        if(!isFunction(callback)) {
+            return -1;
+        }
+        this._lastListenerId += 1;
+        this._listeners[this._lastListenerId] = callback.bind(undefined, this);
+        return this._lastListenerId;
     };
 
     /**
     * Fires when visibility state changes
     */
     VisMon.prototype.onVisibilityChange = function (callback) {
-        return this.onUpdate(this.fireIfVisibilityChanged(callback));
+        var me = this;
+        return this.onUpdate(function() {
+            if(me._state.state !== me._state.previous.state) {
+                callback(me);
+            }
+        });
     };
 
     /**
     * Fires when visibility percentage changes
+    *
+    * This does not occur when element is hidden but may
+    * be called multiple times if element is in state
+    * `VISIBLE` and (depending on the config) `FULLY_VISIBLE`
     */
     VisMon.prototype.onPercentageChange = function (callback) {
         var me = this;
-        return this.onUpdate(this.fireIfPercentageChanged(function() {
-            var state = me.state();
-            var prev = state.previous;
-            // call with '(newValue, oldValue, context)'
-            callback(state.percentage, prev.percentage, me);
-        }));
+        return this.onUpdate(function() {
+            var newValue = me._state.percentage;
+            var oldValue = me._state.previous.percentage;
+            if(newValue !== oldValue) {
+                callback(newValue, oldValue, me);
+            }
+        });
     };
 
     /**
@@ -514,16 +460,9 @@
     */
     VisMon.prototype.onVisible = function (callback) {
         var me = this;
-
-        var fireIfVisible =  fireIf(function() {
-            return me._state.visible;
-        }, callback);
-
-        // only fire when coming from state hidden or no previous state is present
-        var handler = me.fireIfVisibilityChanged(fireIf(function() {
-            return me._state.previous === {} || me._state.previous.hidden;
-        }, fireIfVisible));
-        return me.onUpdate(handler);
+        return me.onVisibilityChange(fireIf(function() {
+            return me._state.visible && !me._state.previous.visible;
+        }, callback));
     };
 
     /**
@@ -531,13 +470,9 @@
     */
     VisMon.prototype.onFullyVisible = function (callback) {
         var me = this;
-
-        var fireIfFullyVisible =  fireIf(function() {
+        return me.onVisibilityChange(fireIf(function() {
             return me._state.fullyvisible;
-        }, callback);
-
-        var handler = me.fireIfVisibilityChanged(fireIfFullyVisible);
-        return me.onUpdate(handler);
+        }, callback));
     };
 
     /**
@@ -546,12 +481,9 @@
     VisMon.prototype.onHidden = function (callback) {
         var me = this;
 
-        var fireIfHidden =  fireIf(function() {
+        return me.onVisibilityChange(fireIf(function() {
             return me._state.hidden;
-        }, callback);
-
-        var handler = me.fireIfVisibilityChanged(fireIfHidden);
-        return me.onUpdate(handler);
+        }, callback));
     };
 
     VisMon.prototype.on = function(eventName, handler) {

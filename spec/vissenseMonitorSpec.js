@@ -1,4 +1,4 @@
-/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach*/
+/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach,spyOn*/
 /**
  * @license
  * Vissense <http://vissense.com/>
@@ -140,7 +140,6 @@ describe('VisSense Monitor', function() {
             expect(vismon2).toBeDefined();
         });
 
-
         it('should update state when update() is executed', function () {
             var config = {
                  update : function() {
@@ -199,7 +198,6 @@ describe('VisSense Monitor', function() {
 
         });
 
-
         it('start/stop/use NoopStrategy', function () {
             var config = {
                 strategy: VisSense.VisMon.Strategy.NoopStrategy(),
@@ -228,8 +226,6 @@ describe('VisSense Monitor', function() {
 
             vismon.use(config.strategy);
         });
-
-
 
         it('should return -1 on registering handler for invalid event', function () {
             var config = {
@@ -286,6 +282,57 @@ describe('VisSense Monitor', function() {
             expect(secondState.code !== secondState.previous.code).toBe(false);
         });
 
+        describe('Events', function() {
+            it('should verify update event is triggered on call to update()', function() {
+                var config = {
+                    strategy: VisSense.VisMon.Strategy.NoopStrategy(),
+                    update : function() {},
+                    visible : function() {},
+                    hidden : function() {},
+                    visibilitychange: function() {},
+                    percentagechange: function() {}
+                };
+
+                spyOn(config, 'update');
+                spyOn(config, 'hidden');
+                spyOn(config, 'visible');
+                spyOn(config, 'visibilitychange');
+                spyOn(config, 'percentagechange');
+
+                var vismon = visobj.monitor(config);
+
+                expect(config.update.calls.count()).toEqual(0);
+                expect(config.hidden.calls.count()).toEqual(0);
+                expect(config.visible.calls.count()).toEqual(0);
+                expect(config.visibilitychange.calls.count()).toEqual(0);
+                expect(config.percentagechange.calls.count()).toEqual(0);
+
+                vismon.start();
+
+                expect(config.update.calls.count()).toEqual(1);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(0);
+                expect(config.visibilitychange.calls.count()).toEqual(1);
+                expect(config.percentagechange.calls.count()).toEqual(1);
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(2);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(0);
+                expect(config.visibilitychange.calls.count()).toEqual(1);
+                expect(config.percentagechange.calls.count()).toEqual(1);
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(3);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(0);
+                expect(config.visibilitychange.calls.count()).toEqual(1);
+                expect(config.percentagechange.calls.count()).toEqual(1);
+
+            });
+        });
     });
 
 });

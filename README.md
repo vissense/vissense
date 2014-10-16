@@ -7,19 +7,23 @@ A utility library for detecting visibility of DOM element
 
 ## Get Started
 
-Install dependencies
+##### Install dependencies
 
 `npm install && bower install`
 
-Build Project
+##### Build Project
 
 `grunt`
 
-Run Tests
+##### Run Tests
 
-`grunt connect watch`
+`grunt test`
 
-Open `http://localhost:3000/SpecRunner.html` in your browser and test with jasmine.
+or
+
+`grunt serve`
+
+and open `http://localhost:3000/SpecRunner.html` in your browser.
 
 
 ### What it does

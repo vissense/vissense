@@ -56,11 +56,22 @@
         }, 0 /*1*/);
     }
 
-    function isObject(obj) {
-        return obj === Object(obj);
+    // from lodash
+    function isObject(value) {
+        var type = typeof value;
+        return !!value && (type === 'function' || (value && type === 'object'));
     }
-    function isFunction(func) {
-        return typeof func === 'function';
+
+    // from lodash
+    function isFunction(value) {
+        return typeof value === 'function' || false;
+    }
+    
+    /**
+     * Checks if 'node' is a DOM element.
+     */
+    function isElement(value) {
+        return value && value.nodeType === 1 || false;
     }
 
     function defaults(dest, source) {
@@ -277,7 +288,7 @@
             return new VisSense(element, config);
         }
 
-        if ( !element || 1 !== element.nodeType ) {
+        if (!isElement(element)) {
             throw new Error('not an element node');
         }
 
@@ -662,6 +673,7 @@
         identity:identity,
         isObject:isObject,
         isFunction:isFunction,
+        isElement:isElement,
         defaults:defaults,
         extend:extend,
         now:now,

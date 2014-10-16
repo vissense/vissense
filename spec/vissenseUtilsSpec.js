@@ -78,8 +78,29 @@ describe('VisSense.Utils', function(undefined) {
             it('should detect `isFunction` as function', function () {
                 expect(VisSense.Utils.isFunction(VisSense.Utils.isFunction)).toBe(true);
             });
-            it('should NOT detect {} as function', function () {
+            it('should NOT detect {}/null/undefined/number/string/etc. as function', function () {
                 expect(VisSense.Utils.isFunction({})).toBe(false);
+                expect(VisSense.Utils.isFunction(null)).toBe(false);
+                expect(VisSense.Utils.isFunction(undefined)).toBe(false);
+                expect(VisSense.Utils.isFunction(0/0)).toBe(false);
+                expect(VisSense.Utils.isFunction(13)).toBe(false);
+                expect(VisSense.Utils.isFunction('string')).toBe(false);
+            });
+        });
+
+        describe('isElement', function() {
+            it('should detect a DOM element as element', function () {
+                jasmine.getFixtures().set('<div id="element"></div>');
+
+                expect(VisSense.Utils.isElement($('#element')[0])).toBe(true);
+            });
+            it('should NOT detect {}/null/undefined/number/string/etc. as element', function () {
+                expect(VisSense.Utils.isElement({})).toBe(false);
+                expect(VisSense.Utils.isElement(null)).toBe(false);
+                expect(VisSense.Utils.isElement(undefined)).toBe(false);
+                expect(VisSense.Utils.isElement(0/0)).toBe(false);
+                expect(VisSense.Utils.isElement(13)).toBe(false);
+                expect(VisSense.Utils.isElement('string')).toBe(false);
             });
         });
 

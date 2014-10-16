@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.1.3", "copyright": "(c) 2014 tbk" } */;(function (root, factory) {
+/*! { "name": "vissense", "version": "0.1.4", "copyright": "(c) 2014 tbk" } */;(function (root, factory) {
     'use strict';
 
     if (typeof define === 'function' && define.amd) {

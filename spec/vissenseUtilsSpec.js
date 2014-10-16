@@ -74,12 +74,29 @@ describe('VisSense.Utils', function(undefined) {
             });
         });
 
+
+        describe('isDefined', function() {
+            it('should NOT detect a undefined as defined', function () {
+                expect(VisSense.Utils.isDefined()).toBe(false);
+                expect(VisSense.Utils.isDefined(undefined)).toBe(false);
+            });
+            it('should detect {}/null/number/string/etc. as defined', function () {
+                expect(VisSense.Utils.isDefined(VisSense.Utils.isDefined)).toBe(true);
+                expect(VisSense.Utils.isDefined({})).toBe(true);
+                expect(VisSense.Utils.isDefined(null)).toBe(true);
+                expect(VisSense.Utils.isDefined(0/0)).toBe(true);
+                expect(VisSense.Utils.isDefined(13)).toBe(true);
+                expect(VisSense.Utils.isDefined('string')).toBe(true);
+            });
+        });
+
         describe('isFunction', function() {
             it('should detect `isFunction` as function', function () {
                 expect(VisSense.Utils.isFunction(VisSense.Utils.isFunction)).toBe(true);
             });
-            it('should NOT detect {}/null/undefined/number/string/etc. as function', function () {
+            it('should NOT detect {}/[]/null/undefined/number/string/etc. as function', function () {
                 expect(VisSense.Utils.isFunction({})).toBe(false);
+                expect(VisSense.Utils.isFunction([])).toBe(false);
                 expect(VisSense.Utils.isFunction(null)).toBe(false);
                 expect(VisSense.Utils.isFunction(undefined)).toBe(false);
                 expect(VisSense.Utils.isFunction(0/0)).toBe(false);
@@ -94,8 +111,9 @@ describe('VisSense.Utils', function(undefined) {
 
                 expect(VisSense.Utils.isElement($('#element')[0])).toBe(true);
             });
-            it('should NOT detect {}/null/undefined/number/string/etc. as element', function () {
+            it('should NOT detect {}/[]/null/undefined/number/string/etc. as element', function () {
                 expect(VisSense.Utils.isElement({})).toBe(false);
+                expect(VisSense.Utils.isElement([])).toBe(false);
                 expect(VisSense.Utils.isElement(null)).toBe(false);
                 expect(VisSense.Utils.isElement(undefined)).toBe(false);
                 expect(VisSense.Utils.isElement(0/0)).toBe(false);

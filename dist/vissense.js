@@ -46,6 +46,10 @@
         return i;
     }
 
+    function isDefined(value) {
+        return value !== undefined;
+    }
+    
     function now() {
         return new Date().getTime();
     }
@@ -104,7 +108,7 @@
     * return the viewport (does *not* subtract scrollbar size)
     */
     function viewport() {
-        if(window.innerWidth === undefined) {
+        if(!isDefined(window.innerWidth)) {
             return {
                 height: window.document.documentElement.clientHeight,
                 width: window.document.documentElement.clientWidth
@@ -141,7 +145,7 @@
     }
 
     function computedStyle(element) {
-        if (element.style === undefined) {
+        if (!isDefined(element.style)) {
             return null; // not a styled element, e.g. document
         }
         return window.getComputedStyle(element, null);
@@ -671,6 +675,7 @@
 
         noop:noop,
         identity:identity,
+        isDefined:isDefined,
         isObject:isObject,
         isFunction:isFunction,
         isElement:isElement,

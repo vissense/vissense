@@ -534,7 +534,7 @@
                percentage: percentage,
                previous: previous,
                fullyvisible: state[0] ===  STATES.FULLY_VISIBLE[0],
-               visible: state[0] ===  STATES.VISIBLE[0] || state ===  STATES.FULLY_VISIBLE[0],
+               visible: state[0] ===  STATES.VISIBLE[0] || state[0] ===  STATES.FULLY_VISIBLE[0],
                hidden: state[0] ===  STATES.HIDDEN[0]
             };
         })(state, percentage, previous);

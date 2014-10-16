@@ -1,4 +1,4 @@
-/*global VisSense,jasmine,describe,it,expect,beforeEach,afterEach,spyOn*/
+/*global VisSense,$,jasmine,describe,it,expect,beforeEach,afterEach,spyOn*/
 /**
  * @license
  * Vissense <http://vissense.com/>
@@ -110,12 +110,11 @@ describe('VisSense Monitor', function() {
         var element, visobj;
 
         beforeEach(function() {
+            jasmine.getFixtures().set('<div id="element" style="height: 100px; width: 100px; display: none;"></div>');
+            element = $('#element')[0];
+            visobj = new VisSense(element);
 
-           element = document.createElement('div');
-           element.id = 'testNode1';
-           visobj = new VisSense(element);
-
-           jasmine.clock().install();
+            jasmine.clock().install();
 
             //jasmine.clock().mockDate();
         });
@@ -140,80 +139,89 @@ describe('VisSense Monitor', function() {
             expect(vismon2).toBeDefined();
         });
 
-        it('should update state when update() is executed', function () {
-            var config = {
-                 update : function() {
-                 }
-            };
-            var vismon = visobj.monitor(config);
-
-            expect(vismon.state()).toEqual({});
-
-            vismon.update();
-
-            expect(vismon.state()).toBeDefined();
-
-        });
-
         it('should update verify that first update() argument is a monitor', function () {
-            var counter = 0;
             var config = {
-                 update : function(monitor) {
+                update : function(monitor) {
                     expect(monitor).toBe(vismon);
-                    counter++;
-                 }
+                }
             };
-            var vismon = visobj.monitor(config);
-            vismon.update();
-            expect(counter).toBe(1);
+
+            spyOn(config, 'update');
+
+            var vismon = visobj.monitor(config).start();
+
+            expect(config.update.calls.count()).toEqual(1);
+
+            vismon.stop();
         });
 
         it('should verify that state instances are cached if nothing changes', function () {
-            var config = {
-                 update : function() {
-                 }
-            };
-            var vismon = visobj.monitor(config);
-
-            expect(vismon.state()).toEqual({});
-
-            vismon.update();
-
-            expect(vismon.state().state).toBeDefined();
-            expect(vismon.state().code).toBeDefined();
-            expect(vismon.state().hidden).toBeDefined();
-            expect(vismon.state().visible).toBeDefined();
-            expect(vismon.state().fullyvisible).toBeDefined();
-            expect(vismon.state().percentage).toBeDefined();
-            expect(vismon.state().previous).toBeDefined();
-
-            vismon.update();
-
-            var cachedState = vismon.state();
-            expect(cachedState.hidden).toBeDefined();
-
-            vismon.update();
-
-            expect(vismon.state()).toBe(cachedState);
-
-        });
-
-        it('start/stop/use NoopStrategy', function () {
-            var config = {
-                strategy: VisSense.VisMon.Strategy.NoopStrategy(),
-                update : function() {}
-            };
-
-            var vismon = visobj.monitor(config);
+            var vismon = visobj.monitor();
 
             expect(vismon.state()).toEqual({});
 
             vismon.start();
 
             var firstState = vismon.state();
-            expect(firstState).toBeDefined();
+            expect(firstState).toEqual({
+                code: 0,
+                state: 'hidden',
+                percentage:0,
+                hidden: true,
+                visible: false,
+                fullyvisible: false,
+                previous: {}
+            });
+
+            vismon.update();
+
+            var cachedState = vismon.state();
+            expect(cachedState.previous).toBeDefined();
+
+            expect(cachedState).toEqual({
+                code: 0,
+                state: 'hidden',
+                percentage:0,
+                hidden: true,
+                visible: false,
+                fullyvisible: false,
+                previous: {
+                    code: 0,
+                    state: 'hidden',
+                    percentage:0,
+                    hidden: true,
+                    visible: false,
+                    fullyvisible: false
+                }
+            });
+
+            vismon.update();
+
+            expect(vismon.state() === cachedState).toBe(true);
+
+            vismon.stop();
+
+        });
+
+        it('start/stop NoopStrategy', function () {
+            var config = {
+                strategy: new VisSense.VisMon.Strategy.NoopStrategy(),
+                update : function() {}
+            };
+
+            spyOn(config, 'update');
+
+            var vismon = visobj.monitor(config);
+
+            expect(vismon.state()).toEqual({});
+            expect(config.update.calls.count()).toEqual(0);
+
+            vismon.start();
+
+            var firstState = vismon.state();
             expect(firstState).toBeDefined();
             expect(firstState.previous).toEqual({});
+            expect(config.update.calls.count()).toEqual(1);
 
             vismon.update();
 
@@ -221,73 +229,45 @@ describe('VisSense Monitor', function() {
             expect(secondState).toBeDefined();
             expect(secondState.hidden).toBeDefined();
             expect(secondState.previous).not.toEqual({});
+            expect(config.update.calls.count()).toEqual(2);
 
             vismon.stop();
 
-            vismon.use(config.strategy);
+            expect(config.update.calls.count()).toEqual(2);
+
+            vismon.use(new VisSense.VisMon.Strategy.NoopStrategy());
+
+            expect(config.update.calls.count()).toEqual(3);
         });
 
         it('should return -1 on registering handler for invalid event', function () {
-            var config = {
-                strategy: VisSense.VisMon.Strategy.NoopStrategy(),
-                update : function() {}
-            };
+            var vismon = visobj.monitor();
 
-            var vismon = visobj.monitor(config);
-
-            var handlerId = vismon.on('non-existing-event', function() {
-                // empty
-            });
+            var handlerId = vismon.on('non-existing-event', null);
 
             expect(handlerId).toBe(-1);
         });
 
-        it('should verify values on state changes', function () {
-            var config = {
-                strategy: VisSense.VisMon.Strategy.NoopStrategy(),
-                update : function() {}
-            };
-
-            var vismon = visobj.monitor(config);
-
-            vismon.start();
-
-            var firstState  = vismon.state();
-
-            expect(firstState.state).toBe('hidden');
-            expect(firstState.hidden).toBe(true);
-            expect(firstState.visible).toBe(false);
-            expect(firstState.fullyvisible).toBe(false);
-
-            expect(firstState.previous).toEqual({});
-            expect(firstState.previous.state).toBeUndefined();
-
-            // from undefined to 'hidden'
-            expect(firstState.code !== firstState.previous.code).toBe(true);
-
-            vismon.update();
-
-            var secondState  = vismon.state();
-
-            expect(secondState.state).toBe('hidden');
-            expect(secondState.hidden).toBe(true);
-            expect(secondState.visible).toBe(false);
-            expect(secondState.fullyvisible).toBe(false);
-
-            expect(secondState.previous.state).toBe('hidden');
-            expect(secondState.previous.hidden).toBe(true);
-            expect(secondState.previous.visible).toBe(false);
-            expect(secondState.previous.fullyvisible).toBe(false);
-
-            expect(secondState.code !== secondState.previous.code).toBe(false);
-        });
-
         describe('Events', function() {
-            it('should verify update event is triggered on call to update()', function() {
+
+            beforeEach(function() {
+                jasmine.getFixtures().set(
+                    '<div id="element" style="position: absolute; height: 10px; width: 10px; display: none;"></div>'
+                );
+                element = $('#element')[0];
+                visobj = new VisSense(element);
+
+                jasmine.clock().install();
+
+                //jasmine.clock().mockDate();
+            });
+
+            it('should verify event chain initially hidden -> fullyvisible -> visible -> visible -> hidden', function() {
                 var config = {
-                    strategy: VisSense.VisMon.Strategy.NoopStrategy(),
+                    strategy: new VisSense.VisMon.Strategy.NoopStrategy(),
                     update : function() {},
                     visible : function() {},
+                    fullyvisible : function() {},
                     hidden : function() {},
                     visibilitychange: function() {},
                     percentagechange: function() {}
@@ -296,6 +276,7 @@ describe('VisSense Monitor', function() {
                 spyOn(config, 'update');
                 spyOn(config, 'hidden');
                 spyOn(config, 'visible');
+                spyOn(config, 'fullyvisible');
                 spyOn(config, 'visibilitychange');
                 spyOn(config, 'percentagechange');
 
@@ -304,6 +285,7 @@ describe('VisSense Monitor', function() {
                 expect(config.update.calls.count()).toEqual(0);
                 expect(config.hidden.calls.count()).toEqual(0);
                 expect(config.visible.calls.count()).toEqual(0);
+                expect(config.fullyvisible.calls.count()).toEqual(0);
                 expect(config.visibilitychange.calls.count()).toEqual(0);
                 expect(config.percentagechange.calls.count()).toEqual(0);
 
@@ -312,6 +294,7 @@ describe('VisSense Monitor', function() {
                 expect(config.update.calls.count()).toEqual(1);
                 expect(config.hidden.calls.count()).toEqual(1);
                 expect(config.visible.calls.count()).toEqual(0);
+                expect(config.fullyvisible.calls.count()).toEqual(0);
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
 
@@ -320,6 +303,7 @@ describe('VisSense Monitor', function() {
                 expect(config.update.calls.count()).toEqual(2);
                 expect(config.hidden.calls.count()).toEqual(1);
                 expect(config.visible.calls.count()).toEqual(0);
+                expect(config.fullyvisible.calls.count()).toEqual(0);
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
 
@@ -328,8 +312,55 @@ describe('VisSense Monitor', function() {
                 expect(config.update.calls.count()).toEqual(3);
                 expect(config.hidden.calls.count()).toEqual(1);
                 expect(config.visible.calls.count()).toEqual(0);
+                expect(config.fullyvisible.calls.count()).toEqual(0);
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
+
+                element.style.display = 'block'; // set visible
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(4);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(1);
+                expect(config.fullyvisible.calls.count()).toEqual(1);
+                expect(config.visibilitychange.calls.count()).toEqual(2);
+                expect(config.percentagechange.calls.count()).toEqual(2);
+
+                element.style.left = '-5px'; // 50% visible
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(5);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(1);
+                expect(config.fullyvisible.calls.count()).toEqual(1);
+                expect(config.visibilitychange.calls.count()).toEqual(3);
+                expect(config.percentagechange.calls.count()).toEqual(3);
+
+                element.style.left = '-9px'; // 10% visible
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(6);
+                expect(config.hidden.calls.count()).toEqual(1);
+                expect(config.visible.calls.count()).toEqual(1);
+                expect(config.fullyvisible.calls.count()).toEqual(1);
+                expect(config.visibilitychange.calls.count()).toEqual(3);
+                expect(config.percentagechange.calls.count()).toEqual(4);
+
+                element.style.left = '-10px'; // 0% visible
+
+                vismon.update();
+
+                expect(config.update.calls.count()).toEqual(7);
+                expect(config.hidden.calls.count()).toEqual(2);
+                expect(config.visible.calls.count()).toEqual(1);
+                expect(config.fullyvisible.calls.count()).toEqual(1);
+                expect(config.visibilitychange.calls.count()).toEqual(4);
+                expect(config.percentagechange.calls.count()).toEqual(5);
+
+                vismon.stop();
 
             });
         });

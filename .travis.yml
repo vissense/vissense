@@ -11,4 +11,4 @@ before_script:
   - 'npm install -g bower'
   - 'bower install'
 after_success:
-  - coveralls
+  - 'grunt coverage'

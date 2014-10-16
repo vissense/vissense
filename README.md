@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://api.travis-ci.org/vissense/vissense)
+[![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://travis-ci.org/vissense/vissense)
 [![Coverage Status](https://coveralls.io/repos/vissense/vissense/badge.png)](https://coveralls.io/r/vissense/vissense)
 
 # VisSense.js

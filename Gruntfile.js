@@ -192,5 +192,9 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', ['default', 'connect', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
+
+    grunt.registerTask('coverage', ['coveralls']);
+
+
 };
 

@@ -1,7 +1,7 @@
 module.exports = function(config) {
     'use strict';
 
-    config.set({
+    var configuration = {
 
         // base path, that will be used to resolve files and exclude
         basePath: './',
@@ -29,17 +29,23 @@ module.exports = function(config) {
  
         colors: true,
  
+        // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
         logLevel: config.LOG_INFO,
  
         autoWatch: true,
  
-        browsers: ['PhantomJS', 'Firefox'],
-        //browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Opera'],
+        //browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE', 'Opera'],
+        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE'],
 
         customLaunchers: {
           Chrome_without_security: {
             base: 'Chrome',
             flags: ['--disable-web-security']
+          },
+          Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
           }
         },
 
@@ -59,5 +65,11 @@ module.exports = function(config) {
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
         singleRun: true
-    });
+    };
+
+    if(process.env.TRAVIS){
+        configuration.browsers = ['PhantomJS', 'Firefox', 'Chrome_travis_ci'];
+    }
+
+    config.set(configuration);
 };

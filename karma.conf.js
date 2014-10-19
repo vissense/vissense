@@ -36,7 +36,7 @@ module.exports = function(config) {
         autoWatch: true,
  
         //browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE', 'Opera'],
-        browsers: ['PhantomJS', 'Chrome', 'Firefox', 'IE'],
+        browsers: ['PhantomJS', 'Chrome', 'Firefox'],
 
         customLaunchers: {
           Chrome_without_security: {
@@ -69,6 +69,10 @@ module.exports = function(config) {
 
     if(process.env.TRAVIS){
         configuration.browsers = ['PhantomJS', 'Firefox', 'Chrome_travis_ci'];
+    }
+    
+    if(process.platform === 'win32') {
+        configuration.browsers.push('IE');
     }
 
     config.set(configuration);

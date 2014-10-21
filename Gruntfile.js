@@ -118,6 +118,14 @@ module.exports = function (grunt) {
                     port: 3000,
                     base: './'
                 }
+            },
+            docs: {
+                options: {
+                    keepalive: true,
+                    hostname: 'localhost',
+                    port: 3000,
+                    base: './docs'
+                }
             }
         },
         watch: {
@@ -158,6 +166,27 @@ module.exports = function (grunt) {
                 src: '<%= dirs.coverage %>/lcov/lcov.info'
             }
         },
+        docular: {
+            docular_webapp_target: './docs',
+            useHtml5Mode: false,
+            groups: [
+                {
+                    groupTitle: 'VisSense',
+                    groupId: 'vissense',
+                    groupIcon: 'icon-beer',
+                    showSource: true,
+                    sections: [
+                        {
+                            id: 'api',
+                            title:'APIs',
+                            scripts: [
+                                'lib/vissense.js'
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
         notify: {
             js: {
                 options: {
@@ -186,12 +215,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'concat:dist', 'uglify', 'clean:tmp']);
     grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'connect', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
+    grunt.registerTask('docs', ['docular', 'connect:docs']);
 
     grunt.registerTask('coverage', ['coveralls']);
 

@@ -23,9 +23,9 @@ describe('VisSense.Utils', function(undefined) {
             expect(VisSense.Utils.noop()).not.toBeDefined();
         });
 
-        it('should verify that identity() returns the object passed', function () {
+        it('should verify that identity() returns the first object passed', function () {
             var a = {};
-            expect(VisSense.Utils.identity(a)).toBe(a);
+            expect(VisSense.Utils.identity(a, [], null, undefined)).toBe(a);
         });
 
         describe('fireIf', function() {

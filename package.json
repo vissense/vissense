@@ -8,7 +8,7 @@
   "scripts": {
     "test": "grunt default --verbose"
   },
-  "repository": { 
+  "repository": {
     "type": "git",
     "url": "https://github.com/vissense/vissense.git"
   },
@@ -37,8 +37,10 @@
     "karma-ie-launcher": "~0.1.5",
     "karma-jasmine": "~0.2.2",
     "karma-opera-launcher": "~0.1.0",
+    "karma-phantomjs-launcher": "^0.1.4",
     "karma-safari-launcher": "~0.1.1",
     "karma-spec-reporter": "0.0.13",
+    "phantomjs": "^1.9.12",
     "time-grunt": "~1.0.0"
   }
 }

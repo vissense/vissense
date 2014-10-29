@@ -231,13 +231,10 @@
      *
      * @param {*} value The value to check.
      *
-     * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+     * @returns {boolean} Returns `true` if `value` is an `Array`, else `false`.
      *
      * @description Checks if `value` is classified as an `Array` object
      *
-     * @example
-     *
-
      * ```javascript
      * VisSense.Utils.isArray([1, 2, 3]);
      * // => true
@@ -379,12 +376,6 @@
      * ```
      */
     function viewport() {
-        if(!isDefined(window.innerWidth)) {
-            return {
-                height: window.document.documentElement.clientHeight,
-                width: window.document.documentElement.clientWidth
-            };
-        }
         return {
             height: window.innerHeight,
             width: window.innerWidth
@@ -419,7 +410,7 @@
      * @private function
      * @name VisSense.Utils:_computedStyle
      *
-     * @param {DOMElement} element a DOM element
+     * @param {DOMElement} element A DOM element
      *
      * @returns {CSSStyleDeclaration} Returns the elements computed style.
      *
@@ -467,7 +458,7 @@
      * @private function
      * @name VisSense.Utils:_isDisplayed
      *
-     * @param {DOMElement} element a DOM element
+     * @param {DOMElement} element A DOM element
      * @param {CSSStyleDeclaration} [style] the elements style
      *
      * @returns {Boolean} Return true if the element is visible by its
@@ -481,7 +472,6 @@
      * *NOTE:* This function calls window.getComputedStyle which is very expensive!
      *
      * @see http://jsperf.com/getcomputedstyle-vs-style-vs-css/2
-     *
      *
      * ```javascript
      * var element = document.getElementById('myElement');
@@ -519,7 +509,7 @@
      * @doc function
      * @name VisSense.Utils:isVisibleByStyling
      *
-     * @param {DOMElement} element a DOM element
+     * @param {DOMElement} element A DOM element
      *
      * @returns {Boolean} True if the element is visible by style and the style of its parents.
      *
@@ -562,7 +552,7 @@
      *
      * @param {Object} rect An object representing a rectangle with properties ´bottom´, ´top´, ´left´
      *                 and ´right´ relative to the viewport.
-     * @param {Object} viewport An object representing the viewport with properties ´height´ and ´width´..
+     * @param {Object} viewport An object representing the viewport with properties ´height´ and ´width´.
      *
      * @returns {Boolean} Returns true of the provided rectangle is in the given viewport otherwise false.
      *
@@ -592,6 +582,8 @@
     /**
      * @doc function
      * @name VisSense.Utils:percentage
+     *
+     * @param {DOMElement} element A DOM element.
      *
      * @returns {Boolean} Returns true if the current tab is in the foreground otherwise false.
      *
@@ -690,7 +682,6 @@
      *
      * @property {DOMElement} _element the DOM element
      * @property {Object} _config the configuration object
-     * @method {Object} stuff the configuration object
      *
      * @description Creates a `VisSense` object which wraps the given element to enable
      * visibility operations.
@@ -727,17 +718,22 @@
      * @doc method
      * @name VisSense:state
      *
-     * @returns {Object} a copy of the current state
+     * @returns {Object} a state object
      *
      * @description returns an object representing the current state.
      *
-     *
      * ```javascript
      * var visElement = VisSense(element);
-     *
-     *
      * visElement.state();
-     * // => { percentage: 0.33, hidden: false, visible: true, fullyvisible: false }
+     * // => {
+     *    code: 1,
+     *    state: 'visible',
+     *    percentage: 0.33,
+     *    fullyvisible: false,
+     *    visible: true,
+     *    hidden: false,
+     *    previous: {}
+     *  }
      * ```
      */
     VisSense.prototype.state = function() {
@@ -914,9 +910,10 @@
      * @doc interface
      * @name VisSense.VisMon
      *
-     * @property {Object} _visobj the VisSense instance
+     * @property {VisSense} _visobj the VisSense instance
      * @property {Number} _lastListenerId the latest listener id
-     * @property {Object} _state the current state
+     * @property {VisState} _state the current state
+     * @property {VisMon.Strategy} _strategy the strategy to use for observing the element
      *
      * @description Creates a `VisSense` object which wraps the given element to enable
      * visibility operations
@@ -924,7 +921,6 @@
      *
      * ```javascript
      * var visElement = VisSense(element);
-     *
      *
      * var visMon = VisSense.VisMon(visElement, {
      *   update: function() {
@@ -938,11 +934,10 @@
         var config = defaults(inConfig, {
             strategy: new VisMon.Strategy.NoopStrategy()
         });
-        //var strategies = isArray(config.strategy) && config.strategy.length > 0 ? config.strategy : [config.strategy];
+        var strategies = isArray(config.strategy) && config.strategy.length > 0 ? config.strategy : [config.strategy];
 
+        me._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
         me._visobj = visobj;
-        //me._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
-        me._strategy = config.strategy;
         me._lastListenerId = -1;
         me._state = {};
         me._listeners = {};
@@ -988,24 +983,91 @@
         return this._state;
     };
 
+    /**
+     * @doc method
+     * @name VisSense.VisMon:start
+     *
+     * @returns {VisMon} itself
+     *
+     * @description starts monitoring the provided element
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(..., {
+     *   strategy: [
+     *     new ViSense.VisMon.Strategy.EventStrategy(...)
+     *     new ViSense.VisMon.Strategy.PollingStrategy(...)
+     *   ]
+     *});
+     *
+     * visElement.start();
+     * ```
+     */
     VisMon.prototype.start = function() {
         this._strategy.start(this);
         return this;
     };
 
+    /**
+     * @doc method
+     * @name VisSense.VisMon:stop
+     *
+     * @returns {*} the return value of the strategies stop function
+     *
+     * @description stops monitoring the provided element
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(..., {
+     *   strategy: [
+     *     new ViSense.VisMon.Strategy.EventStrategy(...)
+     *     new ViSense.VisMon.Strategy.PollingStrategy(...)
+     *   ]
+     * }).start();
+     *
+     * ...
+     *
+     * visElement.stop();
+     * ```
+     */
     VisMon.prototype.stop = function() {
         return this._strategy.stop(this);
     };
 
+    /**
+     * @doc method
+     * @name VisSense.VisMon:use
+     *
+     * @returns {VisMon} itself
+     *
+     * @description changes the update strategy for observing the element
+     *
+     * ```javascript
+     * var visMon = VisSense(...)
+     *  .monitor(...)
+     *  .start()
+     *  .use(new VisSense.VisMon.Strategy.EventStrategy(...));
+     * ```
+     */
     VisMon.prototype.use = function(strategy) {
-        this._strategy.stop();
+        this.stop();
         this._strategy = strategy;
-        this._strategy.start(this);
+        return this.start();
     };
 
     /**
-    * update state and notify listeners
-    */
+     * @doc method
+     * @name VisSense.VisMon:update
+     *
+     * @returns {undefined}
+     *
+     * @description changes the update strategy for observing the element
+     *
+     * ```javascript
+     * var visMon = VisSense(...)
+     *  .monitor(...)
+     *  .start()
+     *  .use(new VisSense.VisMon.Strategy.EventStrategy(...));
+     * ```
+     */
     VisMon.prototype.update = function() {
         // update state
         this._state = nextState(this._visobj, this._state);
@@ -1013,6 +1075,25 @@
         fireListeners(this._listeners, this);
     };
 
+    /**
+     * @doc method
+     * @name VisSense.VisMon:onVisibilityChange
+     *
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
+     *
+     * @description Fires when visibility state changes
+     *
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(...);
+     *
+     * visMon.onVisibilityChange(function() {
+     *   console.log('visibility changed');
+     * });
+     * ```
+     */
     VisMon.prototype.onUpdate = function(callback) {
         if(!isFunction(callback)) {
             return -1;
@@ -1026,7 +1107,9 @@
      * @doc method
      * @name VisSense.VisMon:onVisibilityChange
      *
-     * @returns {Function} a function when called will unregister the callback
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
      *
      * @description Fires when visibility state changes
      *
@@ -1052,7 +1135,9 @@
      * @doc method
      * @name VisSense.VisMon:onPercentageChange
      *
-     * @returns {Function} a function when called will unregister the callback
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
      *
      * @description Fires when visibility percentage changes
      *
@@ -1084,7 +1169,9 @@
      * @doc method
      * @name VisSense.VisMon:onVisible
      *
-     * @returns {Function} a function when called will unregister the callback
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
      *
      * @description Fires when element becomes visible
      *
@@ -1113,7 +1200,9 @@
      * @doc method
      * @name VisSense.VisMon:onFullyVisible
      *
-     * @returns {Function} a function when called will unregister the callback
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
      *
      * @description Fires when visibility changes and element becomes fully visible
      *
@@ -1134,7 +1223,9 @@
      * @doc method
      * @name VisSense.VisMon:onHidden
      *
-     * @returns {Function} a function when called will unregister the callback
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
      *
      * @description Fires when visibility changes and element becomes hidden
      *
@@ -1152,15 +1243,49 @@
         }, callback));
     };
 
-    VisMon.prototype.on = function(eventName, handler) {
+
+    /**
+     * @doc method
+     * @name VisSense.VisMon:on
+     *
+     * @param {String} eventName The name of the event to bind the callback to
+     * @param {Function} callback A callback function
+     *
+     * @returns {Function} A function when called will unregister the callback
+     *
+     * @description Binds a callback to specific event.
+     * Valid events are:
+     *  - ´update´
+     *  - ´hidden´
+     *  - ´visible´
+     *  - ´fullyvisible´
+     *  - ´percentagechange´
+     *  - ´visibilitychange´
+     *
+     * ```javascript
+     * var monitor = VisSense(...).monitor(...);
+       monitor.on('fullyvisible', function() {
+     *   Animations.startAnimation();
+     * });
+     *
+     * monitor.on('percentagechange', function(newValue) {
+     *   if(newValue < 0.8) {
+     *     Animations.stopAnimation();
+     *   }
+     * });
+     *
+     * monitor.start();
+     * ```
+     */
+    VisMon.prototype.on = function(eventName, callback) {
         var me = this;
         switch(eventName) {
-            case 'update': return me.onUpdate(handler);
-            case 'hidden': return me.onHidden(handler);
-            case 'visible': return me.onVisible(handler);
-            case 'fullyvisible': return me.onFullyVisible(handler);
-            case 'percentagechange': return me.onPercentageChange(handler);
-            case 'visibilitychange': return me.onVisibilityChange(handler);
+            case 'update': return me.onUpdate(callback);
+            case 'hidden': return me.onHidden(callback);
+            case 'visible': return me.onVisible(callback);
+            case 'fullyvisible': return me.onFullyVisible(callback);
+            case 'percentagechange': return me.onPercentageChange(callback);
+            case 'visibilitychange': return me.onVisibilityChange(callback);
         }
 
         return -1;
@@ -1295,6 +1420,23 @@
 
     VisSense.VisMon = VisMon;
 
+    /**
+     * @doc method
+     * @name VisSense:monitor
+     *
+     * @param {Object} config A config object
+     *
+     * @description Creates a `VisMon` object to observe the element
+     *
+     * ```javascript
+     * var visMon = VisSense(...).monitor({
+     *   strategy: [new VisSense.VisMon.Strategy.EventStrategy(...)]
+     *   update: function() {
+     *     console.log('updated.');
+     *   }
+     * });
+     * ```
+     */
     VisSense.fn.monitor = function(config) {
         return new VisMon(this, config);
     };
@@ -1307,22 +1449,22 @@
         extend: extend,
         fireIf: fireIf,
         identity: identity,
-        isArray:isArray,
+        isArray: isArray,
         isDefined: isDefined,
         isElement: isElement,
         isFunction: isFunction,
         isObject: isObject,
-        isPageVisible : isPageVisible,
-        isVisibleByStyling : isVisibleByStyling,
+        isPageVisible: isPageVisible,
+        isVisibleByStyling: isVisibleByStyling,
         noop: noop,
-        now:now,
-        percentage : percentage,
+        now: now,
+        percentage: percentage,
 
 
-        _viewport : viewport,
-        _isInViewport : isInViewport,
+        _viewport: viewport,
+        _isInViewport: isInViewport,
 
-        _isDisplayed : isDisplayed,
+        _isDisplayed: isDisplayed,
 
         _computedStyle: computedStyle,
         _styleProperty: styleProperty

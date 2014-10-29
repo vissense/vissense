@@ -74,6 +74,24 @@ describe('VisSense.Utils', function(undefined) {
             });
         });
 
+        describe('isArray', function() {
+            it('should detect [] as array', function () {
+                expect(VisSense.Utils.isArray([])).toBe(true);
+                expect(VisSense.Utils.isArray(new Array(3))).toBe(true);
+            });
+
+            it('should NOT detect null/undefined/number/string/etc. as array', function () {
+                expect(VisSense.Utils.isArray({})).toBe(false);
+                expect(VisSense.Utils.isArray(function() {})).toBe(false);
+                expect(VisSense.Utils.isArray(null)).toBe(false);
+                expect(VisSense.Utils.isArray(true)).toBe(false);
+                expect(VisSense.Utils.isArray(undefined)).toBe(false);
+                expect(VisSense.Utils.isArray(0/0)).toBe(false);
+                expect(VisSense.Utils.isArray(13)).toBe(false);
+                expect(VisSense.Utils.isArray('string')).toBe(false);
+                expect((function() { return VisSense.Utils.isArray(arguments); })()).toBe(false);
+            });
+        });
 
         describe('isDefined', function() {
             it('should NOT detect a undefined as defined', function () {
@@ -146,23 +164,6 @@ describe('VisSense.Utils', function(undefined) {
                 expect(VisSense.Utils.isObject(0/0)).toBe(false);
                 expect(VisSense.Utils.isObject(13)).toBe(false);
                 expect(VisSense.Utils.isObject('string')).toBe(false);
-            });
-        });
-
-        describe('isArray', function() {
-            it('should detect [] as array', function () {
-                expect(VisSense.Utils.isArray([])).toBe(true);
-            });
-
-            it('should NOT detect null/undefined/number/string/etc. as array', function () {
-                expect(VisSense.Utils.isArray({})).toBe(false);
-                expect(VisSense.Utils.isArray(function() {})).toBe(false);
-                expect(VisSense.Utils.isArray(null)).toBe(false);
-                expect(VisSense.Utils.isArray(true)).toBe(false);
-                expect(VisSense.Utils.isArray(undefined)).toBe(false);
-                expect(VisSense.Utils.isArray(0/0)).toBe(false);
-                expect(VisSense.Utils.isArray(13)).toBe(false);
-                expect(VisSense.Utils.isArray('string')).toBe(false);
             });
         });
 

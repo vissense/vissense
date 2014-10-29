@@ -49,6 +49,11 @@
     function isDefined(value) {
         return value !== undefined;
     }
+
+    function isArray(value) {
+        return (value && typeof value === 'object' && typeof value.length === 'number' &&
+            Object.prototype.toString.call(value) === '[object Array]') || false;
+    }
     
     function now() {
         return new Date().getTime();
@@ -312,8 +317,7 @@
           return VisSense.VisState.fullyvisible(perc);
         }
 
-        // else element is visible
-        return VisSense.VisState.visible(perc, {});
+        return VisSense.VisState.visible(perc);
     };
 
     VisSense.prototype.percentage = function() {
@@ -414,12 +418,14 @@
         var config = defaults(inConfig, {
             strategy: new VisMon.Strategy.NoopStrategy()
         });
+        //var strategies = isArray(config.strategy) && config.strategy.length > 0 ? config.strategy : [config.strategy];
 
         me._visobj = visobj;
+        //me._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
+        me._strategy = config.strategy;
         me._lastListenerId = -1;
         me._state = {};
         me._listeners = {};
-        me._strategy = config.strategy;
 
         me._events = ['update', 'hidden', 'visible', 'fullyvisible', 'percentagechange', 'visibilitychange'];
         for (var i = 0, n = me._events.length; i < n; i++) {
@@ -577,6 +583,25 @@
 
     VisMon.Strategy.NoopStrategy.prototype.stop = function() {};
 
+    VisMon.Strategy.CompositeStrategy = function(strategies) {
+        this._strategies = isArray(strategies) ? strategies : [];
+        this._started = false;
+    };
+
+    VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype);
+
+    VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
+       for (var i = 0, n = this._strategies.length; i < n; i++) {
+            this._strategies[i].start(monitor);
+       }
+    };
+
+    VisMon.Strategy.CompositeStrategy.prototype.stop = function(monitor) {
+        for (var i = 0, n = this._strategies.length; i < n; i++) {
+            this._strategies[i].stop(monitor);
+        }
+    };
+
     VisMon.Strategy.PollingStrategy = function(config) {
         this._config = defaults(config, {
             interval: 1000
@@ -590,8 +615,6 @@
         var me = this;
 
         fireIf(!me._started, function() {
-            me.stop();
-
             me._update = function() {
                 monitor.update();
             };
@@ -634,8 +657,6 @@
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
         var me = this;
         fireIf(!me._started, function() {
-            me.stop();
-
             me._update = debounce(function() {
                 monitor.update();
             }, me._config.debounce);
@@ -678,6 +699,7 @@
 
         noop:noop,
         identity:identity,
+        isArray:isArray,
         isDefined:isDefined,
         isObject:isObject,
         isFunction:isFunction,

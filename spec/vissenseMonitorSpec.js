@@ -27,6 +27,11 @@ describe('VisSense Monitor', function() {
 
 
     describe('strategies', function() {
+        var monitorMock;
+
+        beforeEach(function() {
+            monitorMock = { update: VisSense.Utils.noop };
+        });
 
         describe('Strategy', function() {
             var strategy;
@@ -37,13 +42,13 @@ describe('VisSense Monitor', function() {
 
             it('should throw error on start', function () {
                 expect(function() {
-                    strategy.start();
+                    strategy.start(monitorMock);
                 }).toThrow();
             });
 
             it('should throw error on stop', function () {
                 expect(function() {
-                    strategy.stop();
+                    strategy.stop(monitorMock);
                 }).toThrow();
             });
         });
@@ -56,11 +61,11 @@ describe('VisSense Monitor', function() {
             });
 
             it('should idle on start()', function () {
-                expect(strategy.start({ update: VisSense.Utils.noop })).not.toBeDefined();
+                expect(strategy.start(monitorMock)).not.toBeDefined();
             });
 
             it('should idle on stop()', function () {
-                expect(strategy.stop()).not.toBeDefined();
+                expect(strategy.stop(monitorMock)).not.toBeDefined();
             });
         });
 
@@ -72,15 +77,15 @@ describe('VisSense Monitor', function() {
             });
 
             it('should return true on start()', function () {
-                expect(strategy.start({ update: VisSense.Utils.noop })).toBe(true);
+                expect(strategy.start(monitorMock)).toBe(true);
             });
 
             it('should return true on stop()', function () {
-                strategy.start({ update: VisSense.Utils.noop });
-                expect(strategy.stop()).toBe(true);
+                strategy.start(monitorMock);
+                expect(strategy.stop(monitorMock)).toBe(true);
             });
             it('should return false on stop() when not running', function () {
-                expect(strategy.stop()).toBe(false);
+                expect(strategy.stop(monitorMock)).toBe(false);
             });
         });
 
@@ -92,15 +97,50 @@ describe('VisSense Monitor', function() {
             });
 
             it('should return true on start()', function () {
-                expect(strategy.start({ update: VisSense.Utils.noop })).toBe(true);
+                expect(strategy.start(monitorMock)).toBe(true);
             });
 
             it('should return true on stop()', function () {
-                strategy.start({ update: VisSense.Utils.noop });
-                expect(strategy.stop()).toBe(true);
+                strategy.start(monitorMock);
+                expect(strategy.stop(monitorMock)).toBe(true);
             });
             it('should return false on stop() when not running', function () {
-                expect(strategy.stop()).toBe(false);
+                expect(strategy.stop(monitorMock)).toBe(false);
+            });
+        });
+
+        describe('CompositeStrategy', function() {
+            var strategy, strategies;
+
+            beforeEach(function() {
+                strategies = [
+                    new VisSense.VisMon.Strategy.NoopStrategy(),
+                    new VisSense.VisMon.Strategy.PollingStrategy(),
+                    new VisSense.VisMon.Strategy.EventStrategy()
+                ];
+
+                for (var i = 0, n = strategies.length; i < n; i++) {
+                    spyOn(strategies[i], 'start');
+                    spyOn(strategies[i], 'stop');
+                }
+
+                strategy = new VisSense.VisMon.Strategy.CompositeStrategy(strategies);
+            });
+
+            it('should call all inner objects start() method', function () {
+                expect(strategy.start(monitorMock)).toBe(undefined);
+
+                for (var i = 0, n = strategies.length; i < n; i++) {
+                    expect(strategies[i].start.calls.count()).toEqual(1);
+                }
+            });
+
+            it('should call all inner objects stop() method', function () {
+                expect(strategy.stop(monitorMock)).toBe(undefined);
+
+                for (var i = 0, n = strategies.length; i < n; i++) {
+                    expect(strategies[i].stop.calls.count()).toEqual(1);
+                }
             });
         });
 

@@ -158,6 +158,11 @@ module.exports = function (grunt) {
                 configFile: 'karma.conf.js'
             }
         },
+        micro: {
+            dist: {
+              src: '<%= uglify.dist.dest %>'
+            }
+        },
         coveralls: {
             options: {
                 force: true
@@ -212,13 +217,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-micro');
     grunt.loadNpmTasks('grunt-coveralls');
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'concat:dist', 'uglify', 'clean:tmp']);
-    grunt.registerTask('default', ['dist', 'test', 'notify:js']);
+    grunt.registerTask('default', ['dist', 'test', 'micro', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'connect', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);

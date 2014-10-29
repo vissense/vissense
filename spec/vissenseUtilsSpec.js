@@ -84,6 +84,7 @@ describe('VisSense.Utils', function(undefined) {
                 expect(VisSense.Utils.isDefined(VisSense.Utils.isDefined)).toBe(true);
                 expect(VisSense.Utils.isDefined({})).toBe(true);
                 expect(VisSense.Utils.isDefined(null)).toBe(true);
+                expect(VisSense.Utils.isDefined(true)).toBe(true);
                 expect(VisSense.Utils.isDefined(0/0)).toBe(true);
                 expect(VisSense.Utils.isDefined(13)).toBe(true);
                 expect(VisSense.Utils.isDefined('string')).toBe(true);
@@ -99,6 +100,7 @@ describe('VisSense.Utils', function(undefined) {
                 expect(VisSense.Utils.isFunction([])).toBe(false);
                 expect(VisSense.Utils.isFunction(null)).toBe(false);
                 expect(VisSense.Utils.isFunction(undefined)).toBe(false);
+                expect(VisSense.Utils.isFunction(true)).toBe(false);
                 expect(VisSense.Utils.isFunction(0/0)).toBe(false);
                 expect(VisSense.Utils.isFunction(13)).toBe(false);
                 expect(VisSense.Utils.isFunction('string')).toBe(false);
@@ -114,8 +116,10 @@ describe('VisSense.Utils', function(undefined) {
             it('should NOT detect {}/[]/null/undefined/number/string/etc. as element', function () {
                 expect(VisSense.Utils.isElement({})).toBe(false);
                 expect(VisSense.Utils.isElement([])).toBe(false);
+                expect(VisSense.Utils.isElement(function() {})).toBe(false);
                 expect(VisSense.Utils.isElement(null)).toBe(false);
                 expect(VisSense.Utils.isElement(undefined)).toBe(false);
+                expect(VisSense.Utils.isElement(true)).toBe(false);
                 expect(VisSense.Utils.isElement(0/0)).toBe(false);
                 expect(VisSense.Utils.isElement(13)).toBe(false);
                 expect(VisSense.Utils.isElement('string')).toBe(false);
@@ -138,9 +142,27 @@ describe('VisSense.Utils', function(undefined) {
             it('should NOT detect null/undefined/number/string/etc. as object', function () {
                 expect(VisSense.Utils.isObject(null)).toBe(false);
                 expect(VisSense.Utils.isObject(undefined)).toBe(false);
+                expect(VisSense.Utils.isObject(true)).toBe(false);
                 expect(VisSense.Utils.isObject(0/0)).toBe(false);
                 expect(VisSense.Utils.isObject(13)).toBe(false);
                 expect(VisSense.Utils.isObject('string')).toBe(false);
+            });
+        });
+
+        describe('isArray', function() {
+            it('should detect [] as array', function () {
+                expect(VisSense.Utils.isArray([])).toBe(true);
+            });
+
+            it('should NOT detect null/undefined/number/string/etc. as array', function () {
+                expect(VisSense.Utils.isArray({})).toBe(false);
+                expect(VisSense.Utils.isArray(function() {})).toBe(false);
+                expect(VisSense.Utils.isArray(null)).toBe(false);
+                expect(VisSense.Utils.isArray(true)).toBe(false);
+                expect(VisSense.Utils.isArray(undefined)).toBe(false);
+                expect(VisSense.Utils.isArray(0/0)).toBe(false);
+                expect(VisSense.Utils.isArray(13)).toBe(false);
+                expect(VisSense.Utils.isArray('string')).toBe(false);
             });
         });
 

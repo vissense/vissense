@@ -38,96 +38,63 @@
     'use strict';
 
     /**
-    * Returns a function that invokes callback only if call to when() is true
-    */
-    function fireIf(when, callback) {
-        return function() {
-            return (isFunction(when) ? when() : when) ? callback() : undefined;
+     * @doc function
+     * @name VisSense.Utils:debounce
+     *
+     * @param {*} fn The function to debounce.
+     * @param {*} delay The number of milliseconds to delay.
+
+     * @returns {Number} Returns a function that delays invoking `fn` until after `delay` milliseconds
+     * have elapsed since the last time it was invoked.
+     * 
+     * @description Returns a function that delays invoking `fn` until after `delay` milliseconds
+     * have elapsed since the last time it was invoked.
+     *
+     * ```javascript
+     * window.addEventListener('resize', VisSense.Utils.debounce(50, function() { 
+     *   console.log('resizing...'); 
+     * }));
+     * // => logs 'scrolling...' at most every 50ms while the user resizes the browser window
+     * ```
+     */
+    function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+            var self = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(self, args);
+            }, delay);
         };
     }
 
-    function extend(dest, source, callback) {
-        var index = -1,
-            props = Object.keys(source),
-            length = props.length;
-
-        while (++index < length) {
-            var key = props[index];
-            dest[key] = callback ? callback(dest[key], source[key], key, dest, source) : source[key];
-        }
-
-        return dest;
-    }
-
     /**
      * @doc function
-     * @name VisSense.Utils:noop
+     * @name VisSense.Utils:defaults
      *
-     * @description A no-operation function.
+     * @param {Object} dest The destination object.
+     * @param {Object} source The source object.
      *
-     * ```javascript
-     * var object = { 'name': 'fred' };
-     * VisSense.Utils.noop(object) === undefined;
-     * // => true
-     * ```
-     */
-    function noop() {
-    }
-
-    /**
-     * @doc function
-     * @name VisSense.Utils:identity
-     *
-     * @param {*} value Any value
-     *
-     * @returns {*} The given value.
-     *
-     * @description This method returns the first argument provided to it.
-     *
-     * ```javascript
-     * var object = { 'name': 'fred' };
-     * VisSense.Utils.identity(object) === object;
-     * // => true
-     * ```
-     */
-    function identity(value) {
-        return value;
-    }
-
-    /**
-     * @doc function
-     * @name VisSense.Utils:isDefined
-     *
-     * @param {*} value Any value
-     *
-     * @description Checks if value is *not* undefined
-     *
-     * ```javascript
-     * VisSense.Utils.isDefined(undefined) === false;
-     * // => true
-     * ```
-     */
-    function isDefined(value) {
-        return value !== undefined;
-    }
-
-    /**
-     * @doc function
-     * @name VisSense.Utils:now
-     *
-     * @returns {Number} Returns milliseconds since the Unix epoch.
+     * @description Assigns all properties of the source object to the destination object
+     * if they are not present in the destination object.
      * 
-     * @description Gets the number of milliseconds that have elapsed since the Unix epoch
-     * (1 January 1970 00:00:00 UTC).
-     *
      * ```javascript
-     * var start = VisSense.Utils.now();
-     * VisSense.Utils.defer(function() { console.log(VisSense.Utils.now() - start); });
-     * // => logs the number of milliseconds it took for the deferred function to be invoked
+     * VisSense.Utils.defaults({ name: 'Max', gender: 'male' }, { name: 'Bradley', age: 31 });
+     * // => { name: 'Max', gender: 'male', age: 31 }
      * ```
      */
-    function now() {
-        return new Date().getTime();
+    function defaults(dest, source) {
+        if (!isObject(dest)) {
+            return source;
+        }
+        var keys = Object.keys(source);
+        for (var i = 0, n = keys.length; i < n; i++) {
+            var prop = keys[i];
+            if (dest[prop] === void 0) {
+                dest[prop] = source[prop];
+            }
+        }
+        return dest;
     }
 
     /**
@@ -151,32 +118,140 @@
 
     /**
      * @doc function
-     * @name VisSense.Utils:isObject
+     * @name VisSense.Utils:fireIf
      *
-     * @xfromlodash
+     * @param {Function|Boolean} when A function or any other value
+     * @param {*} callback A function to run if `when` evaluates to a truthy value
      *
-     * @param {*} value The value to check.
-     * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+     * @returns {Function} Returns a function that runs the given callback only 
+     * if `when` evaluates to a truthy value.
      *
-     * @description Checks if `value` is the language type of `Object`.
-     * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+     * @description A function that when executed runs the given callback only 
+     * if `when` evaluates to a truthy value.
      *
      * ```javascript
-     * VisSense.Utils.isObject({});
+     * var a = 6;
+     * VisSense.Utils.fireIf(function() { return a % 2 === 0; }, function() {
+     *   return a % 3 === 0;
+     * })();
      * // => true
-     *
-     * VisSense.Utils.isObject([1, 2, 3]);
-     * // => true
-     *
-     * VisSense.Utils.isObject(1);
-     * // => false
      * ```
-     * 
-     * From lodash: [isObject](https://lodash.com/docs#isObject)
      */
-    function isObject(value) {
-        var type = typeof value;
-        return (type === 'function' || (value && type === 'object')) || false;
+    function fireIf(when, callback) {
+        return function() {
+            return (isFunction(when) ? when() : when) ? callback() : undefined;
+        };
+    }
+
+    /**
+     * @doc function
+     * @name VisSense.Utils:extend
+     *
+     * @param {Object} dest The destination object.
+     * @param {Object} source The source object.
+     * @param {Function} [callback] The function to customize assigning values.
+     *
+     * @description Overwrites all properties of the destination object with the source object's properties.
+     * You can provide an optional callback function to modify the behaviour and/or to manipulate
+     * the return value.
+     * 
+     * ```javascript
+     * VisSense.Utils.extend({ name: 'Max', age: 31 }, { name: 'Bradley', gender: 'male' });
+     * // => { name: 'Bradley', age: 31, gender: 'male' }
+     *
+     *
+     * VisSense.Utils.extend({
+     *   name: 'Max',
+     *   age: 31
+     * }, {
+     *   name: 'Bradley',
+     *   gender: 'male'
+     * }, function(destValue, srcValue, key) {
+     *   if(key === 'age') return destValue + 42;
+     *   return srcValue;
+     * });
+     * // => { name: 'Bradley', age: 73, gender: 'male' }
+     * ```
+     */
+    function extend(dest, source, callback) {
+        var index = -1,
+            props = Object.keys(source),
+            length = props.length,
+            ask = isFunction(callback);
+
+        while (++index < length) {
+            var key = props[index];
+            dest[key] = ask ? callback(dest[key], source[key], key, dest, source) : source[key];
+        }
+
+        return dest;
+    }
+
+    /**
+     * @doc function
+     * @name VisSense.Utils:identity
+     *
+     * @param {*} value Any value
+     *
+     * @returns {*} The given value.
+     *
+     * @description This method returns the first argument provided to it.
+     *
+     * ```javascript
+     * var object = { 'name': 'Bradley' };
+     * VisSense.Utils.identity(object) === object;
+     * // => true
+     * ```
+     */
+    function identity(value) {
+        return value;
+    }
+    
+    /**
+     * @doc function
+     * @name VisSense.Utils:isDefined
+     *
+     * @param {*} value Any value
+     *
+     * @description Checks if value is *not* undefined
+     *
+     * ```javascript
+     * VisSense.Utils.isDefined(undefined) === false;
+     * // => true
+     * ```
+     */
+    function isDefined(value) {
+        return value !== undefined;
+    }
+
+    function isArray(value) {
+        return (value && typeof value === 'object' && typeof value.length === 'number' &&
+            Object.prototype.toString.call(value) === '[object Array]') || false;
+    }
+     /**
+     * @doc function
+     * @name VisSense.Utils:isElement
+     *
+     * @param {*} value The value to check.
+     *
+     * @returns {boolean} Returns true if the given value is a DOM Element, else false.
+     *
+     * @description Checks if `value` is a DOM Element.
+     *
+     * ```javascript
+     * var elem = document.getElementById('myElement')
+     * VisSense.Utils.isElement(elem);
+     * // => true
+     *
+     * VisSense.Utils.isElement(document);
+     * // => false
+     *
+     * VisSense.Utils.isElement(document.body);
+     * // => true
+     * ```
+     */
+    function isElement(value) {
+        return value && value.nodeType === 1 || false;
     }
 
     /**
@@ -196,48 +271,89 @@
      * VisSense.Utils.isFunction(/abc/);
      * // => false
      * ```
-     * From lodash: [isObject](https://lodash.com/docs#isFunction)
+     * From lodash: [isFunction](https://lodash.com/docs#isFunction)
      */
     function isFunction(value) {
         return typeof value === 'function' || false;
     }
-    
+
     /**
-     * Checks if 'node' is a DOM element.
+     * @doc function
+     * @name VisSense.Utils:isObject
+     *
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+     *
+     * @description Checks if `value` is the language type of `Object`.
+     * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+     *
+     * ```javascript
+     * VisSense.Utils.isObject({});
+     * // => true
+     *
+     * VisSense.Utils.isObject([1, 2, 3]);
+     * // => true
+     *
+     * VisSense.Utils.isObject(1);
+     * // => false
+     * ```
+     *
+     * From lodash: [isObject](https://lodash.com/docs#isObject)
      */
-    function isElement(value) {
-        return value && value.nodeType === 1 || false;
+    function isObject(value) {
+        var type = typeof value;
+        return (type === 'function' || (value && type === 'object')) || false;
     }
 
-    function defaults(dest, source) {
-        if (!isObject(dest)) {
-            return source;
-        }
-        var keys = Object.keys(source);
-        for (var i = 0, n = keys.length; i < n; i++) {
-            var prop = keys[i];
-            if (dest[prop] === void 0) {
-                dest[prop] = source[prop];
-            }
-        }
-        return dest;
+    /**
+     * @doc function
+     * @name VisSense.Utils:noop
+     *
+     * @description A no-operation function.
+     *
+     * ```javascript
+     * var object = { 'name': 'Bradley' };
+     * VisSense.Utils.noop(object) === undefined;
+     * // => true
+     * ```
+     */
+    function noop() {
     }
 
-    function debounce(fn, delay) {
-        var timer = null;
-        return function () {
-            var self = this, args = arguments;
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                fn.apply(self, args);
-            }, delay);
-        };
+    /**
+     * @doc function
+     * @name VisSense.Utils:now
+     *
+     * @returns {Number} Returns milliseconds since the Unix epoch.
+     * 
+     * @description Gets the number of milliseconds that have elapsed since the Unix epoch
+     * (1 January 1970 00:00:00 UTC).
+     *
+     * ```javascript
+     * var start = VisSense.Utils.now();
+     * VisSense.Utils.defer(function() { console.log(VisSense.Utils.now() - start); });
+     * // => logs the number of milliseconds it took for the deferred function to be invoked
+     * ```
+     */
+    function now() {
+        return new Date().getTime();
     }
 
     /********************************************************** element-position */
+
     /**
-    * return the viewport (does *not* subtract scrollbar size)
-    */
+     * @private function
+     * @name VisSense.Utils:_viewport
+     *
+     * @returns {Object} Returns the viewport size.
+     * 
+     * @description Gets the current viewport size of the browser window.
+     *
+     * ```javascript
+     * VisSense.Utils._viewport();
+     * // => e.g. { height: 1280, width: 790 }
+     * ```
+     */
     function viewport() {
         if(!isDefined(window.innerWidth)) {
             return {
@@ -275,6 +391,24 @@
         return true;
     }
 
+    /**
+     * @private function
+     * @name VisSense.Utils:_computedStyle
+     *
+     * @param {DOMElement} element a DOM element
+     *
+     * @returns {CSSStyleDeclaration} Returns the elements computed style.
+     *
+     * @description Returns the elements computed style.
+     * This function solely exists for the check to the ´style´ property before
+     * invoking the expensive function getComputedStyle.
+     *
+     * ```javascript
+     * var element = document.getElementById('myElement');
+     * VisSense.Utils._computedStyle(element);
+     * // => CSSStyleDeclaration {parentRule: null, length: 0, cssText: "", alignContent: "", alignItems: "", ... }
+     * ```
+     */
     function computedStyle(element) {
         if (!isDefined(element.style)) {
             return null; // not a styled element, e.g. document
@@ -282,13 +416,62 @@
         return window.getComputedStyle(element, null);
     }
 
+    /**
+     * @private function
+     * @name VisSense.Utils:_styleProperty
+     *
+     * @param {CSSStyleDeclaration} style A style of an element
+     * @param {String} property A name of the property to fetch
+     *
+     * @returns {*} Returns the value of the property or undefined if style is not thruthy.
+     *
+     * @description Returns the elements computed style property by name.
+     * This function solely exists for caching reasons.
+     *
+     * ```javascript
+     * var element = document.getElementById('myElement');
+     * var style = VisSense.Utils._computedStyle(element);
+     * VisSense.Utils._styleProperty(style, 'display');
+     * // => 'block'
+     * ```
+     */
     function styleProperty(style, property) {
         return style ? style.getPropertyValue(property) : undefined;
     }
 
+    /**
+     * @private function
+     * @name VisSense.Utils:_isDisplayed
+     *
+     * @param {DOMElement} element a DOM element
+     * @param {CSSStyleDeclaration} [style] the elements style
+     *
+     * @returns {Boolean} Return true if the element is visible by its
+     *                    style and by the style of its parents.
+     *
+     * @description A recursive function that checks if the element is visible by its
+     * style and by the style of its parents. It does so by checking the values
+     * of ´display´ and ´visibility´ as well as calling ´isVisibleByOffsetParentCheck´.
+     * There is an optional style parameter which can be provided if you already
+     * have computed the style of the element.
+     * *NOTE:* This function calls window.getComputedStyle which is very expensive!
+     *
+     * @see http://jsperf.com/getcomputedstyle-vs-style-vs-css/2
+     *
+     *
+     * ```javascript
+     * var element = document.getElementById('myElement');
+     * var style =
+     * VisSense.Utils._isDisplayed(element);
+     * // => true
+     * ```
+     */
     function isDisplayed(element, style) {
         if(!style) {
             style = computedStyle(element);
+            if(!style) {
+                return false;
+            }
         }
 
         var display = styleProperty(style, 'display');
@@ -308,6 +491,22 @@
         return true;
     }
 
+    /**
+     * @doc function
+     * @name VisSense.Utils:isVisibleByStyling
+     *
+     * @param {DOMElement} element a DOM element
+     *
+     * @returns {Boolean} True if the element is visible by style and the style of its parents.
+     *
+     * @description Checks if the element is visible by its style.
+     *
+     * ```javascript
+     * var element = document.getElementById('myElement');
+     * VisSense.Utils.isVisibleByStyling(element);
+     * // => true
+     * ```
+     */
     function isVisibleByStyling(element) {
         if (element ===  document) {
             return true;
@@ -318,12 +517,12 @@
         }
 
         var style = computedStyle(element);
-        if(!isVisibleByOffsetParentCheck(element, style)) {
+        var displayed = isDisplayed(element, style);
+        if(displayed !== true) {
             return false;
         }
 
-        var displayed = isDisplayed(element, style);
-        if(displayed !== true) {
+        if(!isVisibleByOffsetParentCheck(element, style)) {
             return false;
         }
 
@@ -333,6 +532,29 @@
 
     /********************************************************** element visibility */
 
+    /**
+     * @private function
+     * @name VisSense.Utils:_isInViewport
+     *
+     * @param {Object} rect An object representing a rectangle with properties ´bottom´, ´top´, ´left´
+     *                 and ´right´ relative to the viewport.
+     * @param {Object} viewport An object representing the viewport with properties ´height´ and ´width´..
+     *
+     * @returns {Boolean} Returns true of the provided rectangle is in the given viewport otherwise false.
+     *
+     * @description Just checks if the provided rectangle is in the given viewport.
+     * The function solely exists for the fact that "All calls to get any calculated
+     * dimension from the DOM should be cached or avoided".
+     *
+     * @see http://dcousineau.com/blog/2013/09/03/high-performance-js-tip/
+     *
+     * ```javascript
+     * var rect = element.getBoundingClientRect();
+     * var view = VisSense.Utils.viewport();
+     * VisSense.Utils._isInViewport(rect, viewport);
+     * // => true
+     * ```
+     */
     function isInViewport(rect, viewport) {
         if(!rect || (rect.width <= 0 || rect.height <= 0)) {
             return false;
@@ -343,6 +565,24 @@
             rect.left < viewport.width;
     }
 
+    /**
+     * @doc function
+     * @name VisSense.Utils:percentage
+     *
+     * @returns {Boolean} Returns true if the current tab is in the foreground otherwise false.
+     *
+     * @description This method determines the visibility of the current tab and returns true
+     * if it is the foreground. If the browser does not communicate the state via
+     * ´document.hidden´ (or vendor specific derivatives) it will always return true.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
+     *
+     * ```javascript
+     * var start = VisSense.Utils.now();
+     * VisSense.Utils.defer(function() { console.log(VisSense.Utils.now() - start); });
+     * // => logs the number of milliseconds it took for the deferred function to be invoked
+     * ```
+     */
     function percentage(element) {
         if(!isPageVisible()) {
             return 0;
@@ -397,6 +637,23 @@
         }
     })();
 
+    /**
+     * @doc function
+     * @name VisSense.Utils:isPageVisible
+     *
+     * @returns {Boolean} Returns true if the current tab is in the foreground otherwise false.
+     *
+     * @description This method determines the visibility of the current tab and returns true
+     * if it is the foreground. If the browser does not communicate the state via
+     * ´document.hidden´ (or vendor specific derivatives) it will always return true.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/Guide/User_experience/Using_the_Page_Visibility_API
+     *
+     * ```javascript
+     * VisSense.Utils.isPageVisible();
+     * // => true
+     * ```
+     */
     function isPageVisible() {
         return VisibilityApi ? !document[VisibilityApi[0]] : true;
     }
@@ -404,19 +661,27 @@
     /********************************************************** page visibility end */
 
     /**
-     * Creates a `VisSense` object which wraps the given element to enable
-     * visibility operations
+     * @doc interface
+     * @name VisSense
      *
-     * @example
+     * @property {DOMElement} _element the DOM element
+     * @property {Object} _config the configuration object
+     * @method {Object} stuff the configuration object
      *
-     * var visElement = VisSense(element);
+     * @description Creates a `VisSense` object which wraps the given element to enable
+     * visibility operations.
      *
-     * visElement.isVisible();
+     *
+     * ```javascript
+     * var element = document.getElementById('myElement');
+     * var vis = VisSense(element); // or new VisSense(element)
+     *
+     * vis.isVisible();
      * // => true
      *
-     * visElement.percentage();
+     * vis.percentage();
      * // => 0.93
-     *
+     * ```
      */
     function VisSense(element, config) {
         if (!(this instanceof VisSense)) {
@@ -434,28 +699,112 @@
         });
     }
 
+    /**
+     * @doc method
+     * @name VisSense:state
+     *
+     * @returns {Object} a copy of the current state
+     *
+     * @description returns an object representing the current state.
+     *
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * visElement.state();
+     * // => { percentage: 0.33, hidden: false, visible: true, fullyvisible: false }
+     * ```
+     */
     VisSense.prototype.state = function() {
-      var percentage = this.percentage();
-      return {
-        percentage: percentage,
-        hidden: percentage <= this._config.hidden,
-        visible: percentage > this._config.hidden,
-        fullyvisible: percentage >= this._config.fullyvisible
-      };
+      var perc = percentage(this._element);
+        if(perc <= this._config.hidden) {
+          return VisSense.VisState.hidden(perc);
+        }
+        else if (perc >= this._config.fullyvisible) {
+          return VisSense.VisState.fullyvisible(perc);
+        }
+
+        return VisSense.VisState.visible(perc);
     };
 
+    /**
+     * @doc method
+     * @name VisSense:percentage
+     *
+     * @returns {Number} the currently visible area of the element
+     *
+     * @description the currently visible area of the element in percent (0..1)
+     *
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * visElement.precentage();
+     * // => 0.33
+     * ```
+     */
     VisSense.prototype.percentage = function() {
-      return percentage(this._element);
+      return this.state().percentage;
     };
 
+    /**
+     * @doc method
+     * @name VisSense:isFullyVisible
+     *
+     * @returns {Boolean} true if element is fully visible, otherwise false
+     *
+     * @description checks if the element is currently fully visible.
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * visElement.ifFullyVisible();
+     * // => true
+     * ```
+     */
     VisSense.prototype.isFullyVisible = function() {
       return this.state().fullyvisible;
     };
 
+    /**
+     * @doc method
+     * @name VisSense:isVisible
+     *
+     * @returns {Boolean} true if element is visible, otherwise false
+     *
+     * @description checks if the element is currently visible.
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * visElement.isVisible();
+     * // => true
+     * ```
+     */
     VisSense.prototype.isVisible = function() {
       return this.state().visible;
     };
 
+    /**
+     * @doc method
+     * @name VisSense:isHidden
+     *
+     * @returns {Boolean} true if element is hidden, otherwise false
+     *
+     * @description checks if the element is currently hidden.
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * visElement.isHidden();
+     * // => false
+     * ```
+     */
     VisSense.prototype.isHidden = function() {
       return this.state().hidden;
     };
@@ -464,6 +813,42 @@
 
     VisSense.of = function(element, config) {
         return new VisSense(element, config);
+    };
+
+    var STATES = {
+        HIDDEN: [0, 'hidden'],
+        VISIBLE: [1, 'visible'],
+        FULLY_VISIBLE: [2, 'fullyvisible']
+    };
+
+    function newVisState(state, percentage, previous) {
+        if(previous && previous) {
+            delete previous.previous;
+        }
+
+        return (function(state, percentage, previous) {
+            return {
+               code: state[0],
+               state: state[1],
+               percentage: percentage,
+               previous: previous,
+               fullyvisible: state[0] ===  STATES.FULLY_VISIBLE[0],
+               visible: state[0] ===  STATES.VISIBLE[0] || state[0] ===  STATES.FULLY_VISIBLE[0],
+               hidden: state[0] ===  STATES.HIDDEN[0]
+            };
+        })(state, percentage, previous);
+    }
+
+    VisSense.VisState = {
+        hidden: function(percentage, previous) {
+            return newVisState(STATES.HIDDEN, percentage, previous || {});
+        },
+        visible:function(percentage, previous) {
+            return newVisState(STATES.VISIBLE, percentage, previous || {});
+        },
+        fullyvisible: function(percentage, previous ) {
+            return newVisState(STATES.FULLY_VISIBLE, percentage, previous || {});
+        }
     };
 
     /**
@@ -476,7 +861,7 @@
         var percentage = newState.percentage;
 
         // check if nothing changed
-        if(percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage) {
+        if(currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage) {
           return currentState;
         }
 
@@ -501,17 +886,42 @@
     }
     /*--------------------------------------------------------------------------*/
 
+    /**
+     * @doc interface
+     * @name VisSense.VisMon
+     *
+     * @property {Object} _visobj the VisSense instance
+     * @property {Number} _lastListenerId the latest listener id
+     * @property {Object} _state the current state
+     *
+     * @description Creates a `VisSense` object which wraps the given element to enable
+     * visibility operations
+     *
+     *
+     * ```javascript
+     * var visElement = VisSense(element);
+     *
+     *
+     * var visMon = VisSense.VisMon(visElement, {
+     *   update: function() {
+     *     console.log('updated.');
+     *   }
+     * });
+     * ```
+     */
     function VisMon(visobj, inConfig) {
         var me = this;
         var config = defaults(inConfig, {
             strategy: new VisMon.Strategy.NoopStrategy()
         });
+        //var strategies = isArray(config.strategy) && config.strategy.length > 0 ? config.strategy : [config.strategy];
 
         me._visobj = visobj;
+        //me._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
+        me._strategy = config.strategy;
         me._lastListenerId = -1;
         me._state = {};
         me._listeners = {};
-        me._strategy = config.strategy;
 
         me._events = ['update', 'hidden', 'visible', 'fullyvisible', 'percentagechange', 'visibilitychange'];
         for (var i = 0, n = me._events.length; i < n; i++) {
@@ -525,6 +935,31 @@
         return this._visobj;
     };
 
+    /**
+     * @doc method
+     * @name VisSense.VisMon:state
+     *
+     * @returns {Object} a copy of the current state
+     *
+     * @description returns an object representing the current state.
+     *
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(...);
+     *
+     *
+     * visElement.state();
+     * // => {
+     *    code: 1,
+     *    state: 'visible',
+     *    percentage: 0.33,
+     *    fullyvisible: false,
+     *    visible: true,
+     *    hidden: false,
+     *    previous: { ... }
+     *  }
+     * ```
+     */
     VisMon.prototype.state = function() {
         return this._state;
     };
@@ -564,8 +999,22 @@
     };
 
     /**
-    * Fires when visibility state changes
-    */
+     * @doc method
+     * @name VisSense.VisMon:onVisibilityChange
+     *
+     * @returns {Function} a function when called will unregister the callback
+     *
+     * @description Fires when visibility state changes
+     *
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(...);
+     *
+     * visMon.onVisibilityChange(function() {
+     *   console.log('visibility changed');
+     * });
+     * ```
+     */
     VisMon.prototype.onVisibilityChange = function (callback) {
         var me = this;
         return this.onUpdate(function() {
@@ -576,12 +1025,26 @@
     };
 
     /**
-    * Fires when visibility percentage changes
-    *
-    * This does not occur when element is hidden but may
-    * be called multiple times if element is in state
-    * `VISIBLE` and (depending on the config) `FULLY_VISIBLE`
-    */
+     * @doc method
+     * @name VisSense.VisMon:onPercentageChange
+     *
+     * @returns {Function} a function when called will unregister the callback
+     *
+     * @description Fires when visibility percentage changes
+     *
+     * By default this event does not occur when element is in state
+     * 'HIDDEN' or 'FULLY_VISIBLE' but may be called multiple times if
+     * element is in state `VISIBLE`.
+     *
+     *
+     * ```javascript
+     * var visMon = VisSense.VisMon(...);
+     *
+     * visMon.onPercentageChange(function() {
+     *   console.log('percentage changed');
+     * });
+     * ```
+     */
     VisMon.prototype.onPercentageChange = function (callback) {
         var me = this;
         return this.onUpdate(function() {
@@ -594,17 +1057,27 @@
     };
 
     /**
-    * Fires when visibility changes and and state transits from:
-    * HIDDEN => VISIBLE
-    * HIDDEN => FULLY_VISIBLE
-    * Fires NOT when state transits from:
-    * VISIBLE => FULLY_VISIBLE or
-    * FULLY_VISIBLE => VISIBLE
-    *
-    * VisSense(document.getElementById('example1')).monitor().onVisible(function() {
-    *   Animations.startAnimation();
-    * });
-    */
+     * @doc method
+     * @name VisSense.VisMon:onVisible
+     *
+     * @returns {Function} a function when called will unregister the callback
+     *
+     * @description Fires when element becomes visible
+     *
+     * Fires when visibility changes and and state transits from:
+     * HIDDEN => VISIBLE
+     * HIDDEN => FULLY_VISIBLE
+     * Fires NOT when state transits from:
+     * VISIBLE => FULLY_VISIBLE or
+     * FULLY_VISIBLE => VISIBLE
+     *
+     *
+     * ```javascript
+     * VisSense(document.getElementById('example1')).monitor().onVisible(function() {
+     *   Animations.startAnimation();
+     * });
+     * ```
+     */
     VisMon.prototype.onVisible = function (callback) {
         var me = this;
         return me.onVisibilityChange(fireIf(function() {
@@ -613,8 +1086,19 @@
     };
 
     /**
-    * Fires when visibility changes and element becomes fully visible
-    */
+     * @doc method
+     * @name VisSense.VisMon:onFullyVisible
+     *
+     * @returns {Function} a function when called will unregister the callback
+     *
+     * @description Fires when visibility changes and element becomes fully visible
+     *
+     * ```javascript
+     * VisSense(document.getElementById('example1')).monitor().onFullyVisible(function() {
+     *   Animations.startAnimation();
+     * });
+     * ```
+     */
     VisMon.prototype.onFullyVisible = function (callback) {
         var me = this;
         return me.onVisibilityChange(fireIf(function() {
@@ -623,8 +1107,19 @@
     };
 
     /**
-    * Fires when visibility changes and element becomes hidden
-    */
+     * @doc method
+     * @name VisSense.VisMon:onHidden
+     *
+     * @returns {Function} a function when called will unregister the callback
+     *
+     * @description Fires when visibility changes and element becomes hidden
+     *
+     * ```javascript
+     * VisSense(document.getElementById('example1')).monitor().onFullyVisible(function() {
+     *   Animations.startAnimation();
+     * });
+     * ```
+     */
     VisMon.prototype.onHidden = function (callback) {
         var me = this;
 
@@ -646,30 +1141,6 @@
 
         return -1;
     };
-
-    var STATES = {
-        HIDDEN: [0, 'hidden'],
-        VISIBLE: [1, 'visible'],
-        FULLY_VISIBLE: [2, 'fullyvisible']
-    };
-
-    function newVisState(state, percentage, previous) {
-        if(previous && previous) {
-            delete previous.previous;
-        }
-
-        return (function(state, percentage, previous) {
-            return {
-               code: state[0],
-               state: state[1],
-               percentage: percentage,
-               previous: previous,
-               fullyvisible: state[0] ===  STATES.FULLY_VISIBLE[0],
-               visible: state[0] ===  STATES.VISIBLE[0] || state[0] ===  STATES.FULLY_VISIBLE[0],
-               hidden: state[0] ===  STATES.HIDDEN[0]
-            };
-        })(state, percentage, previous);
-    }
 
     /********************************************************** strategies */
 
@@ -693,6 +1164,25 @@
 
     VisMon.Strategy.NoopStrategy.prototype.stop = function() {};
 
+    VisMon.Strategy.CompositeStrategy = function(strategies) {
+        this._strategies = isArray(strategies) ? strategies : [];
+        this._started = false;
+    };
+
+    VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype);
+
+    VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
+       for (var i = 0, n = this._strategies.length; i < n; i++) {
+            this._strategies[i].start(monitor);
+       }
+    };
+
+    VisMon.Strategy.CompositeStrategy.prototype.stop = function(monitor) {
+        for (var i = 0, n = this._strategies.length; i < n; i++) {
+            this._strategies[i].stop(monitor);
+        }
+    };
+
     VisMon.Strategy.PollingStrategy = function(config) {
         this._config = defaults(config, {
             interval: 1000
@@ -706,8 +1196,6 @@
         var me = this;
 
         fireIf(!me._started, function() {
-            me.stop();
-
             me._update = function() {
                 monitor.update();
             };
@@ -750,8 +1238,6 @@
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
         var me = this;
         fireIf(!me._started, function() {
-            me.stop();
-
             me._update = debounce(function() {
                 monitor.update();
             }, me._config.debounce);
@@ -789,37 +1275,25 @@
         return new VisMon(this, config);
     };
 
-    VisSense.VisState = {
-        hidden: function(percentage, previous) {
-            return newVisState(STATES.HIDDEN, percentage, previous || {});
-        },
-        visible:function(percentage, previous) {
-            return newVisState(STATES.VISIBLE, percentage, previous || {});
-        },
-        fullyvisible: function(percentage, previous ) {
-            return newVisState(STATES.FULLY_VISIBLE, percentage, previous || {});
-        }
-    };
-
     VisSense.Utils = {
+
+        debounce: debounce,
+        defaults: defaults,
+        defer: defer,
+        extend: extend,
         fireIf: fireIf,
-
-        noop:noop,
-        identity:identity,
-        isDefined:isDefined,
-        isObject:isObject,
-        isFunction:isFunction,
-        isElement:isElement,
-        defaults:defaults,
-        extend:extend,
-        now:now,
-        defer:defer,
-        debounce:debounce,
-
+        identity: identity,
+        isArray:isArray,
+        isDefined: isDefined,
+        isElement: isElement,
+        isFunction: isFunction,
+        isObject: isObject,
         isPageVisible : isPageVisible,
-
-        percentage : percentage,
         isVisibleByStyling : isVisibleByStyling,
+        noop: noop,
+        now:now,
+        percentage : percentage,
+
 
         _viewport : viewport,
         _isInViewport : isInViewport,

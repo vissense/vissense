@@ -15,8 +15,7 @@ beforeEach(function () {
     }
     function getVisibilityState(element) {
         var vis = VisSense.of(element);
-        return vis.isHidden() ? 'hidden' :
-            (vis.isFullyVisible() ? 'fullyvisible' : 'visible');
+        return vis.state().state;
     }
 
     jasmine.addMatchers({

@@ -29,32 +29,33 @@ module.exports = function (grunt) {
         },
         concat: {
             tmp: {
-                options: {
-                    stripBanners: true
-                },
                 src: [
-                    'lib/vissense.js'
+                    '<%= dirs.src %>/<%= pkg.name %>.js'
                 ],
                 dest: '<%= dirs.tmp %>/<%= pkg.name %>.js'
-            },
-            dist: {
-                options: {
-                  banner: '<%= banner %>',
-                  stripBanners: true
-                },
-                src: '<%= concat.tmp.dest %>',
-                dest: '<%= dirs.dist %>/<%= pkg.name %>.js'
             }
         },
         uglify: {
-            options: {
-                banner: '<%= banner %>',
-                report: 'gzip',
-                drop_console: true,
-                sourceMap: false
+            src: {
+                options: {
+                    banner: '<%= banner %>',
+                    drop_console: true,
+                    sourceMap: false,
+                    preserveComments: false,
+                    beautify: true,
+                    mangle: false
+                },
+                src: '<%= concat.tmp.dest %>',
+                dest: '<%= dirs.dist %>/<%= pkg.name %>.js'
             },
             dist: {
-                src: '<%= concat.dist.dest %>',
+                options: {
+                    banner: '<%= banner %>',
+                    report: 'gzip',
+                    drop_console: true,
+                    sourceMap: false
+                },
+                src: '<%= concat.tmp.dest %>',
                 dest: '<%= dirs.dist %>/<%= pkg.name %>.min.js'
             }
         },
@@ -75,7 +76,7 @@ module.exports = function (grunt) {
         jasmine: {
             coverage: {
                 src: [
-                    '<%= concat.dist.dest %>'
+                    '<%= uglify.src.dest %>'
                 ],
                 options: {
                     display: 'full',
@@ -124,7 +125,8 @@ module.exports = function (grunt) {
             },
             docs: {
                 options: {
-                    //keepalive: true,
+                    open: true,
+                    keepalive: true,
                     hostname: 'localhost',
                     port: 3000,
                     base: '<%= dirs.docs %>'
@@ -197,7 +199,7 @@ module.exports = function (grunt) {
                             id: 'api',
                             title:'APIs',
                             scripts: [
-                                '<%= dirs.dist %>/vissense.js'
+                                '<%= dirs.src %>/vissense.js'
                             ]
                         }
                     ]
@@ -235,12 +237,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-docular');
 
-    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'concat:dist', 'uglify', 'clean:tmp']);
+    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'uglify', 'clean:tmp']);
     grunt.registerTask('default', ['dist', 'test', 'micro', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'connect:server', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
-    grunt.registerTask('docs', ['docular', 'connect:docs', 'watch']);
+    grunt.registerTask('docs', ['docular', 'connect:docs']);
 
     grunt.registerTask('coverage', ['coveralls']);
 

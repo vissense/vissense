@@ -15,6 +15,8 @@ module.exports = function (grunt) {
         dirs :{
             tmp: './tmp',
             dist: './dist',
+            src: './lib',
+            docs: './docs',
             coverage: '<%= dirs.dist %>/coverage'
         },
         clean: {
@@ -70,7 +72,6 @@ module.exports = function (grunt) {
                 src: ['tmp/**/*.js', 'spec/**/*.js']
             }
         },
-
         jasmine: {
             coverage: {
                 src: [
@@ -116,15 +117,17 @@ module.exports = function (grunt) {
                 options: {
                     hostname: 'localhost',
                     port: 3000,
-                    base: './'
+                    base: './',
+                    livereload: true,
+                    open: 'http://localhost:3000/SpecRunner.html'
                 }
             },
             docs: {
                 options: {
-                    keepalive: true,
+                    //keepalive: true,
                     hostname: 'localhost',
                     port: 3000,
-                    base: './docs'
+                    base: '<%= dirs.docs %>'
                 }
             }
         },
@@ -135,7 +138,16 @@ module.exports = function (grunt) {
             },
             src_test: {
                 files: '<%= jshint.src_test.src %>',
-                tasks: ['jshint:src_test', 'default']
+                tasks: ['jshint', 'default']
+            },
+            src: {
+              // We watch and compile sass files as normal but don't live reload here
+              files: ['<%= dirs.src %>/vissense.js'],
+              tasks: ['jshint', 'dist']
+            },
+            livereload: {
+              options: { livereload: true },
+              files: ['<%= dirs.dist %>/vissense.js']
             }
         },
         bump: {
@@ -172,7 +184,7 @@ module.exports = function (grunt) {
             }
         },
         docular: {
-            docular_webapp_target: './docs',
+            docular_webapp_target: '<%= dirs.docs %>',
             useHtml5Mode: false,
             groups: [
                 {
@@ -185,7 +197,7 @@ module.exports = function (grunt) {
                             id: 'api',
                             title:'APIs',
                             scripts: [
-                                'lib/vissense.js'
+                                '<%= dirs.dist %>/vissense.js'
                             ]
                         }
                     ]
@@ -226,9 +238,9 @@ module.exports = function (grunt) {
     grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'concat:dist', 'uglify', 'clean:tmp']);
     grunt.registerTask('default', ['dist', 'test', 'micro', 'notify:js']);
 
-    grunt.registerTask('serve', ['default', 'connect', 'watch']);
+    grunt.registerTask('serve', ['default', 'connect:server', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
-    grunt.registerTask('docs', ['docular', 'connect:docs']);
+    grunt.registerTask('docs', ['docular', 'connect:docs', 'watch']);
 
     grunt.registerTask('coverage', ['coveralls']);
 

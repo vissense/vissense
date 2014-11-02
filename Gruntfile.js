@@ -16,12 +16,15 @@ module.exports = function (grunt) {
             tmp: './tmp',
             dist: './dist',
             src: './lib',
-            docs: './docs',
+            docs: './dist/docs',
             coverage: '<%= dirs.dist %>/coverage'
         },
         clean: {
           tmp: {
             src: ['<%= dirs.tmp %>']
+          },
+          docs: {
+            src: ['<%= dirs.docs %>']
           },
           dist: {
             src: ['<%= dirs.dist %>']
@@ -188,21 +191,30 @@ module.exports = function (grunt) {
         docular: {
             docular_webapp_target: '<%= dirs.docs %>',
             useHtml5Mode: false,
+            docular_partial_home: './docs/index.html',
+            docular_partial_navigation: './docs/navigation.html',
+            docular_partial_footer: './docs/footer.html',
             groups: [
                 {
                     groupTitle: 'VisSense',
                     groupId: 'vissense',
-                    groupIcon: 'icon-beer',
-                    showSource: true,
-                    sections: [
-                        {
-                            id: 'api',
-                            title:'APIs',
-                            scripts: [
-                                '<%= dirs.src %>/vissense.js'
-                            ]
-                        }
-                    ]
+                    groupIcon: 'icon-code',
+                    sections: [{
+                        id: 'quickstart',
+                        title:'Getting started',
+                        docs: [
+                            './docs/quickstart/index.doc'
+                        ]
+                    }, {
+                        id: 'api',
+                        title:'API',
+                        scripts: [
+                            '<%= dirs.src %>/vissense.js'
+                        ],
+                        docs: [
+                            './docs/api/index.doc'
+                        ]
+                    }]
                 }
             ]
         },
@@ -242,7 +254,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', ['default', 'connect:server', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
-    grunt.registerTask('docs', ['docular', 'connect:docs']);
+    grunt.registerTask('docs', ['clean:docs', 'docular', 'connect:docs']);
 
     grunt.registerTask('coverage', ['coveralls']);
 

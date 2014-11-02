@@ -1,0 +1,34 @@
+<style>
+.nav {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+.main-nav .nav > li {
+    margin: 0;
+}
+.main-nav .nav > li > a {
+    padding: 15px 4px 15px 4px;
+}
+</style>
+
+<nav class="navbar navbar-fixed-top navbar-inverse main-nav">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                VisSense.js
+            </a>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <li ng-repeat="group in docGroups" class="dropdown" ng-show="group.visible">
+                <a href="" class="dropdown-toggle ng-binding" data-toggle="dropdown" tabindex="2">
+                    <i class="icon-code icon-white"></i> {{group.title}} <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="section in group.sections"><a data-ng-href="{{section.url}}">{{section.title}}</a></li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</nav>

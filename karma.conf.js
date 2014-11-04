@@ -72,6 +72,9 @@ module.exports = function(config) {
     }
     
     if(process.platform === 'win32') {
+        // @link https://github.com/karma-runner/karma-phantomjs-launcher/issues/27
+        // @link https://github.com/karma-runner/karma/issues/931
+        configuration.browsers.splice(configuration.browsers.indexOf('PhantomJS'), 1);
         configuration.browsers.push('IE');
     }
 

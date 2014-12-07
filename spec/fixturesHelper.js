@@ -18,10 +18,6 @@
     beforeEach(function () {
         var path = karma() ? 'base/' : '';
 
-        if(window.VisSenseSpecRunner === 42) {
-            path = 'http://localhost:3000/';
-        }
-
         jasmine.getFixtures().fixturesPath = path + 'spec/javascripts/fixtures';
     });
 

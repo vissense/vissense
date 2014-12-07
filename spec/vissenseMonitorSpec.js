@@ -302,9 +302,13 @@ describe('VisSense Monitor', function() {
                 //jasmine.clock().mockDate();
             });
 
+            afterEach(function() {
+                jasmine.clock().uninstall();
+            });
+
             it('should verify event chain initially hidden -> fullyvisible -> visible -> visible -> hidden', function() {
                 var config = {
-                    strategy: new VisSense.VisMon.Strategy.NoopStrategy(),
+                    strategy: new VisSense.VisMon.Strategy.PollingStrategy({ interval : 100 }),
                     update : function() {},
                     visible : function() {},
                     fullyvisible : function() {},
@@ -338,7 +342,7 @@ describe('VisSense Monitor', function() {
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
 
-                vismon.update();
+                jasmine.clock().tick(150);
 
                 expect(config.update.calls.count()).toEqual(2);
                 expect(config.hidden.calls.count()).toEqual(1);
@@ -347,7 +351,8 @@ describe('VisSense Monitor', function() {
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
 
-                vismon.update();
+
+                jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(3);
                 expect(config.hidden.calls.count()).toEqual(1);
@@ -358,7 +363,7 @@ describe('VisSense Monitor', function() {
 
                 element.style.display = 'block'; // set visible
 
-                vismon.update();
+                jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(4);
                 expect(config.hidden.calls.count()).toEqual(1);
@@ -369,7 +374,7 @@ describe('VisSense Monitor', function() {
 
                 element.style.left = '-5px'; // 50% visible
 
-                vismon.update();
+                jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(5);
                 expect(config.hidden.calls.count()).toEqual(1);
@@ -380,7 +385,7 @@ describe('VisSense Monitor', function() {
 
                 element.style.left = '-9px'; // 10% visible
 
-                vismon.update();
+                jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(6);
                 expect(config.hidden.calls.count()).toEqual(1);
@@ -391,7 +396,7 @@ describe('VisSense Monitor', function() {
 
                 element.style.left = '-10px'; // 0% visible
 
-                vismon.update();
+                jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(7);
                 expect(config.hidden.calls.count()).toEqual(2);

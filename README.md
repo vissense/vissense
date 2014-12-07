@@ -20,12 +20,14 @@ if(visibility.isFullyVisible()) {
 
 In a more advanced example the video is stopped as soon as it not visible anymore:
 ```javascript
+...
+
 var visibility_monitor = visibility.monitor({ 
   strategy: new VisSense.VisMon.Strategy.EventStrategy({ debounce: 100 }),
-  onFullyVisible: function() { 
+  fullyvisible: function() { 
     video.play();
   }, 
-  onHidden: function() { 
+  hidden: function() { 
     video.stop(); 
   }
 }).start();
@@ -124,10 +126,7 @@ Object constructor. Options:
 - `fullyvisible` function to run when element becomes fully visible
 - `visibilitychange` function to run when the visibility of the element changes
 - `percentagechange` function to run when the percentage of the element changes
-- `strategy` a strategy or array of strategies for observing the element. VisSense comes with three predefined strategies:
-   - `NoopStrategy` (_default_) this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
-   - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
-   - `PollingStrategy` this strategy invokes `update()` periodically.
+- `strategy` a strategy or array of strategies for observing the element. VisSense comes with three predefined strategies. See below.
 
 ```javascript
 var element = document.getElementById('video');
@@ -145,6 +144,13 @@ var visibility_monitor = new VisSense.VisMon(element, {
 }).start();
 ```
 
+##### Strategies
+VisSense comes with three predefined strategies:
+   - `NoopStrategy` (_default_) this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
+   - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
+   - `PollingStrategy` this strategy invokes `update()` periodically.
+
+Feel free to write your own strategy to cover your specific requirements (it's super easy).
 
 #### .start() 
 starts observing the element returns `this`
@@ -203,7 +209,7 @@ or
 
 `grunt serve`
 
-and it should automatically open `http://localhost:3000/SpecRunner.html` in your browser.
+and it automatically opens `http://localhost:3000/SpecRunner.html` in your browser.
 
 License
 -------

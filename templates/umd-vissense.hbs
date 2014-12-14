@@ -9,10 +9,9 @@
     // only CommonJS-like environments that support module.exports,
     // like Node.
     var jsdom = require("jsdom").jsdom;
-    var document = jsdom("hello world");
-    var window = document.parentWindow;
+    var window = jsdom().parentWindow;
 
-    module.exports = factory(window, document);
+    module.exports = factory(window, window.document);
   } else {
     // Browser globals
     root.VisSense = factory(root, root.document);

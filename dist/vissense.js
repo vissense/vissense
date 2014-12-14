@@ -4,8 +4,8 @@
     if ("function" == typeof define && define.amd) define([], function() {
         return factory(root, root.document);
     }); else if ("object" == typeof exports) {
-        var jsdom = require("jsdom").jsdom, document = jsdom("hello world"), window = document.parentWindow;
-        module.exports = factory(window, document);
+        var jsdom = require("jsdom").jsdom, window = jsdom().parentWindow;
+        module.exports = factory(window, window.document);
     } else root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";

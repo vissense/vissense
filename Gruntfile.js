@@ -45,11 +45,7 @@ module.exports = function (grunt) {
                     dest: '<%= concat.tmp.dest %>',
                     template: './templates/umd-vissense.hbs',
                     objectToExport: 'VisSense', // optional, internal object that will be exported
-                    indent: 4 , // optional (defaults to 2), indent source code. Accepts strings as well
-                    deps: {
-                       'default' : ['root', 'root.document', 'undefined'],
-                       global : ['root', 'root.document', 'undefined']
-                    }
+                    indent: 4 // optional (defaults to 2), indent source code. Accepts strings as well
                 }
             }
         },

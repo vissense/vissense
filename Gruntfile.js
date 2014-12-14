@@ -10,7 +10,7 @@ module.exports = function (grunt) {
             '"version": "<%= pkg.version %>", ' +
             '<%= pkg.homepage ? "\\"homepage\\": \\"" + pkg.homepage + "\\"," : "" %>' +
             '"copyright": "(c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>" ' +
-        '} */',
+        '} */\n',
 
         dirs :{
             tmp: './tmp',
@@ -36,6 +36,21 @@ module.exports = function (grunt) {
                     '<%= dirs.src %>/<%= pkg.name %>.js'
                 ],
                 dest: '<%= dirs.tmp %>/<%= pkg.name %>.js'
+            }
+        },
+        umd: {
+            all: {
+                options: {
+                    src:  '<%= concat.tmp.dest %>',
+                    dest: '<%= concat.tmp.dest %>',
+                    template: './templates/umd-vissense.hbs',
+                    objectToExport: 'VisSense', // optional, internal object that will be exported
+                    indent: 4 , // optional (defaults to 2), indent source code. Accepts strings as well
+                    deps: {
+                       'default' : ['root', 'root.document', 'undefined'],
+                       global : ['root', 'root.document', 'undefined']
+                    }
+                }
             }
         },
         uglify: {
@@ -79,7 +94,7 @@ module.exports = function (grunt) {
         jasmine: {
             coverage: {
                 src: [
-                    '<%= uglify.src.dest %>'
+                    '<%= dirs.src %>/<%= pkg.name %>.js'
                 ],
                 options: {
                     display: 'full',
@@ -248,9 +263,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-notify');
     grunt.loadNpmTasks('grunt-docular');
+    grunt.loadNpmTasks('grunt-umd');
 
-    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'uglify', 'clean:tmp']);
-    grunt.registerTask('default', ['dist', 'test', 'micro', 'notify:js']);
+    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'umd', 'uglify', 'clean:tmp']);
+    grunt.registerTask('default', ['test', 'dist', 'micro', 'notify:js']);
 
     grunt.registerTask('serve', ['default', 'connect:server', 'watch']);
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);

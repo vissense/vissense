@@ -13,7 +13,7 @@ module.exports = function(config) {
             'bower_components/lodash/dist/lodash.min.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
 
-            'dist/vissense.js',
+            'lib/vissense.js',
 
             'spec/**/*.js',
             // fixtures

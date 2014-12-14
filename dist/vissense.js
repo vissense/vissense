@@ -1,8 +1,12 @@
-/*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2014 tbk" } */!function(root, factory) {
+/*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2014 tbk" } */
+!function(root, factory) {
     "use strict";
-    "function" == typeof define && define.amd ? define([], function() {
+    if ("function" == typeof define && define.amd) define([], function() {
         return factory(root, root.document);
-    }) : "object" == typeof exports ? module.exports = factory(root, root.document) : root.VisSense = factory(root, root.document);
+    }); else if ("object" == typeof exports) {
+        var jsdom = require("jsdom").jsdom, document = jsdom("hello world"), window = document.parentWindow;
+        module.exports = factory(window, document);
+    } else root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";
     function debounce(fn, delay) {

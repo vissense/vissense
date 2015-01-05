@@ -44,6 +44,26 @@ var visibility_monitor = visibility.monitor({
  * take elements opacity into account
  * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
 
+
+Examples
+------------
+See some examples on the [demo page](https://vissense.github.io/vissense-demo/).
+
+
+Download
+------------
+
+### Bower
+Install with bower
+```
+bower install vissense/vissense --save-dev
+```
+
+Add this `<script>` tag somewhere
+```
+<script src="/bower_components/vissense/dist/vissense.min.js"></script>
+```
+
 API
 ------------
 
@@ -87,8 +107,7 @@ returns an object representing the current state
     "hidden": false 
     "previous" : { 
       "code": 2, 
-      "state": 
-      "fullyvisible", 
+      "state": "fullyvisible", 
       "percentage": 1, 
       "visible": true, 
       "fullyvisible": true, 
@@ -180,9 +199,8 @@ returns a state object
 registers an event hook
 
 ```javascript
-vismon.on('percentagechange', function() { ... });
+visibility_monitor.on('percentagechange', function() { ... });
 ```
-
 
 Contribute
 ------------
@@ -190,7 +208,7 @@ Contribute
 - Issue Tracker: https://github.com/vissense/vissense/issues
 - Source Code: https://github.com/vissense/vissense
 
-### Installation
+### Clone Repository
 `git clone https://github.com/vissense/vissense.git`
 
 #### Install dependencies

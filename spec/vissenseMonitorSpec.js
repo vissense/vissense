@@ -351,7 +351,6 @@ describe('VisSense Monitor', function() {
                 expect(config.visibilitychange.calls.count()).toEqual(1);
                 expect(config.percentagechange.calls.count()).toEqual(1);
 
-
                 jasmine.clock().tick(100);
 
                 expect(config.update.calls.count()).toEqual(3);

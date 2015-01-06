@@ -51,8 +51,7 @@ Immediately know when an element becomes hidden, partly visible or fully visible
 
 <div class="highlight highlight-javascript"><pre>...
 
-<span class="pl-s">var</span> visibility_monitor <span class="pl-k">=</span> visibility.monitor({ 
-  strategy<span class="pl-k">:</span> <span class="pl-k">new</span> <span class="pl-en">VisSense.VisMon</span>.Strategy.EventStrategy({ debounce<span class="pl-k">:</span> <span class="pl-c1">100</span> }),
+<span class="pl-s">var</span> visibility_monitor <span class="pl-k">=</span> visibility.monitor({
   <span class="pl-en">fullyvisible</span>: <span class="pl-st">function</span>() { 
     video.play();
   }, 

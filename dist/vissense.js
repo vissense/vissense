@@ -1,12 +1,13 @@
-/*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2014 tbk" } */
+/*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
-    if ("function" == typeof define && define.amd) define([], function() {
-        return factory(root, root.document);
-    }); else if ("object" == typeof exports) {
-        var jsdom = require("jsdom").jsdom, window = jsdom().parentWindow;
-        module.exports = factory(window, window.document);
-    } else root.VisSense = factory(root, root.document);
+    "function" == typeof define && define.amd ? define([], function() {
+        return function(win, doc) {
+            return factory(win, doc);
+        };
+    }) : "object" == typeof exports ? module.exports = function(win, doc) {
+        factory(win, doc);
+    } : root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";
     function debounce(fn, delay) {
@@ -143,7 +144,7 @@
     }
     function VisMon(visobj, inConfig) {
         var me = this, config = defaults(inConfig, {
-            strategy: new VisMon.Strategy.NoopStrategy()
+            strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
         }), strategies = isArray(config.strategy) ? config.strategy : [ config.strategy ];
         me._strategy = new VisMon.Strategy.CompositeStrategy(strategies), me._visobj = visobj, 
         me._lastListenerId = -1, me._state = {}, me._listeners = {}, me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];

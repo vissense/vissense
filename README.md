@@ -165,10 +165,11 @@ var visibility_monitor = new VisSense.VisMon(element, {
 
 ##### Strategies
 VisSense comes with three predefined strategies:
-   - `NoopStrategy` (_default_) this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
+   - `NoopStrategy` this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
    - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
    - `PollingStrategy` this strategy invokes `update()` periodically.
 
+The default monitor object uses a combination of EventStrategy and PollingStrategy as strategy.
 Feel free to write your own strategy to cover your specific requirements (it's super easy).
 
 #### .start() 

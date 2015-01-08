@@ -1,13 +1,7 @@
 /*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
-    "function" == typeof define && define.amd ? define([], function() {
-        return function(win, doc) {
-            return factory(win, doc);
-        };
-    }) : "object" == typeof exports ? module.exports = function(win, doc) {
-        factory(win, doc);
-    } : root.VisSense = factory(root, root.document);
+    root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";
     function debounce(fn, delay) {

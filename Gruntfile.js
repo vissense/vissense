@@ -43,9 +43,9 @@ module.exports = function (grunt) {
                 options: {
                     src:  '<%= concat.tmp.dest %>',
                     dest: '<%= concat.tmp.dest %>',
-                    template: './templates/umd-vissense.hbs',
-                    objectToExport: 'VisSense', // optional, internal object that will be exported
-                    indent: 4 // optional (defaults to 2), indent source code. Accepts strings as well
+                    template: './templates/browser-vissense.hbs',
+                    objectToExport: 'VisSense',
+                    indent: 2
                 }
             }
         },
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
         },
         jshint: {
             options: {
-                jshintrc:true
+                jshintrc: true
             },
             gruntfile: {
                 src: 'Gruntfile.js'

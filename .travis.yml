@@ -9,6 +9,7 @@ before_install:
   - 'firefox --version'
 before_script:
   - 'npm install -g grunt-cli'
+  - 'npm install -g karma-cli'
   - 'npm install -g bower'
   - 'bower install'
 after_success:

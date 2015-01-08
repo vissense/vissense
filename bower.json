@@ -29,6 +29,7 @@
     "jasmine": "2.1.3",
     "lodash": "2.4.1",
     "jquery": "2.1.1",
-    "jasmine-jquery": "velesin/jasmine-jquery#2.0.5"
+    "jasmine-jquery": "velesin/jasmine-jquery#2.0.5",
+    "jasmine-jsreporter": "detro/jasmine-jsreporter#master"
   }
 }

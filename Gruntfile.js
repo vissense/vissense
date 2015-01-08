@@ -130,11 +130,11 @@ module.exports = function (grunt) {
         connect: {
             server: {
                 options: {
-                    hostname: 'localhost',
-                    port: 3000,
-                    base: './',
-                    livereload: true,
-                    open: 'http://localhost:3000/SpecRunner.html'
+                  hostname: 'localhost',
+                  port: 3000,
+                  base: './',
+                  livereload: true,
+                  open: 'http://localhost:3000/SpecRunner.html'
                 }
             },
             docs: {
@@ -264,7 +264,9 @@ module.exports = function (grunt) {
     grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'umd', 'uglify', 'clean:tmp']);
     grunt.registerTask('default', ['test', 'dist', 'micro', 'notify:js']);
 
-    grunt.registerTask('serve', ['default', 'connect:server', 'watch']);
+    grunt.registerTask('serve', ['connect:server', 'default']);
+    grunt.registerTask('server', ['serve']);
+
     grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
     grunt.registerTask('docs', ['clean:docs', 'docular', 'connect:docs']);
 

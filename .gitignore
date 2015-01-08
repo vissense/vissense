@@ -7,6 +7,7 @@ node_modules/
 bower_components/
 
 .sauce.json
+.coveralls.yml
 
 dist/coverage/
 dist/docs/

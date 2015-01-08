@@ -81,10 +81,10 @@ module.exports = function (grunt) {
                 src: 'Gruntfile.js'
             },
             karma: {
-                src: 'karma.conf.js'
+                src: ['karma.conf.js', 'karma-saucelabs.conf.js']
             },
             src_test: {
-                src: ['tmp/**/*.js', 'spec/**/*.js']
+                src: ['tmp/**/*.js', 'lib/**/*.js', 'spec/**/*.js']
             }
         },
         jasmine: {
@@ -261,8 +261,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-docular');
     grunt.loadNpmTasks('grunt-umd');
 
-    grunt.registerTask('dist', ['clean:tmp', 'concat:tmp', 'jshint', 'clean:dist', 'umd', 'uglify', 'clean:tmp']);
-    grunt.registerTask('default', ['test', 'dist', 'micro', 'notify:js']);
+    grunt.registerTask('dist', ['clean:tmp', 'clean:dist', 'test', 'concat:tmp', 'jshint', 'umd', 'uglify', 'clean:tmp']);
+    grunt.registerTask('default', ['dist', 'micro', 'notify:js']);
 
     grunt.registerTask('serve', ['connect:server', 'default']);
     grunt.registerTask('server', ['serve']);

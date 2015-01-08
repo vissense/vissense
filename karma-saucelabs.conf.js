@@ -12,29 +12,142 @@ module.exports = function(config) {
 		}
 	}
 	var customLaunchers = {
-		/*sl_chrome: {
-		  base: 'SauceLabs',
-		  browserName: 'chrome',
-		  platform: 'Windows 7',
-		  version: '35'
-		},
-		sl_firefox: {
-		  base: 'SauceLabs',
-		  browserName: 'firefox',
-		  version: '30'
-		},
-		sl_ios_safari: {
-		  base: 'SauceLabs',
-		  browserName: 'iphone',
-		  platform: 'OS X 10.9',
-		  version: '7.1'
-		},*/
-		sl_ie_11: {
-		  base: 'SauceLabs',
-		  browserName: 'internet explorer',
-		  platform: 'Windows 8.1',
-		  version: '11'
-		}
+		/*"SL_Android_4.0": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "4.0"
+        },
+        "SL_Android_4.1": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "4.1"
+        },
+        "SL_Android_4.2": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "4.2"
+        },
+        "SL_Android_4.3": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "4.3"
+        },
+        "SL_Android_4.4": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "4.4"
+        },
+        "SL_Android_5.0": {
+            base: "SauceLabs",
+            browserName: "Android",
+            platform: "Linux",
+            version: "5.0"
+        },
+        "SL_Chrome": {
+            base: "SauceLabs",
+            browserName: "Chrome",
+            platform: "Windows 8.1"
+        },
+        "SL_Chrome_Linux": {
+            base: "SauceLabs",
+            browserName: "Chrome",
+            platform: "Linux"
+        },
+        "SL_Chrome_OSX": {
+            base: "SauceLabs",
+            browserName: "Chrome",
+            platform: "OS X 10.10"
+        },
+        "SL_Firefox": {
+            base: "SauceLabs",
+            browserName: "Firefox",
+            platform: "Windows 8.1"
+        },
+        "SL_Firefox_Linux": {
+            base: "SauceLabs",
+            browserName: "Firefox",
+            platform: "Linux"
+        },
+        "SL_Firefox_OSX": {
+            base: "SauceLabs",
+            browserName: "Firefox",
+            platform: "OS X 10.10"
+        },*/
+        "SL_IE_9": {
+            base: "SauceLabs",
+            browserName: "Internet Explorer",
+            platform: "Windows 7",
+            version: "9"
+        },
+        /*"SL_IE_10": {
+            base: "SauceLabs",
+            browserName: "Internet Explorer",
+            platform: "Windows 8",
+            version: "10"
+        },*/
+        "SL_IE_11": {
+            base: "SauceLabs",
+            browserName: "Internet Explorer",
+            platform: "Windows 8.1",
+            version: "11"
+        },/*
+        "SL_IOS_6": {
+            base: "SauceLabs",
+            browserName: "iPhone",
+            platform: "OS X 10.8",
+            version: "6.1"
+        },
+        "SL_IOS_7": {
+            base: "SauceLabs",
+            browserName: "iPhone",
+            platform: "OS X 10.9",
+            version: "7.1"
+        },
+        "SL_IOS_8": {
+            base: "SauceLabs",
+            browserName: "iPhone",
+            platform: "OS X 10.10",
+            version: "8.1"
+        },
+        "SL_Opera": {
+            base: "SauceLabs",
+            browserName: "opera",
+            platform: "Windows 7"
+        },
+        "SL_Opera_Linux": {
+            base: "SauceLabs",
+            browserName: "opera",
+            platform: "Linux"
+        },
+        "SL_Safari_5": {
+            base: "SauceLabs",
+            browserName: "Safari",
+            platform: "OS X 10.6",
+            version: "5"
+        },
+        "SL_Safari_6": {
+            base: "SauceLabs",
+            browserName: "Safari",
+            platform: "OS X 10.8",
+            version: "6"
+        },
+        "SL_Safari_7": {
+            base: "SauceLabs",
+            browserName: "Safari",
+            platform: "OS X 10.9",
+            version: "7"
+        },*/
+        "SL_Safari_8": {
+            base: "SauceLabs",
+            browserName: "Safari",
+            platform: "OS X 10.10",
+            version: "8"
+        }
 	};
 	config.set({
 

@@ -6,7 +6,8 @@
     "name": "tbk"
   },
   "scripts": {
-    "test": "grunt default --verbose && karma start karma-saucelabs.conf.js"
+    "test": "grunt default --verbose",
+    "citest": "karma start karma-saucelabs.conf.js"
   },
   "repository": {
     "type": "git",

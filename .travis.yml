@@ -12,5 +12,7 @@ before_script:
   - 'npm install -g karma-cli'
   - 'npm install -g bower'
   - 'bower install'
+script:
+  - 'npm run-script citest'
 after_success:
   - 'grunt coverage'

@@ -56,9 +56,15 @@ module.exports = function(config) {
         },
 
         coverageReporter: {
-            reporters:[
-              {type: 'lcov', dir:'dist/coverage/'}
-            ]
+          reporters:[{
+            type: 'lcov',
+            dir: 'dist/coverage/',
+            subdir: function(browser) {
+              // normalization process to keep a consistent browser name accross different OS
+              // outputs the results into e.g. './<dir>/firefox/'
+              return browser.toLowerCase().split(/[ /-]/)[0];
+            }
+          }]
         },
 
         // If browser does not capture in given timeout [ms], kill it

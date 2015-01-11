@@ -59,7 +59,7 @@ module.exports = function(config) {
             base: 'SauceLabs',
             browserName: 'Chrome',
             platform: 'Linux'
-        },
+        },*/
         'SL_Chrome_OSX': {
             base: 'SauceLabs',
             browserName: 'Chrome',
@@ -68,13 +68,15 @@ module.exports = function(config) {
         'SL_Firefox': {
             base: 'SauceLabs',
             browserName: 'Firefox',
-            platform: 'Windows 8.1'
+            platform: 'Windows 8.1',
+            version: '34'
         },
         'SL_Firefox_Linux': {
             base: 'SauceLabs',
             browserName: 'Firefox',
-            platform: 'Linux'
-        },
+            platform: 'Linux',
+            version: '26'
+        },/*
         'SL_Firefox_OSX': {
             base: 'SauceLabs',
             browserName: 'Firefox',
@@ -115,12 +117,12 @@ module.exports = function(config) {
             browserName: 'iPhone',
             platform: 'OS X 10.10',
             version: '8.1'
-        },
+        },*/
         'SL_Opera': {
             base: 'SauceLabs',
             browserName: 'opera',
             platform: 'Windows 7'
-        },
+        },/*
         'SL_Opera_Linux': {
             base: 'SauceLabs',
             browserName: 'opera',
@@ -171,34 +173,34 @@ module.exports = function(config) {
             // fixtures
             {pattern: 'spec/**/*.html', watched: true, served: true, included: false}
         ],
-		
+
 		reporters: ['dots', 'saucelabs'],
-		
+
 		port: 9876,
-		
+
 		colors: true,
-		
+
 		logLevel: config.LOG_INFO,
-		
+
 		captureTimeout: 120000,
-		
+
 		customLaunchers: customLaunchers,
-		
+
 		browsers: Object.keys(customLaunchers),
-		
+
 		singleRun: true,
 
 		sauceLabs: {
-			startConnect: true, 
+			startConnect: true,
 
 			testName: 'VisSense.js',
 
 			recordVideo: false,
 
 			deviceOrientation: 'landscape',
-			
+
 			build: process.env.TRAVIS_BUILD_NUMBER || process.env.BUILD_NUMBER || 'none',
-			
+
 			tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER || undefined
 		}
 

@@ -278,12 +278,14 @@
         var me = this;
         return me._started || (me._update = debounce(function() {
             monitor.update();
-        }, me._config.debounce), addEventListener("visibilitychange", me._update), addEventListener("scroll", me._update), 
-        addEventListener("resize", me._update), me._update(), me._started = !0), this._started;
+        }, me._config.debounce), VisibilityApi && addEventListener(VisibilityApi[1], me._update), 
+        addEventListener("scroll", me._update), addEventListener("resize", me._update), 
+        me._update(), me._started = !0), this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {
         var me = this;
         return me._started ? (removeEventListener("resize", me._update), removeEventListener("scroll", me._update), 
-        removeEventListener("visibilitychange", me._update), me._started = !1, !0) : !1;
+        VisibilityApi && removeEventListener(VisibilityApi[1], me._update), me._started = !1, 
+        !0) : !1;
     }, VisSense.VisMon = VisMon, VisSense.fn.monitor = function(config) {
         return new VisMon(this, config);
     }, VisSense.Utils = {

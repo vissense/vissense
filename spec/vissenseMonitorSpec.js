@@ -180,6 +180,11 @@ describe('VisSense Monitor', function() {
             expect(vismon2).toBeDefined();
         });
 
+        it('should get the observed VisSense object', function () {
+            var vismon = visobj.monitor();
+            expect(vismon.visobj()).toBe(visobj);
+        });
+
         it('should update verify that first update() argument is a monitor', function () {
             var config = {
                 update : function(monitor) {

@@ -142,6 +142,46 @@ module.exports = function (grunt) {
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
             }
         },
+
+        jasmine: {
+          coverage: {
+            src: [
+              '<%= dirs.src %>/<%= pkg.name %>.js'
+            ],
+            options: {
+              display: 'full',
+              summary: true,
+              specs: ['spec/*Spec.js'],
+              helpers: [
+                'spec/*Helper.js'
+              ],
+              vendor: [
+                'bower_components/jquery/dist/jquery.min.js',
+                'bower_components/lodash/dist/lodash.min.js',
+                'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+                'spec/phantomjsPolyfills.js'
+              ],
+              template: require('grunt-template-jasmine-istanbul'),
+              templateOptions: {
+                coverage: '<%= dirs.coverage %>/coverage.json',
+                report: [{
+                  type: 'html',
+                  options: {
+                    dir: '<%= dirs.coverage %>/html'
+                  }
+                }, {
+                  type: 'lcov',
+                  options: {
+                    dir: '<%= dirs.coverage %>/lcov'
+                  }
+                }, {
+                  type: 'text-summary'
+                }
+                ]
+              }
+            }
+          }
+        },
         karma: {
             unit: {
                 configFile: 'karma.conf.js'
@@ -157,7 +197,7 @@ module.exports = function (grunt) {
                 force: true
             },
             target: {
-                src: '<%= dirs.coverage %>/phantomjs/lcov.info'
+                src: '<%= dirs.coverage %>/lcov/lcov.info'
             }
         },
         docular: {
@@ -228,7 +268,7 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', ['dist', 'connect:server']);
     grunt.registerTask('server', ['serve']);
 
-    grunt.registerTask('test', ['karma', 'notify:test']);
+    grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
     grunt.registerTask('docs', ['clean:docs', 'docular', 'connect:docs']);
 
     grunt.registerTask('coverage', ['coveralls']);

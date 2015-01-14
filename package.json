@@ -33,6 +33,7 @@
     "grunt-micro": "^0.1.0",
     "grunt-notify": "~0.4.1",
     "grunt-saucelabs": "^8.4.1",
+    "grunt-template-jasmine-istanbul": "0.3.1",
     "grunt-umd": "^2.2.1",
     "karma": "~0.12.28",
     "karma-chrome-launcher": "~0.1.7",

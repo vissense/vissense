@@ -31,5 +31,7 @@
 // window.hidden may not be available in certain phantomjs versions
 ;(function() {
   'use strict';
-  document.hidden = false;
+  if(document.hidden === undefined) {
+    document.hidden = false;
+  }
 }());

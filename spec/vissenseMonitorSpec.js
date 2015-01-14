@@ -281,12 +281,48 @@ describe('VisSense Monitor', function() {
             expect(config.update.calls.count()).toEqual(3);
         });
 
-        it('should return -1 on registering handler for invalid event', function () {
+        it('should return noop when registering an invalid listener', function () {
             var vismon = visobj.monitor();
 
-            var handlerId = vismon.on('non-existing-event', null);
+            var unregister = vismon.on('update', [1,2,3]);
 
-            expect(handlerId).toBe(-1);
+            expect(vismon._listeners.length).toBe(0);
+            expect(unregister).toBe(VisSense.Utils.noop);
+        });
+
+        it('should return noop when registering a listener for an invalid event', function () {
+            var vismon = visobj.monitor();
+
+            var unregister = vismon.on('non-existing-event', function() {});
+
+            expect(vismon._listeners.length).toBe(0);
+            expect(unregister).toBe(VisSense.Utils.noop);
+        });
+
+        it('should return an unregister function when registering a listener for a valid event', function () {
+            var config = {
+              update : function() {}
+            };
+
+            spyOn(config, 'update');
+
+            var vismon = visobj.monitor();
+
+            var unregister = vismon.on('update', config.update);
+
+            expect(vismon._listeners.length).toBe(1);
+            expect(config.update.calls.count()).toEqual(0);
+
+            vismon.update();
+
+            expect(config.update.calls.count()).toEqual(1);
+
+            unregister();
+            expect(vismon._listeners.length).toBe(0);
+
+            vismon.update();
+
+            expect(config.update.calls.count()).toEqual(1);
         });
 
         describe('Events', function() {

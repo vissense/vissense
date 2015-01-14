@@ -116,7 +116,8 @@ describe('VisSense Monitor', function() {
                 strategies = [
                     new VisSense.VisMon.Strategy.NoopStrategy(),
                     new VisSense.VisMon.Strategy.PollingStrategy(),
-                    new VisSense.VisMon.Strategy.EventStrategy()
+                    new VisSense.VisMon.Strategy.EventStrategy(),
+                    new VisSense.VisMon.Strategy.CompositeStrategy()
                 ];
 
                 for (var i = 0, n = strategies.length; i < n; i++) {

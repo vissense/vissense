@@ -1,15 +1,15 @@
-/*! { "name": "vissense", "version": "0.2.1", "copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.2.1", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
     root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";
-    function debounce(fn, delay) {
+    function debounce(callback, delay) {
         var timer = null;
         return function() {
             var self = this, args = arguments;
             clearTimeout(timer), timer = setTimeout(function() {
-                fn.apply(self, args);
+                callback.apply(self, args);
             }, delay);
         };
     }
@@ -67,21 +67,14 @@
             width: window.innerWidth
         };
     }
-    function isVisibleByOffsetParentCheck(element, computedStyle) {
-        if (!element.offsetParent) {
-            var position = styleProperty(computedStyle, "position");
-            if ("fixed" !== position) return !1;
-        }
-        return !0;
-    }
     function computedStyle(element) {
-        return isDefined(element.style) ? window.getComputedStyle(element, null) : null;
+        return window.getComputedStyle(element, null);
     }
     function styleProperty(style, property) {
-        return style ? style.getPropertyValue(property) : undefined;
+        return style.getPropertyValue(property);
     }
     function isDisplayed(element, style) {
-        if (!style && (style = computedStyle(element), !style)) return !1;
+        style || (style = computedStyle(element));
         var display = styleProperty(style, "display");
         if ("none" === display) return !1;
         var visibility = styleProperty(style, "visibility");
@@ -91,7 +84,7 @@
         if (element === document) return !0;
         if (!element || !element.parentNode) return !1;
         var style = computedStyle(element), displayed = isDisplayed(element, style);
-        return displayed !== !0 ? !1 : isVisibleByOffsetParentCheck(element, style) ? !0 : !1;
+        return displayed !== !0 ? !1 : !0;
     }
     function isInViewport(rect, viewport) {
         return !rect || rect.width <= 0 || rect.height <= 0 ? !1 : rect.bottom > 0 && rect.right > 0 && rect.top < viewport.height && rect.left < viewport.width;
@@ -116,33 +109,20 @@
             hidden: 0
         });
     }
-    function newVisState(state, percentage, previous) {
-        return previous && previous && delete previous.previous, function(state, percentage, previous) {
-            return {
-                code: state[0],
-                state: state[1],
-                percentage: percentage,
-                previous: previous,
-                fullyvisible: state[0] === STATES.FULLY_VISIBLE[0],
-                visible: state[0] === STATES.VISIBLE[0] || state[0] === STATES.FULLY_VISIBLE[0],
-                hidden: state[0] === STATES.HIDDEN[0]
-            };
-        }(state, percentage, previous);
-    }
     function nextState(visobj, currentState) {
         var newState = visobj.state(), percentage = newState.percentage;
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function fireListeners(listeners, context) {
-        for (var keys = Object.keys(listeners), i = 0, n = keys.length; n > i; i++) listeners[i].call(context || window);
+        for (var i = 0, n = listeners.length; n > i; i++) listeners[i].call(context || window);
     }
-    function VisMon(visobj, inConfig) {
-        var me = this, config = defaults(inConfig, {
+    function VisMon(visobj, config) {
+        var me = this, _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
-        }), strategies = isArray(config.strategy) ? config.strategy : [ config.strategy ];
+        }), strategies = isArray(_config.strategy) ? _config.strategy : [ _config.strategy ];
         me._strategy = new VisMon.Strategy.CompositeStrategy(strategies), me._visobj = visobj, 
-        me._lastListenerId = -1, me._state = {}, me._listeners = {}, me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
-        for (var i = 0, n = me._events.length; n > i; i++) config[me._events[i]] && me.on(me._events[i], config[me._events[i]]);
+        me._state = {}, me._listeners = [], me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
+        for (var i = 0, n = me._events.length; n > i; i++) _config[me._events[i]] && me.on(me._events[i], _config[me._events[i]]);
     }
     var VisibilityApi = function(undefined) {
         for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
@@ -166,17 +146,30 @@
         VISIBLE: [ 1, "visible" ],
         FULLY_VISIBLE: [ 2, "fullyvisible" ]
     };
-    return VisSense.VisState = {
-        hidden: function(percentage, previous) {
-            return newVisState(STATES.HIDDEN, percentage, previous || {});
-        },
-        visible: function(percentage, previous) {
-            return newVisState(STATES.VISIBLE, percentage, previous || {});
-        },
-        fullyvisible: function(percentage, previous) {
-            return newVisState(STATES.FULLY_VISIBLE, percentage, previous || {});
+    return VisSense.VisState = function() {
+        function newVisState(state, percentage, previous) {
+            return previous && delete previous.previous, {
+                code: state[0],
+                state: state[1],
+                percentage: percentage,
+                previous: previous || {},
+                fullyvisible: state[0] === STATES.FULLY_VISIBLE[0],
+                visible: state[0] === STATES.VISIBLE[0] || state[0] === STATES.FULLY_VISIBLE[0],
+                hidden: state[0] === STATES.HIDDEN[0]
+            };
         }
-    }, VisMon.prototype.visobj = function() {
+        return {
+            hidden: function(percentage, previous) {
+                return newVisState(STATES.HIDDEN, percentage, previous);
+            },
+            visible: function(percentage, previous) {
+                return newVisState(STATES.VISIBLE, percentage, previous);
+            },
+            fullyvisible: function(percentage, previous) {
+                return newVisState(STATES.FULLY_VISIBLE, percentage, previous);
+            }
+        };
+    }(), VisMon.prototype.visobj = function() {
         return this._visobj;
     }, VisMon.prototype.state = function() {
         return this._state;
@@ -189,8 +182,14 @@
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), fireListeners(this._listeners, this);
     }, VisMon.prototype.onUpdate = function(callback) {
-        return isFunction(callback) ? (this._lastListenerId += 1, this._listeners[this._lastListenerId] = callback.bind(undefined, this), 
-        this._lastListenerId) : -1;
+        if (!isFunction(callback)) return noop;
+        var listener = callback.bind(undefined, this);
+        this._listeners.push(listener);
+        var me = this;
+        return function() {
+            var index = me._listeners.indexOf(listener);
+            return index > -1 ? (me._listeners.splice(index, 1), !0) : !1;
+        };
     }, VisMon.prototype.onVisibilityChange = function(callback) {
         var me = this;
         return this.onUpdate(function() {
@@ -205,7 +204,7 @@
     }, VisMon.prototype.onVisible = function(callback) {
         var me = this;
         return me.onVisibilityChange(fireIf(function() {
-            return me._state.visible && !me._state.previous.visible;
+            return me._state.previous.hidden && me._state.visible;
         }, callback));
     }, VisMon.prototype.onFullyVisible = function(callback) {
         var me = this;
@@ -238,7 +237,7 @@
           case "visibilitychange":
             return me.onVisibilityChange(callback);
         }
-        return -1;
+        return noop;
     }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.start = function() {
         throw new Error("Strategy#start needs to be overridden.");
     }, VisMon.Strategy.prototype.stop = function() {
@@ -259,19 +258,18 @@
         }), this._started = !1;
     }, VisMon.Strategy.PollingStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.PollingStrategy.prototype.start = function(monitor) {
-        var me = this;
-        return me._started || (me._update = function() {
-            monitor.update();
-        }, addEventListener("visibilitychange", me._update), function update() {
-            monitor.update(), me._timeoutId = setTimeout(update, me._config.interval);
-        }(), me._started = !0), me._started;
+        if (!this._started) {
+            var me = this;
+            !function update() {
+                monitor.update(), me._timeoutId = setTimeout(update, me._config.interval);
+            }(), this._started = !0;
+        }
+        return this._started;
     }, VisMon.Strategy.PollingStrategy.prototype.stop = function() {
-        var me = this;
-        return me._started ? (clearTimeout(me._timeoutId), removeEventListener("visibilitychange", me._update), 
-        me._started = !1, !0) : !1;
+        return this._started ? (clearTimeout(this._timeoutId), this._started = !1, !0) : !1;
     }, VisMon.Strategy.EventStrategy = function(config) {
         this._config = defaults(config, {
-            debounce: 30
+            debounce: 50
         }), this._started = !1;
     }, VisMon.Strategy.EventStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {

@@ -4,8 +4,8 @@
   "license": "MIT",
   "main": "dist/vissense.min.js",
   "description": "",
-  "keywords": [],
-  "homepage": "https://example.com",
+  "keywords": ["visibility", "viewtime", "viewport", "visible", "monitor", "observe"],
+  "homepage": "https://vissense.github.io/vissense",
   "authors": [
     "tbk"
   ],
@@ -17,8 +17,11 @@
     "spec",
     "bower_components",
     "node_modules",
+    "templates",
+    "docs",
     "Gruntfile.js",
     "karma.conf.js",
+    "karma-saucelabs.conf.js",
     "SpecRunner.html",
     "package.json",
     "bower.json",

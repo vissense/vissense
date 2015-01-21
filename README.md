@@ -61,10 +61,46 @@ Install with bower
 bower install vissense/vissense --save-dev
 ```
 
+### Github
+[Download from Github](https://github.com/vissense/vissense/releases)
+
 Add this `<script>` tag somewhere
 ```
-<script src="/bower_components/vissense/dist/vissense.min.js"></script>
+<script src="/path/to/components/vissense/dist/vissense.min.js"></script>
 ```
+
+
+Contribute
+------------
+
+- Issue Tracker: https://github.com/vissense/vissense/issues
+- Source Code: https://github.com/vissense/vissense
+
+### Clone Repository
+`git clone https://github.com/vissense/vissense.git`
+
+#### Install dependencies
+
+`npm install && bower install`
+
+#### Build project
+
+`grunt`
+
+#### Run tests
+
+`grunt test`
+
+or
+
+`grunt serve`
+
+and it automatically opens `http://localhost:3000/SpecRunner.html` in your browser.
+
+#### Generate documentation
+
+`grunt docs`
+
 
 API
 ------------
@@ -101,21 +137,14 @@ returns an object representing the current state
 
 ```javascript
 { 
-    "code": 1, 
-    "state": "visible", 
-    "percentage": 0.55, 
-    "visible": true, 
-    "fullyvisible": false, 
-    "hidden": false 
-    "previous" : { 
-      "code": 2, 
-      "state": "fullyvisible", 
-      "percentage": 1, 
-      "visible": true, 
-      "fullyvisible": true, 
-      "hidden": false 
-    }
-} 
+  "code": 0, 
+  "state": "hidden", 
+  "percentage": 0, 
+  "visible": false, 
+  "fullyvisible": false, 
+  "hidden": true,
+  "previous": {}
+}
 ```
 
 #### .monitor([config])
@@ -126,11 +155,10 @@ See the options below for more details.
 ```javascript
 var element = document.getElementById('video');
 
-var visibility_monitor = VisSense(element).monitor({ 
-  strategy: [
-    new VisSense.VisMon.Strategy.EventStrategy({ debounce: 100 }),
-    new VisSense.VisMon.Strategy.PollingStrategy({ interval: 2000 })
-  ], 
+var visibility_monitor = VisSense(element).monitor({
+  visible: function() { 
+    console.log('visible');
+  }, 
   hidden: function() { 
     console.log('hidden');
   }
@@ -154,7 +182,7 @@ var element = document.getElementById('video');
 
 var visibility_monitor = new VisSense.VisMon(element, { 
   strategy: [
-    new VisSense.VisMon.Strategy.PollingStrategy({ interval: 9000 })
+    new VisSense.VisMon.Strategy.PollingStrategy({ interval: 9001 })
   ],
   visibilitychange: function() { 
     console.log('visibilitychange');
@@ -167,9 +195,9 @@ var visibility_monitor = new VisSense.VisMon(element, {
 
 ##### Strategies
 VisSense comes with three predefined strategies:
-   - `NoopStrategy` this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
-   - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
-   - `PollingStrategy` this strategy invokes `update()` periodically.
+  - `NoopStrategy` this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
+  - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
+  - `PollingStrategy` this strategy invokes `update()` periodically.
 
 The default monitor object uses a combination of EventStrategy and PollingStrategy as strategy.
 Feel free to write your own strategy to cover your specific requirements (it's super easy).
@@ -188,14 +216,21 @@ returns a state object
 
 ```javascript
 { 
-    "code": 0, 
-    "state": "hidden", 
-    "percentage": 0, 
-    "visible": false, 
-    "fullyvisible": false, 
-    "hidden": true, 
-    "previous": {} 
-}
+  "code": 1, 
+  "state": "visible", 
+  "percentage": 0.55, 
+  "visible": true, 
+  "fullyvisible": false, 
+  "hidden": false 
+  "previous" : { 
+    "code": 2, 
+    "state": "fullyvisible", 
+    "percentage": 1, 
+    "visible": true, 
+    "fullyvisible": true, 
+    "hidden": false 
+  }
+} 
 ```
 
 #### .on(event, hook) 
@@ -205,32 +240,6 @@ registers an event hook
 visibility_monitor.on('percentagechange', function() { ... });
 ```
 
-Contribute
-------------
-
-- Issue Tracker: https://github.com/vissense/vissense/issues
-- Source Code: https://github.com/vissense/vissense
-
-### Clone Repository
-`git clone https://github.com/vissense/vissense.git`
-
-#### Install dependencies
-
-`npm install && bower install`
-
-#### Build Project
-
-`grunt`
-
-#### Run Tests
-
-`grunt test`
-
-or
-
-`grunt serve`
-
-and it automatically opens `http://localhost:3000/SpecRunner.html` in your browser.
 
 License
 -------

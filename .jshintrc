@@ -34,9 +34,9 @@
     "maxerr": 10,
     "sub": false,
     /* Environment options */
-    "node": true, 
+    "node": true,
     "browser": true,
     "globals": {
-        "define": true
+        "define": false
     }
 }

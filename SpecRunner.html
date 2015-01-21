@@ -14,8 +14,9 @@
     // allow sauce to query for the jasmine report
     // because we have to load the page before starting the test, so the thing
     // sauce queries for might not be setup yet
-    if(!window.jasmine.getJSReport) {
-      window.jasmine.getJSReport = function() {};
+    if (!window.jasmine.getJSReport) {
+      window.jasmine.getJSReport = function () {
+      };
     }
   </script>
   <!-- include source files here... -->
@@ -34,7 +35,7 @@
   <script type="text/javascript" src="spec/vissenseMonitorSpec.js"></script>
 
   <script type="text/javascript">
-    (function() {
+    (function () {
       var jasmineEnv = jasmine.getEnv();
 
       jasmineEnv.addReporter(new jasmine.JSReporter2());

@@ -6,60 +6,61 @@
  * Available under MIT license <http://opensource.org/licenses/MIT>
  */
 beforeEach(function () {
-    'use strict';
-    function getMessage(valueDescription, result, actual, expected) {
-        if(result.pass === true) {
-            return 'Expected '+valueDescription+' to be "'+expected+'"';
-        }
-        return 'Expected '+valueDescription+' to be "'+expected+'", but it was "'+actual+'"! ';
+  'use strict';
+  function getMessage(valueDescription, result, actual, expected) {
+    if (result.pass === true) {
+      return 'Expected ' + valueDescription + ' to be "' + expected + '"';
     }
-    function getVisibilityState(element) {
-        var vis = VisSense.of(element);
-        return vis.state().state;
-    }
+    return 'Expected ' + valueDescription + ' to be "' + expected + '", but it was "' + actual + '"! ';
+  }
 
-    jasmine.addMatchers({
-        toHaveVisSensePercentageOf: function() {
-            return {
-                compare: function (element, expected) {
-                    var result = {};
-                    var actual = VisSense.Utils.percentage(element);
+  function getVisibilityState(element) {
+    var vis = VisSense.of(element);
+    return vis.state().state;
+  }
 
-                    result.pass = (actual === expected);
-                    result.message = getMessage('visibility percentage', result, actual, expected);
-                    return result;
-                }
-            };
-        },
-        toBeVisSenseHidden: function() {
-            return {
-                compare: function (element) {
-                    var result = {};
-                    result.pass = VisSense.of(element).isHidden();
-                    result.message = getMessage('visibility', result, getVisibilityState(element), 'hidden');
-                    return result;
-                }
-            };
-        },
-        toBeVisSenseVisible: function() {
-            return {
-                compare: function (element) {
-                    var result = {};
-                    result.pass = VisSense.of(element).isVisible();
-                    result.message = getMessage('visibility', result, getVisibilityState(element), 'visible');
-                    return result;
-                }
-            };
-        },
-        toBeVisSenseFullyVisible: function() {
-            return {
-                compare: function (element) {
-                    var result = {};
-                    result.pass = VisSense.of(element).isFullyVisible();
-                    result.message = getMessage('visibility', result, getVisibilityState(element), 'fullyvisible');
-                    return result;
-                }
-            };
+  jasmine.addMatchers({
+    toHaveVisSensePercentageOf: function () {
+      return {
+        compare: function (element, expected) {
+          var result = {};
+          var actual = VisSense.Utils.percentage(element);
+
+          result.pass = (actual === expected);
+          result.message = getMessage('visibility percentage', result, actual, expected);
+          return result;
         }
-    });
+      };
+    },
+    toBeVisSenseHidden: function () {
+      return {
+        compare: function (element) {
+          var result = {};
+          result.pass = VisSense.of(element).isHidden();
+          result.message = getMessage('visibility', result, getVisibilityState(element), 'hidden');
+          return result;
+        }
+      };
+    },
+    toBeVisSenseVisible: function () {
+      return {
+        compare: function (element) {
+          var result = {};
+          result.pass = VisSense.of(element).isVisible();
+          result.message = getMessage('visibility', result, getVisibilityState(element), 'visible');
+          return result;
+        }
+      };
+    },
+    toBeVisSenseFullyVisible: function () {
+      return {
+        compare: function (element) {
+          var result = {};
+          result.pass = VisSense.of(element).isFullyVisible();
+          result.message = getMessage('visibility', result, getVisibilityState(element), 'fullyvisible');
+          return result;
+        }
+      };
+    }
+  });
 });

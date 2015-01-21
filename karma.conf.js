@@ -51,7 +51,7 @@ module.exports = function (config) {
     },
 
     preprocessors: {
-      'dist/vissense.js': ['coverage']
+      'lib/vissense.js': ['coverage']
     },
 
     coverageReporter: {

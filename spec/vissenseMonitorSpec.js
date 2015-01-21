@@ -333,6 +333,23 @@ describe('VisSense Monitor', function () {
       expect(config.update.calls.count()).toEqual(1);
     });
 
+    it('should return false unregistering a non-existing listener', function () {
+      var vismon = visobj.monitor();
+
+      var unregister = vismon.on('update', VisSense.Utils.noop);
+
+      expect(vismon._listeners.length).toBe(1);
+      expect(unregister()).toBe(true);
+      expect(unregister()).toBe(false);
+      expect(unregister()).toBe(false); // 2x on purpose
+
+      vismon.on('update', VisSense.Utils.noop);
+
+      // even if the exact same instance is registered again it
+      // should not be possible to unregister it with the same function
+      expect(unregister()).toBe(false);
+    });
+
     describe('Events', function () {
 
       beforeEach(function () {

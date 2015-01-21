@@ -8,8 +8,6 @@
 describe('VisSense', function () {
   'use strict';
 
-  describe('vissense.core.js', function () {
-
     it('should throw error when not initialized with element node', function () {
       expect(function () {
         return new VisSense();
@@ -141,6 +139,4 @@ describe('VisSense', function () {
       expect(visobj.isHidden()).toBe(false);
 
     });
-  });
-
 });

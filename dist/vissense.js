@@ -106,7 +106,8 @@
         if (!isElement(element)) throw new Error("not an element node");
         this._element = element, this._config = defaults(config, {
             fullyvisible: 1,
-            hidden: 0
+            hidden: 0,
+            getVisiblePercentage: percentage
         });
     }
     function nextState(visobj, currentState) {
@@ -128,7 +129,7 @@
         for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
     }();
     VisSense.prototype.state = function() {
-        var perc = percentage(this._element);
+        var perc = this._config.getVisiblePercentage(this._element);
         return perc <= this._config.hidden ? VisSense.VisState.hidden(perc) : perc >= this._config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
     }, VisSense.prototype.percentage = function() {
         return this.state().percentage;

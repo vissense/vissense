@@ -117,6 +117,30 @@ describe('VisSense', function () {
       expect(visobj.isFullyVisible()).toBe(false);
       expect(visobj.percentage()).toEqual(0.5);
     });
+
+    it('should be possible to register an alternative logic to get the visible percentage', function () {
+      jasmine.getFixtures().load('visible_50_percent_top.html');
+
+      // a function that alternates the percentage on each call
+      var alternativeVisiblePercentage = (function() {
+        var i = 0;
+        return function(/*jshint unused:false*/element) {
+          return i++ % 2 === 0 ? 0 : 1;
+        };
+      })();
+
+      var visobj = new VisSense($('#element')[0], {
+        getVisiblePercentage: alternativeVisiblePercentage
+      });
+
+      expect(visobj.isHidden()).toBe(true);
+      expect(visobj.isHidden()).toBe(false);
+      expect(visobj.isHidden()).toBe(true);
+      expect(visobj.isHidden()).toBe(false);
+      expect(visobj.isHidden()).toBe(true);
+      expect(visobj.isHidden()).toBe(false);
+
+    });
   });
 
 });

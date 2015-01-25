@@ -53,7 +53,9 @@ module.exports = function (grunt) {
       src: {
         options: {
           banner: '<%= banner %>',
-          drop_console: true,
+          compress: {
+            drop_console: true
+          },
           sourceMap: false,
           preserveComments: false,
           beautify: true,
@@ -66,7 +68,9 @@ module.exports = function (grunt) {
         options: {
           banner: '<%= banner %>',
           report: 'gzip',
-          drop_console: true,
+          compress: {
+            drop_console: true
+          },
           sourceMap: false
         },
         src: '<%= concat.tmp.dest %>',
@@ -250,7 +254,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-umd');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('dist', ['clean:tmp', 'clean:dist', 'concat:tmp', 'jshint', 'umd', 'uglify', 'micro', 'clean:tmp']);
+  grunt.registerTask('dist', [
+    'clean:tmp', 'clean:dist',
+    'concat:tmp',
+    'umd',
+    'jshint',
+    'uglify',
+    'micro',
+    'clean:tmp']);
   grunt.registerTask('default', ['dist', 'test', 'notify:js']);
 
   grunt.registerTask('serve', ['dist', 'connect:server']);

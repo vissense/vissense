@@ -634,4 +634,79 @@ describe('VisSense.Utils', function (undefined) {
     });
 
   });
+
+  describe('PubSUb', function() {
+
+    it('should not register invalid listeners', function () {
+      var pubsub = new VisSense.PubSub();
+
+      var unregister = pubsub.on('some-event', [1, 2, 3]);
+
+      expect(unregister).toBe(VisSense.Utils.noop);
+
+      unregister = pubsub.on('some-event', undefined);
+
+      expect(unregister).toBe(VisSense.Utils.noop);
+    });
+
+    it('should return an unregister function when registering a listener for a valid event', function () {
+      var config = {
+        update: function () {
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var pubsub = new VisSense.PubSub();
+
+      var unregister = pubsub.on('update', config.update);
+
+      expect(config.update.calls.count()).toEqual(0);
+
+      pubsub.publish('update');
+
+      expect(config.update.calls.count()).toEqual(1);
+
+      unregister();
+
+      pubsub.publish('update');
+
+      expect(config.update.calls.count()).toEqual(1);
+    });
+
+    it('should return false unregistering a non-existing listener', function () {
+      var config = {
+        update: function () {
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var pubsub = new VisSense.PubSub();
+
+      var unregister = pubsub.on('update', config.update);
+
+      pubsub.publish('update');
+      expect(config.update.calls.count()).toEqual(1);
+
+      expect(unregister()).toBe(true);
+
+      pubsub.publish('update');
+      expect(config.update.calls.count()).toEqual(1);
+
+      expect(unregister()).toBe(false);
+
+      pubsub.on('update', config.update);
+
+      // even if the exact same instance is registered again it
+      // should not be possible to unregister it with the same function
+      expect(unregister()).toBe(false);
+
+      pubsub.publish('update');
+
+      expect(config.update.calls.count()).toEqual(2);
+
+    });
+  });
+
 });

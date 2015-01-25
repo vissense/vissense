@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.2.1", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.2.2", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
     root.VisSense = factory(root, root.document);
@@ -114,19 +114,47 @@
         var newState = visobj.state(), percentage = newState.percentage;
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
-    function fireListeners(listeners, context) {
-        for (var i = 0, n = listeners.length; n > i; i++) listeners[i].call(context || window);
-    }
     function VisMon(visobj, config) {
         var me = this, _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
         }), strategies = isArray(_config.strategy) ? _config.strategy : [ _config.strategy ];
         me._strategy = new VisMon.Strategy.CompositeStrategy(strategies), me._visobj = visobj, 
-        me._state = {}, me._listeners = [], me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
+        me._state = {}, me._pubsub = new PubSub(), me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ], 
+        this._pubsub.on("update", function() {
+            me._state.code !== me._state.previous.code && me._pubsub.publish("visibilitychange", [ me ]);
+        }), this._pubsub.on("update", function() {
+            var newValue = me._state.percentage, oldValue = me._state.previous.percentage;
+            newValue !== oldValue && me._pubsub.publish("percentagechange", [ newValue, oldValue, me ]);
+        }), this._pubsub.on("visibilitychange", function() {
+            me._state.fullyvisible && me._pubsub.publish("fullyvisible", [ me ]);
+        }), this._pubsub.on("visibilitychange", function() {
+            me._state.visible && !me._state.previous.visible && me._pubsub.publish("visible", [ me ]);
+        }), this._pubsub.on("visibilitychange", function() {
+            me._state.hidden && me._pubsub.publish("hidden", [ me ]);
+        });
         for (var i = 0, n = me._events.length; n > i; i++) _config[me._events[i]] && me.on(me._events[i], _config[me._events[i]]);
     }
     var VisibilityApi = function(undefined) {
         for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
+    }(), PubSub = function(undefined) {
+        function PubSub() {
+            this._cache = {};
+        }
+        return PubSub.prototype.on = function(topic, callback) {
+            if (!isFunction(callback)) return noop;
+            this._cache[topic] || (this._cache[topic] = []);
+            var listener = function(args) {
+                return callback.apply(undefined, args || []);
+            };
+            this._cache[topic].push(listener);
+            var me = this;
+            return function() {
+                var index = me._cache[topic].indexOf(listener);
+                return index > -1 ? (me._cache[topic].splice(index, 1), !0) : !1;
+            };
+        }, PubSub.prototype.publish = function(topic, args) {
+            for (var listeners = this._cache[topic], listenersCount = listeners ? listeners.length : 0, i = 0; listenersCount > i; i++) listeners[i](args || []);
+        }, PubSub;
     }();
     VisSense.prototype.state = function() {
         var perc = this._config.getVisiblePercentage(this._element);
@@ -181,45 +209,22 @@
     }, VisMon.prototype.use = function(strategy) {
         return this.stop(), this._strategy = strategy, this.start();
     }, VisMon.prototype.update = function() {
-        this._state = nextState(this._visobj, this._state), fireListeners(this._listeners, this);
+        this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.onUpdate = function(callback) {
-        if (!isFunction(callback)) return noop;
-        var listener = callback.bind(undefined, this);
-        this._listeners.push(listener);
-        var me = this;
-        return function() {
-            var index = me._listeners.indexOf(listener);
-            return index > -1 ? (me._listeners.splice(index, 1), !0) : !1;
-        };
+        return this._pubsub.on("update", callback);
     }, VisMon.prototype.onVisibilityChange = function(callback) {
-        var me = this;
-        return this.onUpdate(function() {
-            me._state.code !== me._state.previous.code && callback(me);
-        });
+        return this._pubsub.on("visibilitychange", callback);
     }, VisMon.prototype.onPercentageChange = function(callback) {
-        var me = this;
-        return this.onUpdate(function() {
-            var newValue = me._state.percentage, oldValue = me._state.previous.percentage;
-            newValue !== oldValue && callback(newValue, oldValue, me);
-        });
+        return this._pubsub.on("percentagechange", callback);
     }, VisMon.prototype.onVisible = function(callback) {
-        var me = this;
-        return me.onVisibilityChange(fireIf(function() {
-            return me._state.previous.hidden && me._state.visible;
-        }, callback));
+        return this._pubsub.on("visible", callback);
     }, VisMon.prototype.onFullyVisible = function(callback) {
-        var me = this;
-        return me.onVisibilityChange(fireIf(function() {
-            return me._state.fullyvisible;
-        }, callback));
+        return this._pubsub.on("fullyvisible", callback);
     }, VisMon.prototype.onHidden = function(callback) {
+        return this._pubsub.on("hidden", callback);
+    }, VisMon.prototype.on = function(topic, callback) {
         var me = this;
-        return me.onVisibilityChange(fireIf(function() {
-            return me._state.hidden;
-        }, callback));
-    }, VisMon.prototype.on = function(eventName, callback) {
-        var me = this;
-        switch (eventName) {
+        switch (topic) {
           case "update":
             return me.onUpdate(callback);
 
@@ -238,7 +243,7 @@
           case "visibilitychange":
             return me.onVisibilityChange(callback);
         }
-        return noop;
+        return this._pubsub.on(topic, callback);
     }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.start = function() {
         throw new Error("Strategy#start needs to be overridden.");
     }, VisMon.Strategy.prototype.stop = function() {
@@ -285,7 +290,7 @@
         return me._started ? (removeEventListener("resize", me._update), removeEventListener("scroll", me._update), 
         VisibilityApi && removeEventListener(VisibilityApi[1], me._update), me._started = !1, 
         !0) : !1;
-    }, VisSense.VisMon = VisMon, VisSense.fn.monitor = function(config) {
+    }, VisSense.VisMon = VisMon, VisSense.PubSub = PubSub, VisSense.fn.monitor = function(config) {
         return new VisMon(this, config);
     }, VisSense.Utils = {
         debounce: debounce,

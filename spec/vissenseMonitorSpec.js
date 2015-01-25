@@ -8,12 +8,19 @@
 describe('VisSense Monitor', function () {
   'use strict';
 
-  //var noop = function() { /*empty*/ };
+  it('should verify that jasmine mocks the Date object', function () {
+      expect(jasmine.clock().mockDate).toBeDefined();
+  });
 
-  // TODO: uncomment this if jasmine supports mocking the Date object natively
-  //it('should verify that jasmine mocks the Date object', function () {
-  //    expect(jasmine.clock().mockDate).toBeDefined();
-  //});
+  describe('VisState', function () {
+
+    it('should create all 3 VisState objects', function () {
+      expect(VisSense.VisState.hidden(0)).toBeDefined();
+      expect(VisSense.VisState.visible(0.1)).toBeDefined();
+      expect(VisSense.VisState.fullyvisible(1)).toBeDefined();
+    });
+
+  });
 
   describe('VisState', function () {
 
@@ -157,7 +164,7 @@ describe('VisSense Monitor', function () {
 
       jasmine.clock().install();
 
-      //jasmine.clock().mockDate();
+      jasmine.clock().mockDate();
     });
 
     afterEach(function () {
@@ -287,67 +294,13 @@ describe('VisSense Monitor', function () {
       expect(config.update.calls.count()).toEqual(3);
     });
 
-    it('should return noop when registering an invalid listener', function () {
+    it('should return unregister function when registering a listener', function () {
       var vismon = visobj.monitor();
 
-      var unregister = vismon.on('update', [1, 2, 3]);
+      var unregister = vismon.on('some-event', VisSense.Utils.noop);
 
-      expect(vismon._listeners.length).toBe(0);
-      expect(unregister).toBe(VisSense.Utils.noop);
-    });
-
-    it('should return noop when registering a listener for an invalid event', function () {
-      var vismon = visobj.monitor();
-
-      var unregister = vismon.on('non-existing-event', function () {
-      });
-
-      expect(vismon._listeners.length).toBe(0);
-      expect(unregister).toBe(VisSense.Utils.noop);
-    });
-
-    it('should return an unregister function when registering a listener for a valid event', function () {
-      var config = {
-        update: function () {
-        }
-      };
-
-      spyOn(config, 'update');
-
-      var vismon = visobj.monitor();
-
-      var unregister = vismon.on('update', config.update);
-
-      expect(vismon._listeners.length).toBe(1);
-      expect(config.update.calls.count()).toEqual(0);
-
-      vismon.update();
-
-      expect(config.update.calls.count()).toEqual(1);
-
-      unregister();
-      expect(vismon._listeners.length).toBe(0);
-
-      vismon.update();
-
-      expect(config.update.calls.count()).toEqual(1);
-    });
-
-    it('should return false unregistering a non-existing listener', function () {
-      var vismon = visobj.monitor();
-
-      var unregister = vismon.on('update', VisSense.Utils.noop);
-
-      expect(vismon._listeners.length).toBe(1);
+      expect(unregister).toBeDefined();
       expect(unregister()).toBe(true);
-      expect(unregister()).toBe(false);
-      expect(unregister()).toBe(false); // 2x on purpose
-
-      vismon.on('update', VisSense.Utils.noop);
-
-      // even if the exact same instance is registered again it
-      // should not be possible to unregister it with the same function
-      expect(unregister()).toBe(false);
     });
 
     describe('Events', function () {
@@ -361,7 +314,7 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().install();
 
-        //jasmine.clock().mockDate();
+        jasmine.clock().mockDate();
       });
 
       afterEach(function () {

@@ -115,24 +115,24 @@
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function VisMon(visobj, config) {
-        var me = this, _config = defaults(config, {
+        var _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
         }), strategies = isArray(_config.strategy) ? _config.strategy : [ _config.strategy ];
-        me._strategy = new VisMon.Strategy.CompositeStrategy(strategies), me._visobj = visobj, 
-        me._state = {}, me._pubsub = new PubSub(), me._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ], 
-        this._pubsub.on("update", function() {
-            me._state.code !== me._state.previous.code && me._pubsub.publish("visibilitychange", [ me ]);
-        }), this._pubsub.on("update", function() {
-            var newValue = me._state.percentage, oldValue = me._state.previous.percentage;
-            newValue !== oldValue && me._pubsub.publish("percentagechange", [ newValue, oldValue, me ]);
-        }), this._pubsub.on("visibilitychange", function() {
-            me._state.fullyvisible && me._pubsub.publish("fullyvisible", [ me ]);
-        }), this._pubsub.on("visibilitychange", function() {
-            me._state.visible && !me._state.previous.visible && me._pubsub.publish("visible", [ me ]);
-        }), this._pubsub.on("visibilitychange", function() {
-            me._state.hidden && me._pubsub.publish("hidden", [ me ]);
+        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies), this._visobj = visobj, 
+        this._state = {}, this._pubsub = new PubSub(), this._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ], 
+        this._pubsub.on("update", function(monitor) {
+            monitor._state.code !== monitor._state.previous.code && monitor._pubsub.publish("visibilitychange", [ monitor ]);
+        }), this._pubsub.on("update", function(monitor) {
+            var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
+            newValue !== oldValue && monitor._pubsub.publish("percentagechange", [ newValue, oldValue, monitor ]);
+        }), this._pubsub.on("visibilitychange", function(monitor) {
+            monitor._state.fullyvisible && monitor._pubsub.publish("fullyvisible", [ monitor ]);
+        }), this._pubsub.on("visibilitychange", function(monitor) {
+            monitor._state.visible && !monitor._state.previous.visible && monitor._pubsub.publish("visible", [ monitor ]);
+        }), this._pubsub.on("visibilitychange", function(monitor) {
+            monitor._state.hidden && monitor._pubsub.publish("hidden", [ monitor ]);
         });
-        for (var i = 0, n = me._events.length; n > i; i++) _config[me._events[i]] && me.on(me._events[i], _config[me._events[i]]);
+        for (var i = 0, n = this._events.length; n > i; i++) _config[this._events[i]] && this.on(this._events[i], _config[this._events[i]]);
     }
     var VisibilityApi = function(undefined) {
         for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
@@ -203,7 +203,7 @@
     }, VisMon.prototype.state = function() {
         return this._state;
     }, VisMon.prototype.start = function() {
-        return this._strategy.start(this), this;
+        return this.update(), this._strategy.start(this), this;
     }, VisMon.prototype.stop = function() {
         return this._strategy.stop(this);
     }, VisMon.prototype.use = function(strategy) {
@@ -249,10 +249,9 @@
     }, VisMon.Strategy.prototype.stop = function() {
         throw new Error("Strategy#stop needs to be overridden.");
     }, VisMon.Strategy.NoopStrategy = function() {}, VisMon.Strategy.NoopStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
-    VisMon.Strategy.NoopStrategy.prototype.start = function(monitor) {
-        monitor.update();
-    }, VisMon.Strategy.NoopStrategy.prototype.stop = function() {}, VisMon.Strategy.CompositeStrategy = function(strategies) {
-        this._strategies = isArray(strategies) ? strategies : [], this._started = !1;
+    VisMon.Strategy.NoopStrategy.prototype.start = function() {}, VisMon.Strategy.NoopStrategy.prototype.stop = function() {}, 
+    VisMon.Strategy.CompositeStrategy = function(strategies) {
+        this._strategies = isArray(strategies) ? strategies : [];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
         for (var i = 0, n = this._strategies.length; n > i; i++) this._strategies[i].start(monitor);
@@ -264,32 +263,37 @@
         }), this._started = !1;
     }, VisMon.Strategy.PollingStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.PollingStrategy.prototype.start = function(monitor) {
-        if (!this._started) {
-            var me = this;
-            !function update() {
-                monitor.update(), me._timeoutId = setTimeout(update, me._config.interval);
-            }(), this._started = !0;
-        }
-        return this._started;
+        return this._started || (this._clearInterval = function(interval) {
+            var intervalId = setInterval(function() {
+                monitor.update();
+            }, interval);
+            return function() {
+                clearInterval(intervalId);
+            };
+        }(this._config.interval), this._started = !0), this._started;
     }, VisMon.Strategy.PollingStrategy.prototype.stop = function() {
-        return this._started ? (clearTimeout(this._timeoutId), this._started = !1, !0) : !1;
+        return this._started ? (this._clearInterval(), this._started = !1, !0) : !1;
     }, VisMon.Strategy.EventStrategy = function(config) {
         this._config = defaults(config, {
             debounce: 50
         }), this._started = !1;
     }, VisMon.Strategy.EventStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
-        var me = this;
-        return me._started || (me._update = debounce(function() {
-            monitor.update();
-        }, me._config.debounce), VisibilityApi && addEventListener(VisibilityApi[1], me._update), 
-        addEventListener("scroll", me._update), addEventListener("resize", me._update), 
-        me._update(), me._started = !0), this._started;
+        if (!this._started) {
+            var me = this;
+            this._removeEventListeners = function() {
+                var update = debounce(function() {
+                    monitor.update();
+                }, me._config.debounce);
+                return VisibilityApi && addEventListener(VisibilityApi[1], update), addEventListener("scroll", update), 
+                addEventListener("resize", update), function() {
+                    removeEventListener("resize", update), removeEventListener("scroll", update), VisibilityApi && removeEventListener(VisibilityApi[1], update);
+                };
+            }(), this._started = !0;
+        }
+        return this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {
-        var me = this;
-        return me._started ? (removeEventListener("resize", me._update), removeEventListener("scroll", me._update), 
-        VisibilityApi && removeEventListener(VisibilityApi[1], me._update), me._started = !1, 
-        !0) : !1;
+        return this._started ? (this._removeEventListeners(), this._started = !1, !0) : !1;
     }, VisSense.VisMon = VisMon, VisSense.PubSub = PubSub, VisSense.fn.monitor = function(config) {
         return new VisMon(this, config);
     }, VisSense.Utils = {

@@ -196,6 +196,21 @@ module.exports = function (grunt) {
         src: '<%= uglify.dist.dest %>'
       }
     },
+    complexity: {
+      generic: {
+        src: ['lib/vissense.js'],
+        exclude: [],
+        options: {
+          breakOnErrors: true,
+          errorsOnly: false,
+          cyclomatic: [7], // [3, 7, 12]
+          halstead: [24], // [8, 13, 20]
+          maintainability: 100,
+          hideComplexFunctions: false,
+          broadcast: false
+        }
+      }
+    },
     coveralls: {
       options: {
         force: true
@@ -253,12 +268,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-notify');
   grunt.loadNpmTasks('grunt-umd');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-complexity');
 
   grunt.registerTask('dist', [
     'clean:tmp', 'clean:dist',
     'concat:tmp',
     'umd',
     'jshint',
+    'complexity',
     'uglify',
     'micro',
     'clean:tmp']);

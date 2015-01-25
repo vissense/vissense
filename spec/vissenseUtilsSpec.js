@@ -58,10 +58,55 @@ describe('VisSense.Utils', function (undefined) {
       });
     });
 
-    describe('defer', function () {
-      var timerCallback;
+    describe('debounce', function () {
+      var callback;
       beforeEach(function () {
-        timerCallback = jasmine.createSpy('timerCallback');
+        callback = jasmine.createSpy('callback');
+        jasmine.clock().install();
+      });
+      afterEach(function () {
+        jasmine.clock().uninstall();
+      });
+      it('should debounce a function', function () {
+        var debouncedFunction = VisSense.Utils.debounce(function () {
+          callback();
+        }, 1000);
+
+        debouncedFunction();
+        debouncedFunction();
+
+        jasmine.clock().tick(300);
+
+        debouncedFunction();
+        debouncedFunction();
+        debouncedFunction();
+        debouncedFunction();
+
+        jasmine.clock().tick(900);
+
+        expect(callback).not.toHaveBeenCalled();
+
+        debouncedFunction();
+        debouncedFunction();
+
+        jasmine.clock().tick(1001);
+
+        expect(callback.calls.count()).toEqual(1);
+
+        debouncedFunction();
+        debouncedFunction();
+
+        jasmine.clock().tick(1001);
+
+        expect(callback.calls.count()).toEqual(2);
+
+      });
+    });
+
+    describe('defer', function () {
+      var callback;
+      beforeEach(function () {
+        callback = jasmine.createSpy('callback');
         jasmine.clock().install();
       });
       afterEach(function () {
@@ -69,14 +114,14 @@ describe('VisSense.Utils', function (undefined) {
       });
       it('should defer function', function () {
         VisSense.Utils.defer(function () {
-          timerCallback();
+          callback();
         });
 
-        expect(timerCallback).not.toHaveBeenCalled();
+        expect(callback).not.toHaveBeenCalled();
 
         jasmine.clock().tick(10);
 
-        expect(timerCallback).toHaveBeenCalled();
+        expect(callback).toHaveBeenCalled();
       });
     });
 

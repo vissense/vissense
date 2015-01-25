@@ -60,22 +60,6 @@ describe('VisSense Monitor', function () {
       });
     });
 
-    describe('NoopStrategy', function () {
-      var strategy;
-
-      beforeEach(function () {
-        strategy = new VisSense.VisMon.Strategy.NoopStrategy();
-      });
-
-      it('should idle on start()', function () {
-        expect(strategy.start(monitorMock)).not.toBeDefined();
-      });
-
-      it('should idle on stop()', function () {
-        expect(strategy.stop(monitorMock)).not.toBeDefined();
-      });
-    });
-
     describe('PollingStrategy', function () {
       var strategy;
 
@@ -97,22 +81,73 @@ describe('VisSense Monitor', function () {
     });
 
     describe('EventStrategy', function () {
-      var strategy;
+      function fireScrollEvent() {
+        var event = document.createEvent('Event');
+        event.initEvent('scroll', true, true);
+        window.dispatchEvent(event);
+      }
 
+      var element, visobj;
       beforeEach(function () {
-        strategy = new VisSense.VisMon.Strategy.EventStrategy();
+        jasmine.getFixtures().set('<div id="element" style="height: 100px; width: 100px; display: none;"></div>');
+        element = $('#element')[0];
+        visobj = new VisSense(element);
+
+        jasmine.clock().install();
+
+        jasmine.clock().mockDate();
       });
 
-      it('should return true on start()', function () {
-        expect(strategy.start(monitorMock)).toBe(true);
+      afterEach(function () {
+        jasmine.clock().uninstall();
       });
 
-      it('should return true on stop()', function () {
-        strategy.start(monitorMock);
-        expect(strategy.stop(monitorMock)).toBe(true);
+      describe('start/stop', function () {
+        var strategy;
+
+        beforeEach(function () {
+          strategy = new VisSense.VisMon.Strategy.EventStrategy();
+        });
+
+        it('should return true on start()', function () {
+          expect(strategy.start(monitorMock)).toBe(true);
+        });
+
+        it('should return true on stop()', function () {
+          strategy.start(monitorMock);
+          expect(strategy.stop(monitorMock)).toBe(true);
+        });
+        it('should return false on stop() when not running', function () {
+          expect(strategy.stop(monitorMock)).toBe(false);
+        });
       });
-      it('should return false on stop() when not running', function () {
-        expect(strategy.stop(monitorMock)).toBe(false);
+
+      it('should verify proper event handling', function () {
+        var vismon = visobj.monitor({
+          strategy: new VisSense.VisMon.Strategy.EventStrategy({
+            debounce: 10
+          })
+        }).start();
+
+        expect(vismon.state().visible).toBe(false);
+
+        element.style.display = 'block'; // set visible
+
+        jasmine.clock().tick(100);
+
+        // still false, because no event has been fired yet
+        expect(vismon.state().visible).toBe(false);
+
+        fireScrollEvent();
+
+        jasmine.clock().tick(1);
+
+        expect(vismon.state().visible).toBe(false);
+
+        jasmine.clock().tick(10);
+
+        expect(vismon.state().visible).toBe(true);
+
       });
     });
 
@@ -174,6 +209,8 @@ describe('VisSense Monitor', function () {
     it('should create VisMon objects', function () {
       var vismon = visobj.monitor();
 
+      expect(vismon).toBeDefined();
+
       var vismon2 = visobj.monitor({
         update: VisSense.Utils.noop,
         hidden: VisSense.Utils.noop,
@@ -183,7 +220,6 @@ describe('VisSense Monitor', function () {
         visibilitychange: VisSense.Utils.noop
       });
 
-      expect(vismon).toBeDefined();
       expect(vismon2).toBeDefined();
     });
 
@@ -206,6 +242,34 @@ describe('VisSense Monitor', function () {
       expect(config.update.calls.count()).toEqual(1);
 
       vismon.stop();
+    });
+
+    it('should verify that default interval is 1000ms', function () {
+      jasmine.getFixtures().set('<div id="element" style="display:none;"></div>');
+
+      var config = {
+        update : function() {},
+        hidden : function() {},
+        visible : function() {}
+      };
+
+      spyOn(config, 'update');
+      spyOn(config, 'hidden');
+      spyOn(config, 'visible');
+
+      var vismon = VisSense.of($('#element')[0]).monitor(config).start();
+
+      expect(config.update.calls.count()).toEqual(1);
+      expect(config.hidden.calls.count()).toEqual(1);
+      expect(config.visible.calls.count()).toEqual(0);
+
+      jasmine.clock().tick(1001);
+      vismon.stop();
+
+      expect(config.update.calls.count()).toEqual(2);
+      expect(config.hidden.calls.count()).toEqual(1);
+      expect(config.visible.calls.count()).toEqual(0);
+
     });
 
     it('should verify that state instances are cached if nothing changes', function () {

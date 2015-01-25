@@ -115,12 +115,11 @@
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function VisMon(visobj, config) {
+        this._visobj = visobj, this._state = {}, this._pubsub = new PubSub(), this._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
         var _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
-        }), strategies = isArray(_config.strategy) ? _config.strategy : [ _config.strategy ];
-        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies), this._visobj = visobj, 
-        this._state = {}, this._pubsub = new PubSub(), this._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ], 
-        this._pubsub.on("update", function(monitor) {
+        });
+        this._setStrategy(_config.strategy), this._pubsub.on("update", function(monitor) {
             monitor._state.code !== monitor._state.previous.code && monitor._pubsub.publish("visibilitychange", [ monitor ]);
         }), this._pubsub.on("update", function(monitor) {
             var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
@@ -198,7 +197,9 @@
                 return newVisState(STATES.FULLY_VISIBLE, percentage, previous);
             }
         };
-    }(), VisMon.prototype.visobj = function() {
+    }(), VisMon.prototype._setStrategy = function(strategies) {
+        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
+    }, VisMon.prototype.visobj = function() {
         return this._visobj;
     }, VisMon.prototype.state = function() {
         return this._state;
@@ -207,7 +208,7 @@
     }, VisMon.prototype.stop = function() {
         return this._strategy.stop(this);
     }, VisMon.prototype.use = function(strategy) {
-        return this.stop(), this._strategy = strategy, this.start();
+        return this.stop(), this._setStrategy(strategy), this.start();
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.onUpdate = function(callback) {
@@ -248,10 +249,8 @@
         throw new Error("Strategy#start needs to be overridden.");
     }, VisMon.Strategy.prototype.stop = function() {
         throw new Error("Strategy#stop needs to be overridden.");
-    }, VisMon.Strategy.NoopStrategy = function() {}, VisMon.Strategy.NoopStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
-    VisMon.Strategy.NoopStrategy.prototype.start = function() {}, VisMon.Strategy.NoopStrategy.prototype.stop = function() {}, 
-    VisMon.Strategy.CompositeStrategy = function(strategies) {
-        this._strategies = isArray(strategies) ? strategies : [];
+    }, VisMon.Strategy.CompositeStrategy = function(strategies) {
+        this._strategies = isArray(strategies) ? strategies : [ strategies ];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
         for (var i = 0, n = this._strategies.length; n > i; i++) this._strategies[i].start(monitor);

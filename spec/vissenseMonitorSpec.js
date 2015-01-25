@@ -147,7 +147,6 @@ describe('VisSense Monitor', function () {
         jasmine.clock().tick(10);
 
         expect(vismon.state().visible).toBe(true);
-
       });
     });
 
@@ -156,7 +155,6 @@ describe('VisSense Monitor', function () {
 
       beforeEach(function () {
         strategies = [
-          new VisSense.VisMon.Strategy.NoopStrategy(),
           new VisSense.VisMon.Strategy.PollingStrategy(),
           new VisSense.VisMon.Strategy.EventStrategy(),
           new VisSense.VisMon.Strategy.CompositeStrategy()
@@ -320,9 +318,9 @@ describe('VisSense Monitor', function () {
 
     });
 
-    it('start/stop NoopStrategy', function () {
+    it('start/stop without a strategy', function () {
       var config = {
-        strategy: new VisSense.VisMon.Strategy.NoopStrategy(),
+        strategy: [],
         update: function () {
         }
       };
@@ -353,9 +351,13 @@ describe('VisSense Monitor', function () {
 
       expect(config.update.calls.count()).toEqual(2);
 
-      vismon.use(new VisSense.VisMon.Strategy.NoopStrategy());
+      vismon.use(new VisSense.VisMon.Strategy.EventStrategy());
 
       expect(config.update.calls.count()).toEqual(3);
+
+      vismon.use(new VisSense.VisMon.Strategy.PollingStrategy());
+
+      expect(config.update.calls.count()).toEqual(4);
     });
 
     it('should return unregister function when registering a listener', function () {

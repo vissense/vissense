@@ -38,7 +38,7 @@
     "grunt-saucelabs": "8.5.0",
     "grunt-template-jasmine-istanbul": "0.3.3",
     "grunt-umd": "2.2.1",
-    "jaguarjs-jsdoc": "davidshimjs/jaguarjs-jsdoc#f42305",
+    "jaguarjs-jsdoc": "davidshimjs/jaguarjs-jsdoc#f423054",
     "jsdoc": "3.3.0-beta1",
     "karma": "0.12.31",
     "karma-chrome-launcher": "0.1.7",

@@ -90,7 +90,6 @@
         return !rect || rect.width <= 0 || rect.height <= 0 ? !1 : rect.bottom > 0 && rect.right > 0 && rect.top < viewport.height && rect.left < viewport.width;
     }
     function percentage(element) {
-        if (!isPageVisible()) return 0;
         var rect = element.getBoundingClientRect(), view = viewport();
         if (!isInViewport(rect, view) || !isVisibleByStyling(element)) return 0;
         var vh = 0, vw = 0;
@@ -107,7 +106,10 @@
         this._element = element, this._config = defaults(config, {
             fullyvisible: 1,
             hidden: 0,
-            getVisiblePercentage: percentage
+            percentageHook: percentage,
+            visibilityHooks: []
+        }), this._config.visibilityHooks.push(function() {
+            return isPageVisible();
         });
     }
     function nextState(visobj, currentState) {
@@ -156,7 +158,8 @@
         }, PubSub;
     }();
     VisSense.prototype.state = function() {
-        var perc = this._config.getVisiblePercentage(this._element);
+        for (var i = 0, n = this._config.visibilityHooks.length; n > i; i++) if (!this._config.visibilityHooks[i](this._element)) return VisSense.VisState.hidden(0);
+        var perc = this._config.percentageHook(this._element);
         return perc <= this._config.hidden ? VisSense.VisState.hidden(perc) : perc >= this._config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
     }, VisSense.prototype.percentage = function() {
         return this.state().percentage;

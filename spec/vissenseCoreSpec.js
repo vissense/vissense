@@ -116,7 +116,7 @@ describe('VisSense', function () {
       expect(visobj.percentage()).toEqual(0.5);
     });
 
-    it('should be possible to register an alternative logic to get the visible percentage', function () {
+    it('should be possible to specify an alternative logic to get the visible percentage', function () {
       jasmine.getFixtures().load('visible_50_percent_top.html');
 
       // a function that alternates the percentage on each call
@@ -128,7 +128,7 @@ describe('VisSense', function () {
       })();
 
       var visobj = new VisSense($('#element')[0], {
-        getVisiblePercentage: alternativeVisiblePercentage
+        percentageHook: alternativeVisiblePercentage
       });
 
       expect(visobj.isHidden()).toBe(true);
@@ -139,4 +139,29 @@ describe('VisSense', function () {
       expect(visobj.isHidden()).toBe(false);
 
     });
+
+
+  it('should be possible to specify further requirements for an element to be visible', function () {
+    jasmine.getFixtures().load('visible_50_percent_top.html');
+
+    var alternativeVisibility = (function() {
+      var i = 0;
+      return function(/*jshint unused:false*/element) {
+        return i++ % 3 === 0 ? true : false;
+      };
+    })();
+
+    var visobj = new VisSense($('#element')[0], {
+      visibilityHooks: [alternativeVisibility]
+    });
+
+    expect(visobj.isVisible()).toBe(true); // i = 0
+    expect(visobj.isVisible()).toBe(false);
+    expect(visobj.isVisible()).toBe(false);
+    expect(visobj.isVisible()).toBe(true);
+    expect(visobj.isVisible()).toBe(false);
+    expect(visobj.isVisible()).toBe(false);
+    expect(visobj.isVisible()).toBe(true);
+
+  });
 });

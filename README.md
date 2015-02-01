@@ -165,7 +165,7 @@ var visibility_monitor = VisSense(element).monitor({
 }).start();
 ```
 
-### new VisSense.VisMon(obj [, options])
+### new VisSense.VisMon(visobj, [, options])
 
 Object constructor. Options:
 
@@ -175,32 +175,32 @@ Object constructor. Options:
 - `fullyvisible` function to run when element becomes fully visible
 - `visibilitychange` function to run when the visibility of the element changes
 - `percentagechange` function to run when the percentage of the element changes
-- `strategy` a strategy or array of strategies for observing the element. VisSense comes with three predefined strategies. See below.
+- `strategy` a strategy or array of strategies for observing the element. VisSense comes with two predefined strategies. See below.
 
 ```javascript
-var element = document.getElementById('video');
+var visobj = VisSense(document.getElementById('video'));
 
-var visibility_monitor = new VisSense.VisMon(element, { 
+var visibility_monitor = new VisSense.VisMon(visobj, { 
   strategy: [
-    new VisSense.VisMon.Strategy.PollingStrategy({ interval: 9001 })
+    new VisSense.VisMon.Strategy.EventStrategy({ debounce: 42 })
   ],
   visibilitychange: function() { 
     console.log('visibilitychange');
   }, 
-  percentagechange: function() { 
-    console.log('percentagechange');
+  visible: function() { 
+    console.log('element became visible');
   }
 }).start();
 ```
 
 ##### Strategies
-VisSense comes with three predefined strategies:
-  - `NoopStrategy` this strategy (like implied by its name) does nothing on its own. it is your responsibility to invoke `update()` on the monitor instance.
+VisSense comes with two predefined strategies:
   - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
   - `PollingStrategy` this strategy invokes `update()` periodically.
 
 The default monitor object uses a combination of EventStrategy and PollingStrategy as strategy.
 Feel free to write your own strategy to cover your specific requirements (it's super easy).
+You can also pass an empty array if you don't want to use any strategy.
 
 #### .start() 
 starts observing the element returns `this`

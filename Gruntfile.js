@@ -202,10 +202,10 @@ module.exports = function (grunt) {
         src: ['lib/vissense.js'],
         exclude: [],
         options: {
-          breakOnErrors: true,
+          breakOnErrors: false,
           errorsOnly: false,
           cyclomatic: [7], // [3, 7, 12]
-          halstead: [24], // [8, 13, 20]
+          halstead: [25], // [8, 13, 20]
           maintainability: 100,
           hideComplexFunctions: false,
           broadcast: false

@@ -135,7 +135,7 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
-        // still false, because no event has been fired yet
+        // must still be false, because no event has been fired yet
         expect(vismon.state().visible).toBe(false);
 
         fireScrollEvent();
@@ -147,6 +147,8 @@ describe('VisSense Monitor', function () {
         jasmine.clock().tick(10);
 
         expect(vismon.state().visible).toBe(true);
+
+        vismon.stop();
       });
     });
 
@@ -267,7 +269,6 @@ describe('VisSense Monitor', function () {
       expect(config.update.calls.count()).toEqual(2);
       expect(config.hidden.calls.count()).toEqual(1);
       expect(config.visible.calls.count()).toEqual(0);
-
     });
 
     it('should verify that state instances are cached if nothing changes', function () {
@@ -315,7 +316,6 @@ describe('VisSense Monitor', function () {
       expect(vismon.state() === cachedState).toBe(true);
 
       vismon.stop();
-
     });
 
     it('start/stop without a strategy', function () {
@@ -358,6 +358,8 @@ describe('VisSense Monitor', function () {
       vismon.use(new VisSense.VisMon.Strategy.PollingStrategy());
 
       expect(config.update.calls.count()).toEqual(4);
+
+      vismon.stop();
     });
 
     it('should return unregister function when registering a listener', function () {

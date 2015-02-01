@@ -5,10 +5,10 @@
 }(this, function(window, document, undefined) {
     "use strict";
     function debounce(callback, delay) {
-        var timer = null;
+        var cancel = noop;
         return function() {
             var self = this, args = arguments;
-            clearTimeout(timer), timer = setTimeout(function() {
+            cancel(), cancel = defer(function() {
                 callback.apply(self, args);
             }, delay);
         };
@@ -21,10 +21,13 @@
         }
         return dest;
     }
-    function defer(callback) {
-        return window.setTimeout(function() {
+    function defer(callback, delay) {
+        var timer = setTimeout(function() {
             callback();
-        }, 0);
+        }, delay || 0);
+        return function() {
+            clearTimeout(timer);
+        };
     }
     function fireIf(when, callback) {
         return function() {

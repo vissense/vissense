@@ -123,6 +123,37 @@ describe('VisSense.Utils', function (undefined) {
 
         expect(callback).toHaveBeenCalled();
       });
+
+      it('should defer function with a delay', function () {
+        VisSense.Utils.defer(function () {
+          callback();
+        }, 100);
+
+        jasmine.clock().tick(90);
+
+        expect(callback).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(11);
+
+        expect(callback).toHaveBeenCalled();
+      });
+
+      it('should cancel executing a deferred function', function () {
+        var cancel = VisSense.Utils.defer(function () {
+          callback();
+        }, 100);
+
+        jasmine.clock().tick(90);
+
+        expect(callback).not.toHaveBeenCalled();
+
+        cancel();
+
+        jasmine.clock().tick(90001);
+
+        expect(callback).not.toHaveBeenCalled();
+
+      });
     });
 
     describe('isArray', function () {

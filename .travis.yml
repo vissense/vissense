@@ -12,6 +12,7 @@ before_install:
   - 'sh -e /etc/init.d/xvfb start'
   - 'phantomjs --version'
   - 'firefox --version'
+  - 'chromium-browser --version'
 before_script:
   - 'npm install -g grunt-cli'
   - 'npm install -g karma-cli'

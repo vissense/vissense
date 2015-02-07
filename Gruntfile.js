@@ -284,12 +284,17 @@ module.exports = function (grunt) {
     'uglify',
     'micro',
     'clean:tmp']);
+
   grunt.registerTask('default', ['dist', 'test', 'notify:js']);
+
+  grunt.registerTask('fast', ['dist', 'test-fast', 'notify:js']);
 
   grunt.registerTask('serve', ['dist', 'connect:server']);
   grunt.registerTask('server', ['serve']);
 
   grunt.registerTask('test', ['jasmine', 'karma', 'notify:test']);
+  grunt.registerTask('test-fast', ['jasmine', 'notify:test']);
+
   grunt.registerTask('docs', ['clean:docs', 'jsdoc:docstrap', 'connect:docs']);
 
   grunt.registerTask('coverage', ['coveralls']);

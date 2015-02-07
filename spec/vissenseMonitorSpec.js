@@ -464,30 +464,75 @@ describe('VisSense Monitor', function () {
       afterEach(function () {
         jasmine.clock().uninstall();
       });
+      it('should verify that fullyvisible is fired after visible', function () {
+        var model = { state: '?' };
+        var config = {
+          strategy: [],
+          visible: function() {
+            model.state = 'visible';
+          },
+          fullyvisible: function() {
+            model.state = 'fullyvisible';
+          },
+          hidden: function() {
+            model.state = 'hidden';
+          },
+          update: function() {
+          }
+        };
 
-      it('should verify event chain initially hidden -> fullyvisible -> visible -> visible -> hidden', function () {
+        spyOn(config, 'visible').and.callThrough();
+        spyOn(config, 'fullyvisible').and.callThrough();
+        spyOn(config, 'update').and.callThrough();
+        spyOn(config, 'hidden').and.callThrough();
+
+        var vismon = visobj.monitor(config).start();
+
+        expect(config.update.calls.count()).toEqual(1);
+        expect(config.hidden.calls.count()).toEqual(1);
+        expect(config.visible.calls.count()).toEqual(0);
+        expect(config.fullyvisible.calls.count()).toEqual(0);
+
+        element.style.display = 'block'; // set visible
+
+        vismon.update();
+
+        expect(config.update.calls.count()).toEqual(2);
+        expect(config.hidden.calls.count()).toEqual(1);
+        expect(config.visible.calls.count()).toEqual(1);
+        expect(config.fullyvisible.calls.count()).toEqual(1);
+
+        expect(model.state).toEqual('fullyvisible');
+
+        vismon.stop();
+      });
+
+      it('should verify event chain initially hidden -> visible -> fullyvisible -> visible -> hidden', function () {
+        var model = { state: '?' };
         var config = {
           strategy: new VisSense.VisMon.Strategy.PollingStrategy({interval: 100}),
           update: function () {
           },
-          visible: function () {
+          visible: function() {
           },
-          fullyvisible: function () {
+          fullyvisible: function() {
           },
-          hidden: function () {
+          hidden: function() {
           },
-          visibilitychange: function () {
+          visibilitychange: function (monitor) {
+            model.state = monitor.state().state;
           },
           percentagechange: function () {
           }
         };
 
-        spyOn(config, 'update');
-        spyOn(config, 'hidden');
-        spyOn(config, 'visible');
-        spyOn(config, 'fullyvisible');
-        spyOn(config, 'visibilitychange');
-        spyOn(config, 'percentagechange');
+
+        spyOn(config, 'hidden').and.callThrough();
+        spyOn(config, 'visible').and.callThrough();
+        spyOn(config, 'fullyvisible').and.callThrough();
+        spyOn(config, 'update').and.callThrough();
+        spyOn(config, 'visibilitychange').and.callThrough();
+        spyOn(config, 'percentagechange').and.callThrough();
 
         var vismon = visobj.monitor(config);
 
@@ -498,6 +543,8 @@ describe('VisSense Monitor', function () {
         expect(config.visibilitychange.calls.count()).toEqual(0);
         expect(config.percentagechange.calls.count()).toEqual(0);
 
+        expect(model.state).toEqual('?');
+
         vismon.start();
 
         expect(config.update.calls.count()).toEqual(1);
@@ -506,6 +553,8 @@ describe('VisSense Monitor', function () {
         expect(config.fullyvisible.calls.count()).toEqual(0);
         expect(config.visibilitychange.calls.count()).toEqual(1);
         expect(config.percentagechange.calls.count()).toEqual(1);
+
+        expect(model.state).toEqual('hidden');
 
         jasmine.clock().tick(150);
 
@@ -516,6 +565,8 @@ describe('VisSense Monitor', function () {
         expect(config.visibilitychange.calls.count()).toEqual(1);
         expect(config.percentagechange.calls.count()).toEqual(1);
 
+        expect(model.state).toEqual('hidden');
+
         jasmine.clock().tick(100);
 
         expect(config.update.calls.count()).toEqual(3);
@@ -524,6 +575,8 @@ describe('VisSense Monitor', function () {
         expect(config.fullyvisible.calls.count()).toEqual(0);
         expect(config.visibilitychange.calls.count()).toEqual(1);
         expect(config.percentagechange.calls.count()).toEqual(1);
+
+        expect(model.state).toEqual('hidden');
 
         element.style.display = 'block'; // set visible
 
@@ -536,6 +589,8 @@ describe('VisSense Monitor', function () {
         expect(config.visibilitychange.calls.count()).toEqual(2);
         expect(config.percentagechange.calls.count()).toEqual(2);
 
+        expect(model.state).toEqual('fullyvisible');
+
         element.style.left = '-5px'; // 50% visible
 
         jasmine.clock().tick(100);
@@ -546,6 +601,8 @@ describe('VisSense Monitor', function () {
         expect(config.fullyvisible.calls.count()).toEqual(1);
         expect(config.visibilitychange.calls.count()).toEqual(3);
         expect(config.percentagechange.calls.count()).toEqual(3);
+
+        expect(model.state).toEqual('visible');
 
         element.style.left = '-9px'; // 10% visible
 
@@ -558,6 +615,8 @@ describe('VisSense Monitor', function () {
         expect(config.visibilitychange.calls.count()).toEqual(3);
         expect(config.percentagechange.calls.count()).toEqual(4);
 
+        expect(model.state).toEqual('visible');
+
         element.style.left = '-10px'; // 0% visible
 
         jasmine.clock().tick(100);
@@ -568,6 +627,8 @@ describe('VisSense Monitor', function () {
         expect(config.fullyvisible.calls.count()).toEqual(1);
         expect(config.visibilitychange.calls.count()).toEqual(4);
         expect(config.percentagechange.calls.count()).toEqual(5);
+
+        expect(model.state).toEqual('hidden');
 
         vismon.stop();
 

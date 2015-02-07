@@ -141,9 +141,9 @@
             var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
             newValue !== oldValue && monitor._pubsub.publish("percentagechange", [ newValue, oldValue, monitor ]);
         }), this._pubsub.on("visibilitychange", function(monitor) {
-            monitor._state.fullyvisible && monitor._pubsub.publish("fullyvisible", [ monitor ]);
-        }), this._pubsub.on("visibilitychange", function(monitor) {
             monitor._state.visible && !monitor._state.previous.visible && monitor._pubsub.publish("visible", [ monitor ]);
+        }), this._pubsub.on("visibilitychange", function(monitor) {
+            monitor._state.fullyvisible && monitor._pubsub.publish("fullyvisible", [ monitor ]);
         }), this._pubsub.on("visibilitychange", function(monitor) {
             monitor._state.hidden && monitor._pubsub.publish("hidden", [ monitor ]);
         });

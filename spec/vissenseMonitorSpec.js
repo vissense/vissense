@@ -234,9 +234,45 @@ describe('VisSense Monitor', function () {
     });
 
     it('should be able to start and stop a monitor with a smooth syntax', function () {
-      var vismon = visobj.monitor();
-      vismon.start().stop();
+      var config = {
+        update: function (monitor) {
+          expect(monitor).toBe(vismon);
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var vismon = visobj.monitor(config);
+
       expect(vismon.start().stop()).toBe(undefined);
+
+      expect(config.update.calls.count()).toEqual(1);
+
+      jasmine.clock().tick(5);
+
+      expect(config.update.calls.count()).toEqual(1);
+
+      vismon.stop();
+    });
+
+    it('should be able to start and stop an async monitor before executing', function () {
+      var config = {
+        update: function (monitor) {
+          expect(monitor).toBe(vismon);
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var vismon = visobj.monitor(config);
+
+      expect(vismon.startAsync().stop()).toBe(undefined);
+
+      jasmine.clock().tick(5);
+
+      expect(config.update.calls.count()).toEqual(0);
+
+      vismon.stop();
     });
 
 

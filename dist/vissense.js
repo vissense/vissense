@@ -222,13 +222,14 @@
         return updateThenStartStrategy(this, this._strategy);
     }, VisMon.prototype.startAsync = function(config) {
         var me = this;
-        return defer(function() {
+        return this._cancelAsyncStart = defer(function() {
             me.start(extend(defaults(config, {}), {
                 async: !1
             }));
         }), this;
     }, VisMon.prototype.stop = function() {
-        return this._strategy.stop(this);
+        return this._cancelAsyncStart ? (this._cancelAsyncStart(), this._cancelAsyncStart = null) : this._strategy.stop(this), 
+        undefined;
     }, VisMon.prototype.use = function(strategy) {
         return this.stop(), this._setStrategy(strategy), this.start();
     }, VisMon.prototype.update = function() {

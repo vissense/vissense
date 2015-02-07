@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.2.2", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.3.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
     root.VisSense = factory(root, root.document);

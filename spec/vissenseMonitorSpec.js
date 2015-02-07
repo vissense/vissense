@@ -70,7 +70,10 @@ describe('VisSense Monitor', function () {
       it('should return true on start()', function () {
         expect(strategy.start(monitorMock)).toBe(true);
       });
-
+      it('should return true on start() when already running', function () {
+        strategy.start(monitorMock);
+        expect(strategy.start(monitorMock)).toBe(true);
+      });
       it('should return true on stop()', function () {
         strategy.start(monitorMock);
         expect(strategy.stop(monitorMock)).toBe(true);
@@ -272,7 +275,12 @@ describe('VisSense Monitor', function () {
 
       expect(config.update.calls.count()).toEqual(0);
 
-      vismon.stop();
+      expect(vismon.startAsync().startAsync().stop()).toBe(undefined);
+
+      jasmine.clock().tick(5);
+
+      expect(config.update.calls.count()).toEqual(0);
+
     });
 
 

@@ -31,6 +31,14 @@
             clearTimeout(timer);
         };
     }
+    function async(callback, delay) {
+        return function() {
+            var args = arguments;
+            return defer(function() {
+                callback.apply(undefined, args);
+            }, delay || 0);
+        };
+    }
     function fireIf(when, callback) {
         return function() {
             return (isFunction(when) ? when() : when) ? callback() : undefined;
@@ -124,7 +132,8 @@
     function VisMon(visobj, config) {
         this._visobj = visobj, this._state = {}, this._pubsub = new PubSub(), this._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
         var _config = defaults(config, {
-            strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ]
+            strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ],
+            async: !1
         });
         this._setStrategy(_config.strategy), this._pubsub.on("update", function(monitor) {
             monitor._state.code !== monitor._state.previous.code && monitor._pubsub.publish("visibilitychange", [ monitor ]);
@@ -143,15 +152,17 @@
     var VisibilityApi = function(undefined) {
         for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
     }(), PubSub = function(undefined) {
-        function PubSub() {
-            this._cache = {};
+        function PubSub(config) {
+            this._cache = {}, this._config = defaults(config, {
+                async: !1
+            });
         }
         return PubSub.prototype.on = function(topic, callback) {
             if (!isFunction(callback)) return noop;
             this._cache[topic] || (this._cache[topic] = []);
-            var listener = function(args) {
+            var applyCallback = function(args) {
                 return callback.apply(undefined, args || []);
-            };
+            }, listener = this._config.async ? async(applyCallback) : applyCallback;
             this._cache[topic].push(listener);
             var me = this;
             return function() {
@@ -159,7 +170,11 @@
                 return index > -1 ? (me._cache[topic].splice(index, 1), !0) : !1;
             };
         }, PubSub.prototype.publish = function(topic, args) {
-            for (var listeners = this._cache[topic], listenersCount = listeners ? listeners.length : 0, i = 0; listenersCount > i; i++) listeners[i](args || []);
+            var listeners = this._cache[topic], fireListeners = function(listeners, args) {
+                for (var listenersCount = listeners ? listeners.length : 0, i = 0; listenersCount > i; i++) listeners[i](args || []);
+                return undefined;
+            };
+            return this._config.async ? async(fireListeners)(listeners, args) : fireListeners(listeners, args);
         }, PubSub;
     }();
     VisSense.prototype.state = function() {
@@ -215,20 +230,23 @@
         var _config = defaults(config, {
             async: !1
         });
-        if (_config.async) return this.startAsync();
+        if (this._cancelAsyncStart && this._cancelAsyncStart(), _config.async) return this.startAsync();
         var updateThenStartStrategy = function(monitor, strategy) {
             return monitor.update(), strategy.start(monitor), monitor;
         };
         return updateThenStartStrategy(this, this._strategy);
     }, VisMon.prototype.startAsync = function(config) {
-        var me = this;
-        return this._cancelAsyncStart = defer(function() {
+        this._cancelAsyncStart && this._cancelAsyncStart();
+        var me = this, cancelAsyncStart = defer(function() {
             me.start(extend(defaults(config, {}), {
                 async: !1
             }));
-        }), this;
+        });
+        return this._cancelAsyncStart = function() {
+            cancelAsyncStart(), me._cancelAsyncStart = null;
+        }, this;
     }, VisMon.prototype.stop = function() {
-        return this._cancelAsyncStart ? (this._cancelAsyncStart(), this._cancelAsyncStart = null) : this._strategy.stop(this), 
+        return this._cancelAsyncStart ? this._cancelAsyncStart() : this._strategy.stop(this), 
         undefined;
     }, VisMon.prototype.use = function(strategy) {
         return this.stop(), this._setStrategy(strategy), this.start();
@@ -319,6 +337,7 @@
     }, VisSense.VisMon = VisMon, VisSense.PubSub = PubSub, VisSense.fn.monitor = function(config) {
         return new VisMon(this, config);
     }, VisSense.Utils = {
+        async: async,
         debounce: debounce,
         defaults: defaults,
         defer: defer,

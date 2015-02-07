@@ -14,7 +14,7 @@ describe('VisSense', function () {
       }).toThrow(new Error('not an element node'));
     });
 
-    it('should create VisSense objects', function () {
+    it('should be able to create VisSense objects', function () {
       jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
       var visobj = new VisSense($('#element')[0]);
       var visobj3 = VisSense.of($('#element')[0]);
@@ -28,37 +28,37 @@ describe('VisSense', function () {
       expect(visobj3).toBeDefined();
     });
 
-    it('should check the default values', function () {
+    it('should have reasonable default values', function () {
       jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
 
       var visobj = VisSense.of($('#element')[0], {});
 
       expect(visobj._config.fullyvisible).toBe(1);
       expect(visobj._config.hidden).toBe(0);
+      expect(visobj._config.percentageHook).toBe(VisSense.Utils.percentage);
+      expect(visobj._config.visibilityHooks).toBeDefined();
+      expect(visobj._config.visibilityHooks.length).toBeDefined(1);
     });
 
-    it('should adopt config arguments properly', function () {
-      jasmine.getFixtures().set('<div id="element" style="width: 1px; height: 1px;"></div>');
-
-      var visobj = VisSense.of($('#element')[0], {
-        fullyvisible: 0.75
-      });
-
-      expect(visobj._config.fullyvisible).toBe(0.75);
-      expect(visobj._config.hidden).toBe(0);
-    });
-
-    it('should create and test for a hidden object', function () {
-      jasmine.getFixtures().set('<div id="element" style="width: 0; height: 0;"></div>');
+    it('should detect an element without width or height as hidden', function () {
+      jasmine.getFixtures().set('<div id="element" style="width: 20px; height: 0;"></div>');
       var visobj = new VisSense($('#element')[0]);
 
       expect(visobj.isHidden()).toBe(true);
       expect(visobj.isVisible()).toBe(false);
       expect(visobj.isFullyVisible()).toBe(false);
       expect(visobj.percentage()).toBe(0);
+
+      jasmine.getFixtures().set('<div id="element2" style="width: 0; height: 20px;"></div>');
+      var visobj2 = new VisSense($('#element2')[0]);
+
+      expect(visobj2.isHidden()).toBe(true);
+      expect(visobj2.isVisible()).toBe(false);
+      expect(visobj2.isFullyVisible()).toBe(false);
+      expect(visobj2.percentage()).toBe(0);
     });
 
-    it('should create and test for a visible object', function () {
+    it('should detect an simple element as visible', function () {
       jasmine.getFixtures().set('<div id="element" style="width: 2px; height: 2px; position: fixed; top:-1px; left: -1px;"></div>');
       var visobj = new VisSense($('#element')[0]);
 
@@ -90,7 +90,7 @@ describe('VisSense', function () {
       expect(visobj.percentage()).toEqual(1);
     });
 
-    it('should detect element with 50% visibility as fully visible', function () {
+    it('should be able to detect an element with 50% visibility as fully visible', function () {
       jasmine.getFixtures().load('visible_50_percent_top.html');
 
       var visobj = new VisSense($('#element')[0], {
@@ -103,7 +103,7 @@ describe('VisSense', function () {
       expect(visobj.percentage()).toEqual(0.5);
     });
 
-    it('should detect element with 50% visibility as hidden (config)', function () {
+    it('should be able to detect an element with 50% visibility as hidden', function () {
       jasmine.getFixtures().load('visible_50_percent_top.html');
 
       var visobj = new VisSense($('#element')[0], {

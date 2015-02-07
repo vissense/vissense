@@ -156,6 +156,72 @@ describe('VisSense.Utils', function (undefined) {
       });
     });
 
+    describe('async', function () {
+      var callback;
+      beforeEach(function () {
+        callback = jasmine.createSpy('callback');
+        jasmine.clock().install();
+      });
+      afterEach(function () {
+        jasmine.clock().uninstall();
+      });
+
+      it('should create an async proxy function', function () {
+        var callbackAsync = VisSense.Utils.async(callback);
+
+        callbackAsync();
+
+        expect(callback).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(10);
+
+        expect(callback.calls.count()).toEqual(1);
+      });
+
+      it('should pass through the arguments supplied', function () {
+        var callbackAsync = VisSense.Utils.async(callback);
+
+        callbackAsync('foo', 'bar');
+
+        expect(callback).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(10);
+
+        expect(callback).toHaveBeenCalledWith('foo', 'bar');
+      });
+
+      it('should be able to specify the delay time', function () {
+        var callbackAsync = VisSense.Utils.async(callback, 42);
+
+        callbackAsync();
+
+        expect(callback).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(10);
+
+        expect(callback).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(100);
+
+        expect(callback.calls.count()).toEqual(1);
+      });
+
+
+      it('should be able to cancel a triggered async function', function () {
+        var callbackAsync = VisSense.Utils.async(callback, 42);
+
+        var cancel = callbackAsync();
+
+        jasmine.clock().tick(10);
+
+        cancel();
+
+        jasmine.clock().tick(100);
+
+        expect(callback).not.toHaveBeenCalled();
+      });
+    });
+
     describe('isArray', function () {
       it('should detect [] as array', function () {
         expect(VisSense.Utils.isArray([])).toBe(true);
@@ -728,8 +794,13 @@ describe('VisSense.Utils', function (undefined) {
 
   });
 
-  describe('PubSUb', function() {
-
+  describe('PubSub', function() {
+    beforeEach(function () {
+      jasmine.clock().install();
+    });
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
     it('should not register invalid listeners', function () {
       var pubsub = new VisSense.PubSub();
 
@@ -752,7 +823,7 @@ describe('VisSense.Utils', function (undefined) {
 
       var pubsub = new VisSense.PubSub();
 
-      var unregister = pubsub.on('update', config.update);
+      var unbind = pubsub.on('update', config.update);
 
       expect(config.update.calls.count()).toEqual(0);
 
@@ -760,14 +831,49 @@ describe('VisSense.Utils', function (undefined) {
 
       expect(config.update.calls.count()).toEqual(1);
 
-      unregister();
+      unbind();
 
       pubsub.publish('update');
 
       expect(config.update.calls.count()).toEqual(1);
     });
 
-    it('should return false unregistering a non-existing listener', function () {
+    it('should be able to distribute events asynchronously', function () {
+      var config = {
+        update: function () {
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var pubsub = new VisSense.PubSub({ async: true });
+
+      var unbind = pubsub.on('update', config.update);
+
+      expect(config.update.calls.count()).toEqual(0);
+
+      pubsub.publish('update');
+
+      // in sync mode update would have been called once ...
+      expect(config.update.calls.count()).toEqual(0);
+
+      jasmine.clock().tick(10);
+
+      // since it is async we had to wait a little
+      expect(config.update.calls.count()).toEqual(1);
+
+      unbind();
+
+      jasmine.clock().tick(10);
+
+      pubsub.publish('update');
+
+      jasmine.clock().tick(10);
+
+      expect(config.update.calls.count()).toEqual(1);
+    });
+
+    it('should allow to unbind a listener instance exactly once', function () {
       var config = {
         update: function () {
         }
@@ -777,23 +883,23 @@ describe('VisSense.Utils', function (undefined) {
 
       var pubsub = new VisSense.PubSub();
 
-      var unregister = pubsub.on('update', config.update);
+      var unbind = pubsub.on('update', config.update);
 
       pubsub.publish('update');
       expect(config.update.calls.count()).toEqual(1);
 
-      expect(unregister()).toBe(true);
+      expect(unbind()).toBe(true);
 
       pubsub.publish('update');
       expect(config.update.calls.count()).toEqual(1);
 
-      expect(unregister()).toBe(false);
+      expect(unbind()).toBe(false);
 
       pubsub.on('update', config.update);
 
       // even if the exact same instance is registered again it
-      // should not be possible to unregister it with the same function
-      expect(unregister()).toBe(false);
+      // should not be possible to unbind it with the same function
+      expect(unbind()).toBe(false);
 
       pubsub.publish('update');
 

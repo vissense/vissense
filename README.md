@@ -20,7 +20,7 @@ if(visibility.isFullyVisible()) {
 }
 ```
 
-In a more advanced example the video is stopped as soon as it not visible anymore:
+In a more advanced example the video is stopped as soon as it is not visible anymore:
 ```javascript
 ...
 
@@ -40,7 +40,7 @@ var visibility_monitor = visibility.monitor({
  * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
  * provides a convenience class for detecting changes in visibility
 
-#### What it does *not*
+#### What it does *not* do
  * detect if an element is overlapped by others
  * detect if an element is a hidden input element
  * take elements opacity into account

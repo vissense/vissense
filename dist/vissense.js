@@ -14,10 +14,12 @@
         };
     }
     function defaults(dest, source) {
-        if (!isObject(dest)) return source;
+        var sourceIsObject = isObject(source), destIsObject = isObject(dest);
+        if (!sourceIsObject && !destIsObject) return source;
+        if (!sourceIsObject || !destIsObject) return sourceIsObject ? source : dest;
         for (var keys = Object.keys(source), i = 0, n = keys.length; n > i; i++) {
             var prop = keys[i];
-            void 0 === dest[prop] && (dest[prop] = source[prop]);
+            dest[prop] === undefined && (dest[prop] = source[prop]);
         }
         return dest;
     }
@@ -209,8 +211,22 @@
         return this._visobj;
     }, VisMon.prototype.state = function() {
         return this._state;
-    }, VisMon.prototype.start = function() {
-        return this.update(), this._strategy.start(this), this;
+    }, VisMon.prototype.start = function(config) {
+        var _config = defaults(config, {
+            async: !1
+        });
+        if (_config.async) return this.startAsync();
+        var updateThenStartStrategy = function(monitor, strategy) {
+            return monitor.update(), strategy.start(monitor), monitor;
+        };
+        return updateThenStartStrategy(this, this._strategy);
+    }, VisMon.prototype.startAsync = function(config) {
+        var me = this;
+        return defer(function() {
+            me.start(extend(defaults(config, {}), {
+                async: !1
+            }));
+        }), this;
     }, VisMon.prototype.stop = function() {
         return this._strategy.stop(this);
     }, VisMon.prototype.use = function(strategy) {

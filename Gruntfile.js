@@ -194,7 +194,11 @@ module.exports = function (grunt) {
     },
     micro: {
       dist: {
-        src: '<%= uglify.dist.dest %>'
+        src: '<%= uglify.dist.dest %>',
+        options: {
+          limit: 4096, // default is 5KB
+          gzip: true
+        }
       }
     },
     complexity: {

@@ -364,9 +364,26 @@ describe('VisSense.Utils', function (undefined) {
     });
 
     describe('defaults', function () {
-      it('should immediately return on non-object values', function () {
-        expect(VisSense.Utils.defaults(true, false)).toBe(false);
-        expect(VisSense.Utils.defaults(null, false)).toBe(false);
+
+      it('should return a default object when neither source nor destination is given', function () {
+        expect(VisSense.Utils.defaults(undefined, undefined)).toEqual(undefined);
+      });
+
+      it('should return the destination object when no source is given', function () {
+        var destination = { theAnswerToLifeTheUniverseAndEverything: 42 };
+        expect(VisSense.Utils.defaults(destination, undefined)).toBe(destination);
+      });
+
+      it('should return the source object when no destination object is given', function () {
+        var defaultAttributes = { foo: 'bar' };
+        expect(VisSense.Utils.defaults(undefined, defaultAttributes)).toBe(defaultAttributes);
+      });
+
+      it('should immediately return the source object on non-object destination values', function () {
+        expect(VisSense.Utils.defaults(true, null)).toEqual(null);
+        expect(VisSense.Utils.defaults(null, false)).toEqual(false);
+        expect(VisSense.Utils.defaults(undefined, 42)).toEqual(42);
+        expect(VisSense.Utils.defaults(42, undefined)).toEqual(undefined);
       });
 
       it('should add default values to object', function () {

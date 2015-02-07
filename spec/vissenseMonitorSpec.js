@@ -112,7 +112,10 @@ describe('VisSense Monitor', function () {
         it('should return true on start()', function () {
           expect(strategy.start(monitorMock)).toBe(true);
         });
-
+        it('should return true on start() when already running', function () {
+          strategy.start(monitorMock);
+          expect(strategy.start(monitorMock)).toBe(true);
+        });
         it('should return true on stop()', function () {
           strategy.start(monitorMock);
           expect(strategy.stop(monitorMock)).toBe(true);
@@ -123,9 +126,11 @@ describe('VisSense Monitor', function () {
       });
 
       it('should verify proper event handling', function () {
+        var debounceInMilliseconds = 10;
+
         var vismon = visobj.monitor({
           strategy: new VisSense.VisMon.Strategy.EventStrategy({
-            debounce: 10
+            debounce: debounceInMilliseconds
           })
         }).start();
 
@@ -133,7 +138,7 @@ describe('VisSense Monitor', function () {
 
         element.style.display = 'block'; // set visible
 
-        jasmine.clock().tick(100);
+        jasmine.clock().tick(42);
 
         // must still be false, because no event has been fired yet
         expect(vismon.state().visible).toBe(false);
@@ -144,7 +149,7 @@ describe('VisSense Monitor', function () {
 
         expect(vismon.state().visible).toBe(false);
 
-        jasmine.clock().tick(10);
+        jasmine.clock().tick(debounceInMilliseconds);
 
         expect(vismon.state().visible).toBe(true);
 
@@ -226,6 +231,33 @@ describe('VisSense Monitor', function () {
     it('should get the observed VisSense object', function () {
       var vismon = visobj.monitor();
       expect(vismon.visobj()).toBe(visobj);
+    });
+
+    it('should be able to start and stop a monitor with a smooth syntax', function () {
+      var vismon = visobj.monitor();
+      vismon.start().stop();
+      expect(vismon.start().stop()).toBe(undefined);
+    });
+
+
+    it('should be able to start a monitor asynchronously', function () {
+      var config = {
+        update: function (monitor) {
+          expect(monitor).toBe(vismon);
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var vismon = visobj.monitor(config).start({async: true});
+
+      expect(config.update.calls.count()).toEqual(0);
+
+      jasmine.clock().tick(5);
+
+      expect(config.update.calls.count()).toEqual(1);
+
+      expect(vismon.stop()).toBe(undefined);
     });
 
     it('should update verify that first update() argument is a monitor', function () {

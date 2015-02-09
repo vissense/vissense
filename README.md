@@ -1,6 +1,7 @@
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://travis-ci.org/vissense/vissense)
 [![Coverage Status](https://coveralls.io/repos/vissense/vissense/badge.png)](https://coveralls.io/r/vissense/vissense)
+[![Inline docs](http://inch-ci.org/github/vissense/vissense.svg?branch=master)](http://inch-ci.org/github/vissense/vissense)
 [![Dependency Status](https://david-dm.org/vissense/vissense.svg)](https://david-dm.org/vissense/vissense)
 [![devDependency Status](https://david-dm.org/vissense/vissense/dev-status.svg)](https://david-dm.org/vissense/vissense#info=devDependencies)
 

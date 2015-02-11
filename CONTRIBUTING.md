@@ -1,4 +1,4 @@
-Contributing to VisSense.js
+# Contributing to VisSense.js
 
 First off, thanks for taking the time to contribute!
 

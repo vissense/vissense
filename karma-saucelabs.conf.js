@@ -43,13 +43,13 @@ module.exports = function (config) {
      browserName: 'Android',
      platform: 'Linux',
      version: '4.4'
-     },
+     },*/
      'SL_Android_5.0': {
      base: 'SauceLabs',
      browserName: 'Android',
      platform: 'Linux',
      version: '5.0'
-     },
+     },/*
      'SL_Chrome': {
      base: 'SauceLabs',
      browserName: 'Chrome',
@@ -111,13 +111,13 @@ module.exports = function (config) {
      browserName: 'iPhone',
      platform: 'OS X 10.9',
      version: '7.1'
-     },
+     },*/
      'SL_IOS_8': {
      base: 'SauceLabs',
      browserName: 'iPhone',
      platform: 'OS X 10.10',
      version: '8.1'
-     },*/
+     },
     'SL_Opera': {
       base: 'SauceLabs',
       browserName: 'opera',

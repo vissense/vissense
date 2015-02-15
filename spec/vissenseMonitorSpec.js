@@ -510,7 +510,6 @@ describe('VisSense Monitor', function () {
       it('should verify event chain initially hidden -> visible -> fullyvisible -> visible -> hidden', function () {
         var model = { state: '?' };
         var config = {
-          strategy: new VisSense.VisMon.Strategy.PollingStrategy({interval: 100}),
           start: function () {
           },
           stop: function () {
@@ -539,7 +538,18 @@ describe('VisSense Monitor', function () {
         spyOn(config, 'visibilitychange').and.callThrough();
         spyOn(config, 'percentagechange').and.callThrough();
 
-        var vismon = visobj.monitor(config);
+        var vismon = visobj.monitor({
+          strategy: new VisSense.VisMon.Strategy.PollingStrategy({interval: 100})
+        });
+
+        vismon.on('start', config.start);
+        vismon.on('stop', config.stop);
+        vismon.onUpdate(config.update);
+        vismon.onHidden(config.hidden);
+        vismon.onVisible(config.visible);
+        vismon.onFullyVisible(config.fullyvisible);
+        vismon.onVisibilityChange(config.visibilitychange);
+        vismon.onPercentageChange(config.percentagechange);
 
         expect(config.start.calls.count()).toEqual(0);
         expect(config.stop.calls.count()).toEqual(0);

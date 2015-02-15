@@ -256,38 +256,18 @@
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.onUpdate = function(callback) {
-        return this._pubsub.on("update", callback);
+        return this.on("update", callback);
     }, VisMon.prototype.onVisibilityChange = function(callback) {
-        return this._pubsub.on("visibilitychange", callback);
+        return this.on("visibilitychange", callback);
     }, VisMon.prototype.onPercentageChange = function(callback) {
-        return this._pubsub.on("percentagechange", callback);
+        return this.on("percentagechange", callback);
     }, VisMon.prototype.onVisible = function(callback) {
-        return this._pubsub.on("visible", callback);
+        return this.on("visible", callback);
     }, VisMon.prototype.onFullyVisible = function(callback) {
-        return this._pubsub.on("fullyvisible", callback);
+        return this.on("fullyvisible", callback);
     }, VisMon.prototype.onHidden = function(callback) {
-        return this._pubsub.on("hidden", callback);
+        return this.on("hidden", callback);
     }, VisMon.prototype.on = function(topic, callback) {
-        var me = this;
-        switch (topic) {
-          case "update":
-            return me.onUpdate(callback);
-
-          case "hidden":
-            return me.onHidden(callback);
-
-          case "visible":
-            return me.onVisible(callback);
-
-          case "fullyvisible":
-            return me.onFullyVisible(callback);
-
-          case "percentagechange":
-            return me.onPercentageChange(callback);
-
-          case "visibilitychange":
-            return me.onVisibilityChange(callback);
-        }
         return this._pubsub.on(topic, callback);
     }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.start = function() {
         throw new Error("Strategy#start needs to be overridden.");

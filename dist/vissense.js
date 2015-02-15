@@ -74,6 +74,12 @@
     function now() {
         return new Date().getTime();
     }
+    function once(callback) {
+        var cache, called = !1;
+        return function() {
+            return called || (cache = callback.apply(undefined, arguments), called = !0), cache;
+        };
+    }
     function viewport() {
         return {
             height: window.innerHeight,
@@ -350,6 +356,7 @@
         isVisibleByStyling: isVisibleByStyling,
         noop: noop,
         now: now,
+        once: once,
         percentage: percentage,
         _viewport: viewport,
         _isInViewport: isInViewport,

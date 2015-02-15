@@ -28,6 +28,34 @@ describe('VisSense.Utils', function (undefined) {
       expect(VisSense.Utils.identity(a, [], null, undefined)).toBe(a);
     });
 
+    describe('once', function() {
+      it('should verify that a callback is only invoked once', function () {
+        var config = {
+          callback: function () {
+          }
+        };
+
+        spyOn(config, 'callback');
+
+        var oncedCallback = VisSense.Utils.once(config.callback);
+
+        expect(config.callback.calls.count()).toEqual(0);
+
+        oncedCallback();
+
+        expect(config.callback.calls.count()).toEqual(1);
+
+        oncedCallback();
+
+        expect(config.callback.calls.count()).toEqual(1);
+
+        oncedCallback();
+
+        expect(config.callback.calls.count()).toEqual(1);
+
+      });
+    });
+
     describe('fireIf', function () {
       var func;
       beforeEach(function () {

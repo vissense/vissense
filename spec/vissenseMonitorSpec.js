@@ -511,6 +511,10 @@ describe('VisSense Monitor', function () {
         var model = { state: '?' };
         var config = {
           strategy: new VisSense.VisMon.Strategy.PollingStrategy({interval: 100}),
+          start: function () {
+          },
+          stop: function () {
+          },
           update: function () {
           },
           visible: function() {
@@ -526,16 +530,19 @@ describe('VisSense Monitor', function () {
           }
         };
 
-
+        spyOn(config, 'start').and.callThrough();
+        spyOn(config, 'stop').and.callThrough();
+        spyOn(config, 'update').and.callThrough();
         spyOn(config, 'hidden').and.callThrough();
         spyOn(config, 'visible').and.callThrough();
         spyOn(config, 'fullyvisible').and.callThrough();
-        spyOn(config, 'update').and.callThrough();
         spyOn(config, 'visibilitychange').and.callThrough();
         spyOn(config, 'percentagechange').and.callThrough();
 
         var vismon = visobj.monitor(config);
 
+        expect(config.start.calls.count()).toEqual(0);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(0);
         expect(config.hidden.calls.count()).toEqual(0);
         expect(config.visible.calls.count()).toEqual(0);
@@ -547,6 +554,8 @@ describe('VisSense Monitor', function () {
 
         vismon.start();
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(1);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(0);
@@ -558,6 +567,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(150);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(2);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(0);
@@ -569,6 +580,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(3);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(0);
@@ -582,6 +595,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(4);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(1);
@@ -595,6 +610,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(5);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(1);
@@ -608,6 +625,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(6);
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(1);
@@ -621,6 +640,8 @@ describe('VisSense Monitor', function () {
 
         jasmine.clock().tick(100);
 
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(0);
         expect(config.update.calls.count()).toEqual(7);
         expect(config.hidden.calls.count()).toEqual(2);
         expect(config.visible.calls.count()).toEqual(1);
@@ -631,6 +652,9 @@ describe('VisSense Monitor', function () {
         expect(model.state).toEqual('hidden');
 
         vismon.stop();
+
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(1);
 
       });
     });

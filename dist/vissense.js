@@ -130,7 +130,7 @@
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function VisMon(visobj, config) {
-        this._visobj = visobj, this._state = {}, this._pubsub = new PubSub(), this._events = [ "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
+        this._visobj = visobj, this._state = {}, this._pubsub = new PubSub(), this._events = [ "start", "stop", "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
         var _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ],
             async: !1
@@ -172,7 +172,6 @@
         }, PubSub.prototype.publish = function(topic, args) {
             var listeners = this._cache[topic], fireListeners = function(listeners, args) {
                 for (var listenersCount = listeners ? listeners.length : 0, i = 0; listenersCount > i; i++) listeners[i](args || []);
-                return undefined;
             };
             return this._config.async ? async(fireListeners)(listeners, args) : fireListeners(listeners, args);
         }, PubSub;
@@ -230,11 +229,9 @@
         var _config = defaults(config, {
             async: !1
         });
-        if (this._cancelAsyncStart && this._cancelAsyncStart(), _config.async) return this.startAsync();
-        var updateThenStartStrategy = function(monitor, strategy) {
-            return monitor.update(), strategy.start(monitor), monitor;
-        };
-        return updateThenStartStrategy(this, this._strategy);
+        return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (function(monitor, strategy) {
+            monitor.update(), monitor._pubsub.publish("start", [ monitor ]), strategy.start(monitor);
+        }(this, this._strategy), this);
     }, VisMon.prototype.startAsync = function(config) {
         this._cancelAsyncStart && this._cancelAsyncStart();
         var me = this, cancelAsyncStart = defer(function() {
@@ -246,8 +243,8 @@
             cancelAsyncStart(), me._cancelAsyncStart = null;
         }, this;
     }, VisMon.prototype.stop = function() {
-        return this._cancelAsyncStart ? this._cancelAsyncStart() : this._strategy.stop(this), 
-        undefined;
+        this._cancelAsyncStart ? this._cancelAsyncStart() : (this._strategy.stop(this), 
+        this._pubsub.publish("stop", [ this ]));
     }, VisMon.prototype.use = function(strategy) {
         return this.stop(), this._setStrategy(strategy), this.start();
     }, VisMon.prototype.update = function() {

@@ -235,9 +235,8 @@
         var _config = defaults(config, {
             async: !1
         });
-        return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (function(monitor, strategy) {
-            monitor.update(), monitor._pubsub.publish("start", [ monitor ]), strategy.start(monitor);
-        }(this, this._strategy), this);
+        return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (this.update(), 
+        this._pubsub.publish("start", [ this ]), this._strategy.start(this), this);
     }, VisMon.prototype.startAsync = function(config) {
         this._cancelAsyncStart && this._cancelAsyncStart();
         var me = this, cancelAsyncStart = defer(function() {

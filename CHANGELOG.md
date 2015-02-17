@@ -8,6 +8,7 @@ before changing this file!
 ### Deprecated
 - deprecated Vismon.on<Event>; use Vismon.on('<Event>', ...) instead
 - deprecated Vismon.use
+
 ### Added
 - added Utils.once
 - added "start" and "stop" events
@@ -17,8 +18,9 @@ before changing this file!
 - added Utils.async
 - added VisMon.startAsync
 - added constructor option "visibilityHooks" to VisSense
+
 ### Removed
 - Removed VisMon.NoopStrategy
 
-[unreleased]: https://github.com/vissense/compare/0.3.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.3.0...HEAD
 [0.3.0]: https://github.com/vissense/vissense/compare/0.2.1...0.3.0

@@ -58,6 +58,60 @@ describe('VisSense', function () {
       expect(visobj2.percentage()).toBe(0);
     });
 
+
+    describe('tests with hidden parents', function () {
+      it('should detect an element with parent without height = 0 or widht = 0 as hidden', function () {
+        jasmine.getFixtures().set('<div style="width: 10px; height: 0;"><div id="element"></div></div>');
+        var visobj = new VisSense($('#element')[0]);
+
+        expect(visobj.isHidden()).toBe(true);
+        expect(visobj.isVisible()).toBe(false);
+        expect(visobj.isFullyVisible()).toBe(false);
+        expect(visobj.percentage()).toBe(0);
+
+        jasmine.getFixtures().set('<div style="width: 0; height: 10px;"><div id="element2"></div></div>');
+        var visobj2 = new VisSense($('#element2')[0]);
+
+        expect(visobj2.isHidden()).toBe(true);
+        expect(visobj2.isVisible()).toBe(false);
+        expect(visobj2.isFullyVisible()).toBe(false);
+        expect(visobj2.percentage()).toBe(0);
+      });
+
+      it('should detect an element with parent with "display := none" as hidden', function () {
+        jasmine.getFixtures().set('<div style="display: none;"><div id="element"></div></div>');
+        var visobj = new VisSense($('#element')[0]);
+
+        expect(visobj.isHidden()).toBe(true);
+        expect(visobj.isVisible()).toBe(false);
+        expect(visobj.isFullyVisible()).toBe(false);
+        expect(visobj.percentage()).toBe(0);
+        expect(VisSense.Utils._computedStyle($('#element')[0]).display).toBe('block');
+      });
+
+      it('should detect an element with parent with "visibility := hidden" as hidden', function () {
+        jasmine.getFixtures().set('<div style="visibility: hidden;"><div id="element"></div></div>');
+        var visobj = new VisSense($('#element')[0]);
+
+        expect(visobj.isHidden()).toBe(true);
+        expect(visobj.isVisible()).toBe(false);
+        expect(visobj.isFullyVisible()).toBe(false);
+        expect(visobj.percentage()).toBe(0);
+        expect(VisSense.Utils._computedStyle($('#element')[0]).visibility).toBe('hidden');
+      });
+
+      it('should detect an element with parent with "visibility := collapse" as hidden', function () {
+        jasmine.getFixtures().set('<div style="visibility: collapse;"><div id="element"></div></div>');
+        var visobj = new VisSense($('#element')[0]);
+
+        expect(visobj.isHidden()).toBe(true);
+        expect(visobj.isVisible()).toBe(false);
+        expect(visobj.isFullyVisible()).toBe(false);
+        expect(visobj.percentage()).toBe(0);
+        expect(VisSense.Utils._computedStyle($('#element')[0]).visibility).toBe('collapse');
+      });
+    });
+
     it('should detect an simple element as visible', function () {
       jasmine.getFixtures().set('<div id="element" style="width: 2px; height: 2px; position: fixed; top:-1px; left: -1px;"></div>');
       var visobj = new VisSense($('#element')[0]);

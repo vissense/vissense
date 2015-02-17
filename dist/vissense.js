@@ -97,13 +97,15 @@
         var display = styleProperty(style, "display");
         if ("none" === display) return !1;
         var visibility = styleProperty(style, "visibility");
-        return "hidden" === visibility || "collapse" === visibility ? !1 : element.parentNode && element.parentNode.style ? isDisplayed(element.parentNode, computedStyle(element)) : !0;
+        if ("hidden" === visibility || "collapse" === visibility) return !1;
+        var parent = element.parentNode;
+        return isElement(parent) ? isDisplayed(parent) : !0;
     }
     function isVisibleByStyling(element) {
         if (element === document) return !0;
         if (!element || !element.parentNode) return !1;
-        var style = computedStyle(element), displayed = isDisplayed(element, style);
-        return displayed !== !0 ? !1 : !0;
+        var style = computedStyle(element);
+        return isDisplayed(element, style);
     }
     function isInViewport(rect, viewport) {
         return !rect || rect.width <= 0 || rect.height <= 0 ? !1 : rect.bottom > 0 && rect.right > 0 && rect.top < viewport.height && rect.left < viewport.width;

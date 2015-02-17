@@ -142,10 +142,10 @@
             async: !1
         });
         this._setStrategy(_config.strategy), this._pubsub.on("update", function(monitor) {
-            monitor._state.code !== monitor._state.previous.code && monitor._pubsub.publish("visibilitychange", [ monitor ]);
-        }), this._pubsub.on("update", function(monitor) {
             var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
-            newValue !== oldValue && monitor._pubsub.publish("percentagechange", [ newValue, oldValue, monitor ]);
+            newValue !== oldValue && monitor._pubsub.publish("percentagechange", [ monitor, newValue, oldValue ]);
+        }), this._pubsub.on("update", function(monitor) {
+            monitor._state.code !== monitor._state.previous.code && monitor._pubsub.publish("visibilitychange", [ monitor ]);
         }), this._pubsub.on("visibilitychange", function(monitor) {
             monitor._state.visible && !monitor._state.previous.visible && monitor._pubsub.publish("visible", [ monitor ]);
         }), this._pubsub.on("visibilitychange", function(monitor) {

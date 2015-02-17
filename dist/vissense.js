@@ -160,7 +160,8 @@
     }(), PubSub = function(undefined) {
         function PubSub(config) {
             this._cache = {}, this._config = defaults(config, {
-                async: !1
+                async: !1,
+                anyTopicName: "*"
             });
         }
         return PubSub.prototype.on = function(topic, callback) {
@@ -176,10 +177,11 @@
                 return index > -1 ? (me._cache[topic].splice(index, 1), !0) : !1;
             };
         }, PubSub.prototype.publish = function(topic, args) {
-            var listeners = this._cache[topic], fireListeners = function(listeners, args) {
-                for (var listenersCount = listeners ? listeners.length : 0, i = 0; listenersCount > i; i++) listeners[i](args || []);
+            var me = this, anyTopic = this._config.anyTopicName, fireListeners = function(listenersOrNull, args) {
+                for (var listeners = listenersOrNull || [], i = 0, n = listeners.length; n > i; i++) listeners[i](args || []);
+                topic !== anyTopic && me.publish(anyTopic, args);
             };
-            return this._config.async ? async(fireListeners)(listeners, args) : fireListeners(listeners, args);
+            return (this._config.async ? async(fireListeners) : fireListeners)(this._cache[topic], args);
         }, PubSub;
     }();
     VisSense.prototype.state = function() {

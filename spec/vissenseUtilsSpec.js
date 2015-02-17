@@ -841,6 +841,41 @@ describe('VisSense.Utils', function (undefined) {
       expect(unregister).toBe(VisSense.Utils.noop);
     });
 
+    it('should be able to register a listener to all events', function () {
+      var config = {
+        callback: function () {
+        }
+      };
+
+      spyOn(config, 'callback');
+
+      var anyTopicName = 'mySpecialEvent';
+      var pubsub = new VisSense.PubSub({
+        anyTopicName: anyTopicName
+      });
+
+      var unbind = pubsub.on(anyTopicName, config.callback);
+
+      expect(config.callback.calls.count()).toEqual(0);
+
+      pubsub.publish('foobar42');
+      pubsub.publish('foobar42+1');
+
+      expect(config.callback.calls.count()).toEqual(2);
+
+      pubsub.publish('foobar42');
+      pubsub.publish(anyTopicName);
+
+      expect(config.callback.calls.count()).toEqual(4);
+
+      unbind();
+
+      pubsub.publish('foobar42');
+      pubsub.publish(anyTopicName);
+
+      expect(config.callback.calls.count()).toEqual(4);
+    });
+
     it('should return an unregister function when registering a listener for a valid event', function () {
       var config = {
         update: function () {
@@ -856,6 +891,7 @@ describe('VisSense.Utils', function (undefined) {
       expect(config.update.calls.count()).toEqual(0);
 
       pubsub.publish('update');
+      pubsub.publish('foobar42');
 
       expect(config.update.calls.count()).toEqual(1);
 
@@ -881,6 +917,7 @@ describe('VisSense.Utils', function (undefined) {
       expect(config.update.calls.count()).toEqual(0);
 
       pubsub.publish('update');
+      pubsub.publish('foobar42');
 
       // in sync mode update would have been called once ...
       expect(config.update.calls.count()).toEqual(0);
@@ -895,6 +932,7 @@ describe('VisSense.Utils', function (undefined) {
       jasmine.clock().tick(10);
 
       pubsub.publish('update');
+      pubsub.publish('foobar42');
 
       jasmine.clock().tick(10);
 
@@ -914,11 +952,13 @@ describe('VisSense.Utils', function (undefined) {
       var unbind = pubsub.on('update', config.update);
 
       pubsub.publish('update');
+      pubsub.publish('foobar42');
       expect(config.update.calls.count()).toEqual(1);
 
       expect(unbind()).toBe(true);
 
       pubsub.publish('update');
+      pubsub.publish('foobar42');
       expect(config.update.calls.count()).toEqual(1);
 
       expect(unbind()).toBe(false);

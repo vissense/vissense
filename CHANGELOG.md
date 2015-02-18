@@ -5,6 +5,8 @@ See [Make A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+
+## [0.4.0-rc1] - 2015-02-18
 ### Added
 - added `Utils.once`
 - added `start` and `stop` events
@@ -26,5 +28,6 @@ before changing this file!
 ### Removed
 - Removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.3.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.4.0-rc1...HEAD
+[0.4.0-rc1]: https://github.com/vissense/vissense/compare/0.3.0...0.4.0-rc1
 [0.3.0]: https://github.com/vissense/vissense/compare/0.2.1...0.3.0

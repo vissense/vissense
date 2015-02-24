@@ -20,12 +20,12 @@
     "templates",
     "docs",
     "Gruntfile.js",
-    "karma.conf.js",
-    "karma-saucelabs.conf.js",
     "SpecRunner.html",
     "package.json",
     "bower.json",
     "dist/coverage",
+    "*.conf.js",
+    "*.conf.json",
     "**/.*"
   ],
   "devDependencies": {

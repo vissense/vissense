@@ -192,6 +192,8 @@
         return perc <= this._config.hidden ? VisSense.VisState.hidden(perc) : perc >= this._config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
     }, VisSense.prototype.percentage = function() {
         return this.state().percentage;
+    }, VisSense.prototype.element = function() {
+        return this._element;
     }, VisSense.prototype.isFullyVisible = function() {
         return this.state().fullyvisible;
     }, VisSense.prototype.isVisible = function() {

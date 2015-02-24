@@ -5,6 +5,8 @@ See [Make A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+### Added
+- added method `VisSense.element`
 
 ## [0.4.0-rc1] - 2015-02-18
 ### Added

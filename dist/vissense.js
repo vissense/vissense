@@ -4,6 +4,14 @@
     root.VisSense = factory(root, root.document);
 }(this, function(window, document, undefined) {
     "use strict";
+    function async(callback, delay) {
+        return function() {
+            var args = arguments;
+            return defer(function() {
+                callback.apply(undefined, args);
+            }, delay || 0);
+        };
+    }
     function debounce(callback, delay) {
         var cancel = noop;
         return function() {
@@ -15,13 +23,9 @@
     }
     function defaults(dest, source) {
         var sourceIsObject = isObject(source), destIsObject = isObject(dest);
-        if (!sourceIsObject && !destIsObject) return source;
-        if (!sourceIsObject || !destIsObject) return sourceIsObject ? source : dest;
-        for (var keys = Object.keys(source), i = 0, n = keys.length; n > i; i++) {
-            var prop = keys[i];
-            dest[prop] === undefined && (dest[prop] = source[prop]);
-        }
-        return dest;
+        return sourceIsObject || destIsObject ? sourceIsObject && destIsObject ? (forEach(Object.keys(source), function(property) {
+            dest[property] === undefined && (dest[property] = source[property]);
+        }), dest) : sourceIsObject ? source : dest : source;
     }
     function defer(callback, delay) {
         var timer = setTimeout(function() {
@@ -29,14 +33,6 @@
         }, delay || 0);
         return function() {
             clearTimeout(timer);
-        };
-    }
-    function async(callback, delay) {
-        return function() {
-            var args = arguments;
-            return defer(function() {
-                callback.apply(undefined, args);
-            }, delay || 0);
         };
     }
     function fireIf(when, callback) {
@@ -50,6 +46,12 @@
             dest[key] = ask ? callback(dest[key], source[key], key, dest, source) : source[key];
         }
         return dest;
+    }
+    function forEach(array, callback, thisArg) {
+        for (var i = 0, n = array.length; n > i; i++) {
+            var result = callback.call(thisArg, array[i], i, array);
+            if (result !== undefined) return result;
+        }
     }
     function identity(value) {
         return value;
@@ -154,11 +156,15 @@
             monitor._state.fullyvisible && monitor._pubsub.publish("fullyvisible", [ monitor ]);
         }), this._pubsub.on("visibilitychange", function(monitor) {
             monitor._state.hidden && monitor._pubsub.publish("hidden", [ monitor ]);
-        });
-        for (var i = 0, n = this._events.length; n > i; i++) _config[this._events[i]] && this.on(this._events[i], _config[this._events[i]]);
+        }), forEach(this._events, function(event) {
+            isFunction(_config[event]) && this.on(event, _config[event]);
+        }, this);
     }
     var VisibilityApi = function(undefined) {
-        for (var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ], i = 0, n = dict.length; n > i; i++) if (document[dict[i][0]] !== undefined) return dict[i];
+        var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ];
+        return forEach(dict, function(entry) {
+            return document[entry[0]] !== undefined ? entry : void 0;
+        });
     }(), PubSub = function(undefined) {
         function PubSub(config) {
             this._cache = {}, this._config = defaults(config, {
@@ -180,16 +186,22 @@
             };
         }, PubSub.prototype.publish = function(topic, args) {
             var me = this, anyTopic = this._config.anyTopicName, fireListeners = function(listenersOrNull, args) {
-                for (var listeners = listenersOrNull || [], i = 0, n = listeners.length; n > i; i++) listeners[i](args || []);
-                topic !== anyTopic && me.publish(anyTopic, args);
+                var listeners = listenersOrNull || [], listenerArgs = args || [];
+                forEach(listeners, function(listener) {
+                    listener(listenerArgs);
+                }), topic !== anyTopic && me.publish(anyTopic, args);
             };
             return (this._config.async ? async(fireListeners) : fireListeners)(this._cache[topic], args);
         }, PubSub;
     }();
     VisSense.prototype.state = function() {
-        for (var i = 0, n = this._config.visibilityHooks.length; n > i; i++) if (!this._config.visibilityHooks[i](this._element)) return VisSense.VisState.hidden(0);
-        var perc = this._config.percentageHook(this._element);
-        return perc <= this._config.hidden ? VisSense.VisState.hidden(perc) : perc >= this._config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
+        var hiddenByHook = forEach(this._config.visibilityHooks, function(hook) {
+            return hook(this._element) ? void 0 : VisSense.VisState.hidden(0);
+        }, this);
+        return hiddenByHook || function(element, config) {
+            var perc = config.percentageHook(element);
+            return perc <= config.hidden ? VisSense.VisState.hidden(perc) : perc >= config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
+        }(this._element, this._config);
     }, VisSense.prototype.percentage = function() {
         return this.state().percentage;
     }, VisSense.prototype.element = function() {
@@ -282,9 +294,13 @@
         this._strategies = isArray(strategies) ? strategies : [ strategies ];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
-        for (var i = 0, n = this._strategies.length; n > i; i++) this._strategies[i].start(monitor);
+        forEach(this._strategies, function(strategy) {
+            isFunction(strategy.start) && strategy.start(monitor);
+        });
     }, VisMon.Strategy.CompositeStrategy.prototype.stop = function(monitor) {
-        for (var i = 0, n = this._strategies.length; n > i; i++) this._strategies[i].stop(monitor);
+        forEach(this._strategies, function(strategy) {
+            isFunction(strategy.stop) && strategy.stop(monitor);
+        });
     }, VisMon.Strategy.PollingStrategy = function(config) {
         this._config = defaults(config, {
             interval: 1e3
@@ -330,6 +346,7 @@
         defaults: defaults,
         defer: defer,
         extend: extend,
+        forEach: forEach,
         fireIf: fireIf,
         identity: identity,
         isArray: isArray,

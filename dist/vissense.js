@@ -167,31 +167,31 @@
         });
     }(), PubSub = function(undefined) {
         function PubSub(config) {
-            this._cache = {}, this._config = defaults(config, {
+            this._cache = {}, this._onAnyCache = [], this._config = defaults(config, {
                 async: !1,
                 anyTopicName: "*"
             });
         }
+        var fireListeners = function(topic, listeners, args) {
+            forEach(listeners, function(listener) {
+                listener(args);
+            });
+        };
         return PubSub.prototype.on = function(topic, callback) {
             if (!isFunction(callback)) return noop;
-            this._cache[topic] || (this._cache[topic] = []);
             var applyCallback = function(args) {
                 return callback.apply(undefined, args || []);
-            }, listener = this._config.async ? async(applyCallback) : applyCallback;
-            this._cache[topic].push(listener);
-            var me = this;
-            return function() {
-                var index = me._cache[topic].indexOf(listener);
-                return index > -1 ? (me._cache[topic].splice(index, 1), !0) : !1;
+            }, listener = this._config.async ? async(applyCallback) : applyCallback, unregister = function(listener, array, topic) {
+                return function() {
+                    var index = array.indexOf(listener);
+                    return index > -1 ? (array.splice(index, 1), !0) : !1;
+                };
             };
+            return topic === this._config.anyTopicName ? (this._onAnyCache.push(listener), unregister(listener, this._onAnyCache, "*")) : (this._cache[topic] || (this._cache[topic] = []), 
+            this._cache[topic].push(listener), unregister(listener, this._cache[topic], topic));
         }, PubSub.prototype.publish = function(topic, args) {
-            var me = this, anyTopic = this._config.anyTopicName, fireListeners = function(listenersOrNull, args) {
-                var listeners = listenersOrNull || [], listenerArgs = args || [];
-                forEach(listeners, function(listener) {
-                    listener(listenerArgs);
-                }), topic !== anyTopic && me.publish(anyTopic, args);
-            };
-            return (this._config.async ? async(fireListeners) : fireListeners)(this._cache[topic], args);
+            var listeners = (this._cache[topic] || []).concat(topic === this._config.anyTopicName ? [] : this._onAnyCache), syncOrAsyncPublish = this._config.async ? async(fireListeners) : fireListeners;
+            return syncOrAsyncPublish(topic, listeners, args || []);
         }, PubSub;
     }();
     VisSense.prototype.state = function() {

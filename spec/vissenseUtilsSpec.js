@@ -864,16 +864,20 @@ describe('VisSense.Utils', function (undefined) {
       expect(config.callback.calls.count()).toEqual(2);
 
       pubsub.publish('foobar42');
+
+      expect(config.callback.calls.count()).toEqual(3);
+
       pubsub.publish(anyTopicName);
 
-      expect(config.callback.calls.count()).toEqual(4);
+      expect(config.callback.calls.count()).toEqual(3);
 
       unbind();
 
       pubsub.publish('foobar42');
+      pubsub.publish('foobar42+1');
       pubsub.publish(anyTopicName);
 
-      expect(config.callback.calls.count()).toEqual(4);
+      expect(config.callback.calls.count()).toEqual(3);
     });
 
     it('should return an unregister function when registering a listener for a valid event', function () {

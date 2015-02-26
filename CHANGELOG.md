@@ -8,6 +8,9 @@ before changing this file!
 ### Added
 - added method `VisSense.element`
 
+### Changed
+- listeners on all events are only called once per even
+
 ## [0.4.0-rc1] - 2015-02-18
 ### Added
 - added `Utils.once`

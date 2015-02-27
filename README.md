@@ -13,7 +13,23 @@ VisSense.js
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.
 
-VisSense.js is **lightweight**, **highly extensible** and **easy to use** (very straigt forward API). It is **well tested** (100% code coverage!), **documented** and **production-ready** (integrated on websites with > 1 billion impressions/month). Best of all: **No dependencies**.
+VisSense.js is **lightweight**, **highly extensible** and **easy to use** (very straight forward API). It is **well tested** (100% code coverage!), **documented** and **production-ready** (integrated on websites with > 1 billion impressions/month). Best of all: **No dependencies**.
+
+#### What it does
+ * provides methods for detecting visibility of DOM elements
+ * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
+ * provides a convenience class for detecting changes in visibility
+
+#### What it does *not* do
+ * detect if an element is overlapped by others
+ * detect if an element is a hidden input element
+ * take elements opacity into account
+ * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
+
+
+[Demos](https://vissense.github.io/vissense-demo/) and Examples
+------------
+See more examples on the [demo page](https://vissense.github.io/vissense-demo/).
 
 In this simple example a video is played if at least 75% of its area is in the users viewport:
 ```javascript
@@ -40,23 +56,6 @@ var visibility_monitor = visibility.monitor({
   }
 }).start();
 ```
-
-#### What it does
- * provides methods for detecting visibility of DOM elements
- * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
- * provides a convenience class for detecting changes in visibility
-
-#### What it does *not* do
- * detect if an element is overlapped by others
- * detect if an element is a hidden input element
- * take elements opacity into account
- * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
-
-
-Examples
-------------
-See some examples on the [demo page](https://vissense.github.io/vissense-demo/).
-
 
 Download
 ------------

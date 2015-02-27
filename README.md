@@ -1,9 +1,9 @@
-![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://travis-ci.org/vissense/vissense)
 [![Coverage Status](https://coveralls.io/repos/vissense/vissense/badge.png)](https://coveralls.io/r/vissense/vissense)
-[![Inline docs](http://inch-ci.org/github/vissense/vissense.svg?branch=master)](http://inch-ci.org/github/vissense/vissense)
 [![Dependency Status](https://david-dm.org/vissense/vissense.svg)](https://david-dm.org/vissense/vissense)
 [![devDependency Status](https://david-dm.org/vissense/vissense/dev-status.svg)](https://david-dm.org/vissense/vissense#info=devDependencies)
+[![Inline docs](http://inch-ci.org/github/vissense/vissense.svg?branch=master)](http://inch-ci.org/github/vissense/vissense)
+![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/vissense.svg)](https://saucelabs.com/u/vissense)
 
@@ -13,10 +13,13 @@ VisSense.js
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.
 
+VisSense.js is **lightweight**, **highly extensible** and **easy to use** (very straigt forward API). It is **well tested** (100% code coverage!), **documented** and **production-ready** (integrated on websites with > 1 billion impressions/month). Best of all: **No dependencies**.
+
 In this simple example a video is played if at least 75% of its area is in the users viewport:
 ```javascript
 var video = $('#video'); 
-var visibility = VisSense(video[0], { fullyvisible: 0.75 }); 
+var visibility = VisSense(video[0], { fullyvisible: 0.75 });
+
 if(visibility.isFullyVisible()) { 
   video.play();
 }
@@ -24,7 +27,8 @@ if(visibility.isFullyVisible()) {
 
 In a more advanced example the video is stopped as soon as it is not visible anymore:
 ```javascript
-...
+var video = $('#video'); 
+var visibility = VisSense(video[0], { fullyvisible: 0.75 });
 
 var visibility_monitor = visibility.monitor({ 
   strategy: new VisSense.VisMon.Strategy.EventStrategy({ debounce: 100 }),
@@ -171,13 +175,15 @@ var visibility_monitor = VisSense(element).monitor({
 
 Object constructor. Options:
 
+- `strategy` a strategy (or array of strategies) for observing the element. VisSense comes with two predefined strategies. See below.
+- `start` function to run when monitoring the element starts
+- `stop` function to run when monitoring the element stops
 - `update` function to run when elements update function is called
 - `hidden` function to run when element becomes hidden
 - `visible` function to run when element becomes visible
 - `fullyvisible` function to run when element becomes fully visible
 - `visibilitychange` function to run when the visibility of the element changes
 - `percentagechange` function to run when the percentage of the element changes
-- `strategy` a strategy or array of strategies for observing the element. VisSense comes with two predefined strategies. See below.
 
 ```javascript
 var visobj = VisSense(document.getElementById('video'));

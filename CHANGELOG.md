@@ -10,7 +10,8 @@ before changing this file!
 - added method `Strategy.init`
 
 ### Changed
-- listeners on all events are only called once per even
+- listeners on all events (including `*`) are only called once per even
+- template methods `Strategy.start` and `Strategy.stop` do not throw an error by default
 
 ## [0.4.0-rc1] - 2015-02-18
 ### Added

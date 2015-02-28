@@ -47,16 +47,22 @@ describe('VisSense Monitor', function () {
         strategy = new VisSense.VisMon.Strategy();
       });
 
-      it('should throw error on start', function () {
+      it('should not throw an error on init', function () {
         expect(function () {
-          strategy.start(monitorMock);
-        }).toThrow();
+          strategy.init(monitorMock);
+        }).not.toThrow();
       });
 
-      it('should throw error on stop', function () {
+      it('should not throw an error on start', function () {
+        expect(function () {
+          strategy.start(monitorMock);
+        }).not.toThrow();
+      });
+
+      it('should not throw an error on stop', function () {
         expect(function () {
           strategy.stop(monitorMock);
-        }).toThrow();
+        }).not.toThrow();
       });
     });
 

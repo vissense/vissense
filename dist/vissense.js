@@ -286,12 +286,8 @@
         return this.on("hidden", callback);
     }, VisMon.prototype.on = function(topic, callback) {
         return this._pubsub.on(topic, callback);
-    }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = function() {}, 
-    VisMon.Strategy.prototype.start = function() {
-        throw new Error("Strategy#start needs to be overridden.");
-    }, VisMon.Strategy.prototype.stop = function() {
-        throw new Error("Strategy#stop needs to be overridden.");
-    }, VisMon.Strategy.CompositeStrategy = function(strategies) {
+    }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = noop, VisMon.Strategy.prototype.start = noop, 
+    VisMon.Strategy.prototype.stop = noop, VisMon.Strategy.CompositeStrategy = function(strategies) {
         this._strategies = isArray(strategies) ? strategies : [ strategies ];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.CompositeStrategy.prototype.init = function(monitor) {

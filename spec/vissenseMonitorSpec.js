@@ -171,6 +171,7 @@ describe('VisSense Monitor', function () {
         ];
 
         for (var i = 0, n = strategies.length; i < n; i++) {
+          spyOn(strategies[i], 'init');
           spyOn(strategies[i], 'start');
           spyOn(strategies[i], 'stop');
         }
@@ -178,8 +179,16 @@ describe('VisSense Monitor', function () {
         strategy = new VisSense.VisMon.Strategy.CompositeStrategy(strategies);
       });
 
+      it('should call all inner objects init() method', function () {
+        strategy.init(monitorMock);
+
+        for (var i = 0, n = strategies.length; i < n; i++) {
+          expect(strategies[i].init.calls.count()).toEqual(1);
+        }
+      });
+
       it('should call all inner objects start() method', function () {
-        expect(strategy.start(monitorMock)).toBe(undefined);
+        strategy.start(monitorMock);
 
         for (var i = 0, n = strategies.length; i < n; i++) {
           expect(strategies[i].start.calls.count()).toEqual(1);
@@ -187,7 +196,7 @@ describe('VisSense Monitor', function () {
       });
 
       it('should call all inner objects stop() method', function () {
-        expect(strategy.stop(monitorMock)).toBe(undefined);
+        strategy.stop(monitorMock);
 
         for (var i = 0, n = strategies.length; i < n; i++) {
           expect(strategies[i].stop.calls.count()).toEqual(1);

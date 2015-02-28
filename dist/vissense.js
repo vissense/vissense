@@ -244,7 +244,7 @@
             }
         };
     }(), VisMon.prototype._setStrategy = function(strategies) {
-        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies);
+        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies), this._strategy.init(this);
     }, VisMon.prototype.visobj = function() {
         return this._visobj;
     }, VisMon.prototype.state = function() {
@@ -286,14 +286,19 @@
         return this.on("hidden", callback);
     }, VisMon.prototype.on = function(topic, callback) {
         return this._pubsub.on(topic, callback);
-    }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.start = function() {
+    }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = function() {}, 
+    VisMon.Strategy.prototype.start = function() {
         throw new Error("Strategy#start needs to be overridden.");
     }, VisMon.Strategy.prototype.stop = function() {
         throw new Error("Strategy#stop needs to be overridden.");
     }, VisMon.Strategy.CompositeStrategy = function(strategies) {
         this._strategies = isArray(strategies) ? strategies : [ strategies ];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
-    VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
+    VisMon.Strategy.CompositeStrategy.prototype.init = function(monitor) {
+        forEach(this._strategies, function(strategy) {
+            isFunction(strategy.init) && strategy.init(monitor);
+        });
+    }, VisMon.Strategy.CompositeStrategy.prototype.start = function(monitor) {
         forEach(this._strategies, function(strategy) {
             isFunction(strategy.start) && strategy.start(monitor);
         });

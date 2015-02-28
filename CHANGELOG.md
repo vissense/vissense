@@ -7,6 +7,7 @@ before changing this file!
 ## [Unreleased][unreleased]
 ### Added
 - added method `VisSense.element`
+- added method `Strategy.init`
 
 ### Changed
 - listeners on all events are only called once per even

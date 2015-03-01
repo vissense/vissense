@@ -7,7 +7,9 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -17,10 +19,7 @@
       <header>
         <h1>Vissense</h1>
         <p>A utility library for observing visibility changes of DOM elements.</p>
-
         <p class="view"><a href="https://github.com/vissense/vissense">View the Project on GitHub <small>vissense/vissense</small></a></p>
-
-
         <ul>
           <li><a href="https://github.com/vissense/vissense/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/vissense/vissense/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -34,31 +33,7 @@
 <p>A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.</p>
 
-<h2>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
-
-<p>See some examples on the <a href="https://vissense.github.io/vissense-demo/">demo page</a>.</p>
-
-<p>In this simple example a video is played if at least 75% of its area is in the users viewport:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> video <span class="pl-k">=</span> $(<span class="pl-s1"><span class="pl-pds">'</span>#video<span class="pl-pds">'</span></span>); 
-<span class="pl-s">var</span> visibility <span class="pl-k">=</span> VisSense(video[<span class="pl-c1">0</span>], { fullyvisible<span class="pl-k">:</span> <span class="pl-c1">0.75</span> }); 
-<span class="pl-k">if</span>(visibility.isFullyVisible()) { 
-  video.play();
-}</pre></div>
-
-<p>In a more advanced example the video is stopped as soon as it not visible anymore:</p>
-
-<div class="highlight highlight-javascript"><pre>...
-
-<span class="pl-s">var</span> visibility_monitor <span class="pl-k">=</span> visibility.monitor({
-  <span class="pl-en">fullyvisible</span>: <span class="pl-st">function</span>() { 
-    video.play();
-  }, 
-  <span class="pl-en">hidden</span>: <span class="pl-st">function</span>() { 
-    video.<span class="pl-s3">stop</span>(); 
-  }
-}).<span class="pl-sc">start</span>();</pre></div>
+<p>VisSense.js is <strong>lightweight</strong>, <strong>highly extensible</strong> and <strong>easy to use</strong> (very straight forward API). It is <strong>well tested</strong> (100% code coverage!), <strong>documented</strong> and <strong>production-ready</strong> (integrated on websites with &gt; 1 billion impressions/month). Best of all: <strong>No dependencies</strong>.</p>
 
 <h4>
 <a id="what-it-does" class="anchor" href="#what-it-does" aria-hidden="true"><span class="octicon octicon-link"></span></a>What it does</h4>
@@ -70,8 +45,7 @@ Immediately know when an element becomes hidden, partly visible or fully visible
 </ul>
 
 <h4>
-<a id="what-it-does-not" class="anchor" href="#what-it-does-not" aria-hidden="true"><span class="octicon octicon-link"></span></a>What it does <em>not</em>
-</h4>
+<a id="what-it-does-not-do" class="anchor" href="#what-it-does-not-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>What it does <em>not</em> do</h4>
 
 <ul>
 <li>detect if an element is overlapped by others</li>
@@ -79,6 +53,36 @@ Immediately know when an element becomes hidden, partly visible or fully visible
 <li>take elements opacity into account</li>
 <li>take scrollbars into account - elements "hidden" behind scrollbars are considered visible</li>
 </ul>
+
+<h2>
+<a id="demos-and-examples" class="anchor" href="#demos-and-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<a href="https://vissense.github.io/vissense-demo/">Demos</a> and Examples</h2>
+
+<p>See more examples on the <a href="https://vissense.github.io/vissense-demo/">demo page</a>.</p>
+
+<p>In this simple example a video is played if at least 75% of its area is in the users viewport:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> video <span class="pl-k">=</span> $(<span class="pl-s1"><span class="pl-pds">'</span>#video<span class="pl-pds">'</span></span>); 
+<span class="pl-s">var</span> visibility <span class="pl-k">=</span> VisSense(video[<span class="pl-c1">0</span>], { fullyvisible<span class="pl-k">:</span> <span class="pl-c1">0.75</span> });
+
+<span class="pl-k">if</span>(visibility.isFullyVisible()) { 
+  video.play();
+}</pre></div>
+
+<p>In a more advanced example the video is stopped as soon as it is not visible anymore:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> video <span class="pl-k">=</span> $(<span class="pl-s1"><span class="pl-pds">'</span>#video<span class="pl-pds">'</span></span>); 
+<span class="pl-s">var</span> visibility <span class="pl-k">=</span> VisSense(video[<span class="pl-c1">0</span>], { fullyvisible<span class="pl-k">:</span> <span class="pl-c1">0.75</span> });
+
+<span class="pl-s">var</span> visibility_monitor <span class="pl-k">=</span> visibility.monitor({ 
+  strategy<span class="pl-k">:</span> <span class="pl-k">new</span> <span class="pl-en">VisSense.VisMon</span>.Strategy.EventStrategy({ debounce<span class="pl-k">:</span> <span class="pl-c1">100</span> }),
+  <span class="pl-en">fullyvisible</span>: <span class="pl-st">function</span>() { 
+    video.play();
+  }, 
+  <span class="pl-en">hidden</span>: <span class="pl-st">function</span>() { 
+    video.<span class="pl-s3">stop</span>(); 
+  }
+}).<span class="pl-sc">start</span>();</pre></div>
 
 <h2>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h2>
@@ -91,9 +95,14 @@ Immediately know when an element becomes hidden, partly visible or fully visible
 <pre><code>bower install vissense/vissense --save-dev
 </code></pre>
 
+<h3>
+<a id="github" class="anchor" href="#github" aria-hidden="true"><span class="octicon octicon-link"></span></a>Github</h3>
+
+<p><a href="https://github.com/vissense/vissense/releases">Download from Github</a></p>
+
 <p>Add this <code>&lt;script&gt;</code> tag somewhere</p>
 
-<pre><code>&lt;script src="/bower_components/vissense/dist/vissense.min.js"&gt;&lt;/script&gt;
+<pre><code>&lt;script src="/path/to/components/vissense/dist/vissense.min.js"&gt;&lt;/script&gt;
 </code></pre>
 
 <h2>
@@ -102,12 +111,12 @@ Immediately know when an element becomes hidden, partly visible or fully visible
 <p>The project is licensed under the MIT license. See
 <a href="https://github.com/vissense/vissense/blob/master/LICENSE">LICENSE</a> for details.</p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/vissense">vissense</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/vissense">vissense</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

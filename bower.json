@@ -33,6 +33,6 @@
     "lodash": "2.4.1",
     "jquery": "2.1.1",
     "jasmine-jquery": "velesin/jasmine-jquery#2.1.0",
-    "jasmine-jsreporter": "detro/jasmine-jsreporter#7bcea60db1a45cc77c5a463fc7ff19aa095a822a"
+    "jasmine-jsreporter": "detro/jasmine-jsreporter#7bcea60db1a45cc77c5a463f"
   }
 }

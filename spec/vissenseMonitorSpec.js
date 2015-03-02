@@ -9,7 +9,7 @@ describe('VisSense Monitor', function () {
   'use strict';
 
   it('should verify that jasmine mocks the Date object', function () {
-      expect(jasmine.clock().mockDate).toBeDefined();
+    expect(jasmine.clock().mockDate).toBeDefined();
   });
 
   describe('VisState', function () {
@@ -273,6 +273,26 @@ describe('VisSense Monitor', function () {
       vismon.stop();
     });
 
+    it('should be able to start a monitor asynchronously', function () {
+      var config = {
+        update: function (monitor) {
+          expect(monitor).toBe(vismon);
+        }
+      };
+
+      spyOn(config, 'update');
+
+      var vismon = visobj.monitor(config).start({async: true});
+
+      expect(config.update.calls.count()).toEqual(0);
+
+      jasmine.clock().tick(5);
+
+      expect(config.update.calls.count()).toEqual(1);
+
+      expect(vismon.stop()).toBe(undefined);
+    });
+
     it('should be able to start and stop an async monitor before executing', function () {
       var config = {
         update: function (monitor) {
@@ -296,27 +316,6 @@ describe('VisSense Monitor', function () {
 
       expect(config.update.calls.count()).toEqual(0);
 
-    });
-
-
-    it('should be able to start a monitor asynchronously', function () {
-      var config = {
-        update: function (monitor) {
-          expect(monitor).toBe(vismon);
-        }
-      };
-
-      spyOn(config, 'update');
-
-      var vismon = visobj.monitor(config).start({async: true});
-
-      expect(config.update.calls.count()).toEqual(0);
-
-      jasmine.clock().tick(5);
-
-      expect(config.update.calls.count()).toEqual(1);
-
-      expect(vismon.stop()).toBe(undefined);
     });
 
     it('should update verify that first update() argument is a monitor', function () {
@@ -479,6 +478,57 @@ describe('VisSense Monitor', function () {
       afterEach(function () {
         jasmine.clock().uninstall();
       });
+
+      it('should be possible to unregister a listener when it is fired', function () {
+        var config = {
+          strategy: [],
+          update: function() {}
+        };
+        spyOn(config, 'update').and.callThrough();
+
+        var cancelOnVisibleEvent = VisSense.Utils.noop;
+
+        var observer = {
+          onVisible: function() {
+            cancelOnVisibleEvent();
+          }
+        };
+        spyOn(observer, 'onVisible').and.callThrough();
+
+
+        var monitor = visobj.monitor(config);
+
+        cancelOnVisibleEvent = monitor.on('visible', observer.onVisible);
+
+        monitor.start();
+
+        expect(config.update.calls.count()).toEqual(1);
+        expect(observer.onVisible.calls.count()).toEqual(0);
+
+        element.style.display = 'block'; // set visible
+
+        monitor.update();
+
+        expect(config.update.calls.count()).toEqual(2);
+        expect(observer.onVisible.calls.count()).toEqual(1); // <- unregistered here
+
+        element.style.display = 'none'; // set hidden
+
+        monitor.update();
+
+        expect(config.update.calls.count()).toEqual(3);
+        expect(observer.onVisible.calls.count()).toEqual(1);
+
+        element.style.display = 'block'; // set visible again
+
+        monitor.update();
+
+        expect(config.update.calls.count()).toEqual(4);
+        expect(observer.onVisible.calls.count()).toEqual(1);
+
+        monitor.stop();
+      });
+
       it('should verify that fullyvisible is fired after visible', function () {
         var model = { state: '?' };
         var config = {
@@ -507,6 +557,8 @@ describe('VisSense Monitor', function () {
         expect(config.hidden.calls.count()).toEqual(1);
         expect(config.visible.calls.count()).toEqual(0);
         expect(config.fullyvisible.calls.count()).toEqual(0);
+
+        expect(model.state).toEqual('hidden');
 
         element.style.display = 'block'; // set visible
 

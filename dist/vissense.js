@@ -350,9 +350,9 @@
                 monitor.update();
             }, config.debounce), removeOnVisibilityChangeEvent = VisibilityApi.onVisibilityChange(update);
             return addEventListener("scroll", update, !1), addEventListener("resize", update, !1), 
-            function() {
-                removeEventListener("resize", update, !1), removeEventListener("scroll", update, !1), 
-                removeOnVisibilityChangeEvent();
+            addEventListener("touchmove", update, !1), function() {
+                removeEventListener("touchmove", update, !1), removeEventListener("resize", update, !1), 
+                removeEventListener("scroll", update, !1), removeOnVisibilityChangeEvent();
             };
         }(this._config), this._started = !0), this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {

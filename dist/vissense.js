@@ -121,7 +121,7 @@
         Math.round(vh * vw / (rect.height * rect.width) * 1e3) / 1e3;
     }
     function isPageVisible() {
-        return VisibilityApi ? !document[VisibilityApi[0]] : !0;
+        return !VisibilityApi.isHidden();
     }
     function VisSense(element, config) {
         if (!(this instanceof VisSense)) return new VisSense(element, config);
@@ -161,10 +161,31 @@
         }, this);
     }
     var VisibilityApi = function(undefined) {
-        var event = "visibilitychange", dict = [ [ "hidden", event ], [ "mozHidden", "moz" + event ], [ "webkitHidden", "webkit" + event ], [ "msHidden", "ms" + event ] ];
-        return forEach(dict, function(entry) {
-            return document[entry[0]] !== undefined ? entry : void 0;
+        var entry = function(propertyName, eventName) {
+            return {
+                property: propertyName,
+                event: eventName
+            };
+        }, event = "visibilitychange", dict = [ entry("hidden", event), entry("mozHidden", "moz" + event), entry("webkitHidden", "webkit" + event), entry("msHidden", "ms" + event) ], api = forEach(dict, function(entry) {
+            return document[entry.property] !== undefined ? {
+                isHidden: function() {
+                    return document[entry.property] || !1;
+                },
+                onVisibilityChange: function(callback) {
+                    return addEventListener(entry.event, callback), function() {
+                        removeEventListener(entry.event, callback);
+                    };
+                }
+            } : void 0;
         });
+        return api || {
+            isHidden: function() {
+                return !1;
+            },
+            onVisibilityChange: function() {
+                return noop;
+            }
+        };
     }(), PubSub = function(undefined) {
         function PubSub(config) {
             this._cache = {}, this._onAnyCache = [], this._config = defaults(config, {
@@ -324,19 +345,14 @@
         }), this._started = !1;
     }, VisMon.Strategy.EventStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
-        if (!this._started) {
-            var me = this;
-            this._removeEventListeners = function() {
-                var update = debounce(function() {
-                    monitor.update();
-                }, me._config.debounce);
-                return VisibilityApi && addEventListener(VisibilityApi[1], update), addEventListener("scroll", update), 
-                addEventListener("resize", update), function() {
-                    removeEventListener("resize", update), removeEventListener("scroll", update), VisibilityApi && removeEventListener(VisibilityApi[1], update);
-                };
-            }(), this._started = !0;
-        }
-        return this._started;
+        return this._started || (this._removeEventListeners = function(config) {
+            var update = debounce(function() {
+                monitor.update();
+            }, config.debounce), removeOnVisibilityChangeEvent = VisibilityApi.onVisibilityChange(update);
+            return addEventListener("scroll", update), addEventListener("resize", update), function() {
+                removeEventListener("resize", update), removeEventListener("scroll", update), removeOnVisibilityChangeEvent();
+            };
+        }(this._config), this._started = !0), this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {
         return this._started ? (this._removeEventListeners(), this._started = !1, !0) : !1;
     }, VisSense.VisMon = VisMon, VisSense.PubSub = PubSub, VisSense.fn.monitor = function(config) {
@@ -361,6 +377,7 @@
         now: now,
         once: once,
         percentage: percentage,
+        VisibilityApi: VisibilityApi,
         _viewport: viewport,
         _isInViewport: isInViewport,
         _isDisplayed: isDisplayed,

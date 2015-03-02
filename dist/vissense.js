@@ -160,20 +160,20 @@
             isFunction(_config[event]) && this.on(event, _config[event]);
         }, this);
     }
-    var VisibilityApi = function(undefined) {
+    var VisibilityApi = function(document, undefined) {
         var entry = function(propertyName, eventName) {
             return {
                 property: propertyName,
                 event: eventName
             };
-        }, event = "visibilitychange", dict = [ entry("hidden", event), entry("mozHidden", "moz" + event), entry("webkitHidden", "webkit" + event), entry("msHidden", "ms" + event) ], api = forEach(dict, function(entry) {
+        }, event = "visibilitychange", dict = [ entry("webkitHidden", "webkit" + event), entry("msHidden", "ms" + event), entry("mozHidden", "moz" + event), entry("hidden", event) ], api = forEach(dict, function(entry) {
             return document[entry.property] !== undefined ? {
                 isHidden: function() {
-                    return document[entry.property] || !1;
+                    return !!document[entry.property] || !1;
                 },
                 onVisibilityChange: function(callback) {
-                    return addEventListener(entry.event, callback), function() {
-                        removeEventListener(entry.event, callback);
+                    return document.addEventListener(entry.event, callback, !1), function() {
+                        document.removeEventListener(entry.event, callback, !1);
                     };
                 }
             } : void 0;
@@ -186,7 +186,7 @@
                 return noop;
             }
         };
-    }(), PubSub = function(undefined) {
+    }(document), PubSub = function(undefined) {
         function PubSub(config) {
             this._cache = {}, this._onAnyCache = [], this._config = defaults(config, {
                 async: !1,
@@ -349,8 +349,10 @@
             var update = debounce(function() {
                 monitor.update();
             }, config.debounce), removeOnVisibilityChangeEvent = VisibilityApi.onVisibilityChange(update);
-            return addEventListener("scroll", update), addEventListener("resize", update), function() {
-                removeEventListener("resize", update), removeEventListener("scroll", update), removeOnVisibilityChangeEvent();
+            return addEventListener("scroll", update, !1), addEventListener("resize", update, !1), 
+            function() {
+                removeEventListener("resize", update, !1), removeEventListener("scroll", update, !1), 
+                removeOnVisibilityChangeEvent();
             };
         }(this._config), this._started = !0), this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {

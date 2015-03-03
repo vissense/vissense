@@ -22,17 +22,6 @@ describe('VisSense Monitor', function () {
 
   });
 
-  describe('VisState', function () {
-
-    it('should create all 3 VisState objects', function () {
-      expect(VisSense.VisState.hidden(0)).toBeDefined();
-      expect(VisSense.VisState.visible(0.1)).toBeDefined();
-      expect(VisSense.VisState.fullyvisible(1)).toBeDefined();
-    });
-
-  });
-
-
   describe('strategies', function () {
     var monitorMock;
 
@@ -338,9 +327,12 @@ describe('VisSense Monitor', function () {
       jasmine.getFixtures().set('<div id="element" style="display:none;"></div>');
 
       var config = {
-        update : function() {},
-        hidden : function() {},
-        visible : function() {}
+        update: function () {
+        },
+        hidden: function () {
+        },
+        visible: function () {
+        }
       };
 
       spyOn(config, 'update');
@@ -482,14 +474,15 @@ describe('VisSense Monitor', function () {
       it('should be possible to unregister a listener when it is fired', function () {
         var config = {
           strategy: [],
-          update: function() {}
+          update: function () {
+          }
         };
         spyOn(config, 'update').and.callThrough();
 
         var cancelOnVisibleEvent = VisSense.Utils.noop;
 
         var observer = {
-          onVisible: function() {
+          onVisible: function () {
             cancelOnVisibleEvent();
           }
         };
@@ -530,19 +523,19 @@ describe('VisSense Monitor', function () {
       });
 
       it('should verify that fullyvisible is fired after visible', function () {
-        var model = { state: '?' };
+        var model = {state: '?'};
         var config = {
           strategy: [],
-          visible: function() {
+          visible: function () {
             model.state = 'visible';
           },
-          fullyvisible: function() {
+          fullyvisible: function () {
             model.state = 'fullyvisible';
           },
-          hidden: function() {
+          hidden: function () {
             model.state = 'hidden';
           },
-          update: function() {
+          update: function () {
           }
         };
 
@@ -575,7 +568,7 @@ describe('VisSense Monitor', function () {
       });
 
       it('should verify event chain initially hidden -> visible -> fullyvisible -> visible -> hidden', function () {
-        var model = { state: '?' };
+        var model = {state: '?'};
         var config = {
           start: function () {
           },
@@ -583,11 +576,11 @@ describe('VisSense Monitor', function () {
           },
           update: function () {
           },
-          visible: function() {
+          visible: function () {
           },
-          fullyvisible: function() {
+          fullyvisible: function () {
           },
-          hidden: function() {
+          hidden: function () {
           },
           visibilitychange: function (monitor) {
             model.state = monitor.state().state;

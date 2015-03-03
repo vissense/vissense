@@ -232,14 +232,6 @@ module.exports = function (grunt) {
           template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure: 'jsdoc-docstrap.conf.json'
         }
-      },
-      jaguarjs: {
-        src: ['lib/**/*.js', 'README.md'],
-        options: {
-          destination: '<%= dirs.docs %>',
-          template: 'node_modules/jaguarjs-jsdoc',
-          configure: 'jsdoc-jaguarjs.conf.json'
-        }
       }
     },
     notify: {

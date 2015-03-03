@@ -1,10 +1,10 @@
 {
   "name": "vissense",
-  "version": "0.4.0-rc1",
+  "version": "0.4.0",
   "license": "MIT",
   "main": "dist/vissense.min.js",
   "description": "",
-  "keywords": ["visibility", "viewtime", "viewport", "visible", "monitor", "observe"],
+  "keywords": ["visibility", "viewtime", "viewport", "visible", "hidden", "monitor", "observe"],
   "homepage": "https://vissense.github.io/vissense",
   "authors": [
     "tbk"
@@ -26,6 +26,7 @@
     "dist/coverage",
     "*.conf.js",
     "*.conf.json",
+    "CONTRIBUTING.md",
     "**/.*"
   ],
   "devDependencies": {

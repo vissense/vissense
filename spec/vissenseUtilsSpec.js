@@ -28,7 +28,7 @@ describe('VisSense.Utils', function (undefined) {
       expect(VisSense.Utils.identity(a, [], null, undefined)).toBe(a);
     });
 
-    describe('once', function() {
+    describe('once', function () {
       it('should verify that a callback is only invoked once', function () {
         var config = {
           callback: function () {
@@ -464,12 +464,12 @@ describe('VisSense.Utils', function (undefined) {
       });
 
       it('should return the destination object when no source is given', function () {
-        var destination = { theAnswerToLifeTheUniverseAndEverything: 42 };
+        var destination = {theAnswerToLifeTheUniverseAndEverything: 42};
         expect(VisSense.Utils.defaults(destination, undefined)).toBe(destination);
       });
 
       it('should return the source object when no destination object is given', function () {
-        var defaultAttributes = { foo: 'bar' };
+        var defaultAttributes = {foo: 'bar'};
         expect(VisSense.Utils.defaults(undefined, defaultAttributes)).toBe(defaultAttributes);
       });
 
@@ -822,7 +822,7 @@ describe('VisSense.Utils', function (undefined) {
 
   });
 
-  describe('PubSub', function() {
+  describe('PubSub', function () {
     beforeEach(function () {
       jasmine.clock().install();
     });
@@ -914,7 +914,7 @@ describe('VisSense.Utils', function (undefined) {
 
       spyOn(config, 'update');
 
-      var pubsub = new VisSense.PubSub({ async: true });
+      var pubsub = new VisSense.PubSub({async: true});
 
       var unbind = pubsub.on('update', config.update);
 

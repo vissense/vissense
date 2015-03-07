@@ -145,7 +145,8 @@
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ],
             async: !1
         });
-        this._setStrategy(_config.strategy), this._pubsub.on("update", function(monitor) {
+        this._strategy = new VisMon.Strategy.CompositeStrategy(_config.strategy), this._strategy.init(this), 
+        this._pubsub.on("update", function(monitor) {
             var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
             newValue !== oldValue && monitor._pubsub.publish("percentagechange", [ monitor, newValue, oldValue ]);
         }), this._pubsub.on("update", function(monitor) {
@@ -264,9 +265,7 @@
                 return newVisState(STATES.FULLY_VISIBLE, percentage, previous);
             }
         };
-    }(), VisMon.prototype._setStrategy = function(strategies) {
-        this._strategy = new VisMon.Strategy.CompositeStrategy(strategies), this._strategy.init(this);
-    }, VisMon.prototype.visobj = function() {
+    }(), VisMon.prototype.visobj = function() {
         return this._visobj;
     }, VisMon.prototype.state = function() {
         return this._state;
@@ -289,8 +288,6 @@
     }, VisMon.prototype.stop = function() {
         this._cancelAsyncStart ? this._cancelAsyncStart() : (this._strategy.stop(this), 
         this._pubsub.publish("stop", [ this ]));
-    }, VisMon.prototype.use = function(strategy) {
-        return this.stop(), this._setStrategy(strategy), this.start();
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.onUpdate = function(callback) {

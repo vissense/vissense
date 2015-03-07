@@ -5,6 +5,8 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+### Removed
+- removed deprecated method `VisMon.use`
 
 ## [0.4.0] - 2015-03-03
 ### Added

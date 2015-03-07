@@ -432,16 +432,6 @@ describe('VisSense Monitor', function () {
       vismon.stop();
 
       expect(config.update.calls.count()).toEqual(2);
-
-      vismon.use(new VisSense.VisMon.Strategy.EventStrategy());
-
-      expect(config.update.calls.count()).toEqual(3);
-
-      vismon.use(new VisSense.VisMon.Strategy.PollingStrategy());
-
-      expect(config.update.calls.count()).toEqual(4);
-
-      vismon.stop();
     });
 
     it('should return unregister function when registering a listener', function () {

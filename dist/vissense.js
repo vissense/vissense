@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.4.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.5.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, factory) {
     "use strict";
     root.VisSense = factory(root, root.document);
@@ -290,18 +290,6 @@
         this._pubsub.publish("stop", [ this ]));
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
-    }, VisMon.prototype.onUpdate = function(callback) {
-        return this.on("update", callback);
-    }, VisMon.prototype.onVisibilityChange = function(callback) {
-        return this.on("visibilitychange", callback);
-    }, VisMon.prototype.onPercentageChange = function(callback) {
-        return this.on("percentagechange", callback);
-    }, VisMon.prototype.onVisible = function(callback) {
-        return this.on("visible", callback);
-    }, VisMon.prototype.onFullyVisible = function(callback) {
-        return this.on("fullyvisible", callback);
-    }, VisMon.prototype.onHidden = function(callback) {
-        return this.on("hidden", callback);
     }, VisMon.prototype.on = function(topic, callback) {
         return this._pubsub.on(topic, callback);
     }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = noop, VisMon.Strategy.prototype.start = noop, 

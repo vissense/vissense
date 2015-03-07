@@ -594,12 +594,12 @@ describe('VisSense Monitor', function () {
 
         vismon.on('start', config.start);
         vismon.on('stop', config.stop);
-        vismon.onUpdate(config.update);
-        vismon.onHidden(config.hidden);
-        vismon.onVisible(config.visible);
-        vismon.onFullyVisible(config.fullyvisible);
-        vismon.onVisibilityChange(config.visibilitychange);
-        vismon.onPercentageChange(config.percentagechange);
+        vismon.on('update', config.update);
+        vismon.on('hidden', config.hidden);
+        vismon.on('visible', config.visible);
+        vismon.on('fullyvisible', config.fullyvisible);
+        vismon.on('visibilitychange', config.visibilitychange);
+        vismon.on('percentagechange', config.percentagechange);
 
         expect(config.start.calls.count()).toEqual(0);
         expect(config.stop.calls.count()).toEqual(0);

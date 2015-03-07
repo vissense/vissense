@@ -7,6 +7,12 @@ before changing this file!
 ## [Unreleased][unreleased]
 ### Removed
 - removed deprecated method `VisMon.use`
+- removed deprecated method `VisMon.onUpdate` - use `VisMon.on('update', ...)`
+- removed deprecated method `VisMon.onHidden` - use `VisMon.on('hidden', ...)`
+- removed deprecated method `VisMon.onVisible` - use `VisMon.on('visible', ...)`
+- removed deprecated method `VisMon.onFullyVisible` - use `VisMon.on('fullyvisible', ...)`
+- removed deprecated method `VisMon.onVisibilityChange` - use `VisMon.on('visibilitychange', ...)`
+- removed deprecated method `VisMon.onPercentageChange` - use `VisMon.on('percentagechange', ...)`
 
 ## [0.4.0] - 2015-03-03
 ### Added

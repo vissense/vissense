@@ -1,0 +1,23 @@
+ ;(function (root, name, factory) {
+  'use strict';
+
+  var _oldValue = root[name];
+
+  var _newValue = factory(root, root.document);
+
+  root[name] = _newValue;
+
+  root[name].noConflict = function() {
+    root[name] = _oldValue;
+
+    return _newValue;
+  };
+
+}(this, 'VisSense', function (window, document, undefined) {
+
+{{{code}}}
+{{#if objectToExport}}
+return {{{objectToExport}}};
+{{/if}}
+
+}));

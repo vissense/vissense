@@ -5,6 +5,9 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+### Added
+- added function `VisSense.noConflict`
+
 ### Removed
 - removed deprecated method `VisMon.use`
 - removed deprecated method `VisMon.onUpdate` - use `VisMon.on('update', ...)`

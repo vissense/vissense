@@ -1,8 +1,11 @@
 /*! { "name": "vissense", "version": "0.5.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
-!function(root, factory) {
+!function(root, name, factory) {
     "use strict";
-    root.VisSense = factory(root, root.document);
-}(this, function(window, document, undefined) {
+    var _oldValue = root[name], _newValue = factory(root, root.document);
+    root[name] = _newValue, root[name].noConflict = function() {
+        return root[name] = _oldValue, _newValue;
+    };
+}(this, "VisSense", function(window, document, undefined) {
     "use strict";
     function async(callback, delay) {
         return function() {

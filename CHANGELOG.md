@@ -5,6 +5,7 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+## [0.5.0] - 2015-03-14
 ### Added
 - added function `VisSense.noConflict`
 
@@ -48,6 +49,7 @@ before changing this file!
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.4.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/vissense/vissense/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/vissense/vissense/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/vissense/vissense/compare/0.2.1...0.3.0

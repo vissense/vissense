@@ -242,9 +242,7 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start and stop a monitor with a smooth syntax', function () {
       var config = {
-        update: function (monitor) {
-          expect(monitor).toBe(vismon);
-        }
+        update: function () {}
       };
 
       spyOn(config, 'update');
@@ -264,9 +262,7 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start a monitor asynchronously', function () {
       var config = {
-        update: function (monitor) {
-          expect(monitor).toBe(vismon);
-        }
+        update: function () {}
       };
 
       spyOn(config, 'update');
@@ -284,9 +280,7 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start and stop an async monitor before executing', function () {
       var config = {
-        update: function (monitor) {
-          expect(monitor).toBe(vismon);
-        }
+        update: function () {}
       };
 
       spyOn(config, 'update');
@@ -304,6 +298,40 @@ describe('VisSense Monitor', function () {
       jasmine.clock().tick(5);
 
       expect(config.update.calls.count()).toEqual(0);
+
+    });
+
+    it('should not fire start/stop events if already started/stopped', function () {
+      var config = {
+        start: function () {},
+        stop: function () {}
+      };
+
+      spyOn(config, 'start');
+      spyOn(config, 'stop');
+
+      var vismon = visobj.monitor(config);
+
+      expect(vismon.start()
+          .start()
+          .start()
+          .start()
+          .start()
+          .stop()
+      ).toBe(undefined);
+
+      expect(vismon.stop()).toBe(undefined);
+      expect(vismon.stop()).toBe(undefined);
+      expect(vismon.stop()).toBe(undefined);
+      expect(vismon.stop()).toBe(undefined);
+
+      expect(config.start.calls.count()).toEqual(1);
+      expect(config.stop.calls.count()).toEqual(1);
+
+      jasmine.clock().tick(5);
+
+      expect(config.start.calls.count()).toEqual(1);
+      expect(config.stop.calls.count()).toEqual(1);
 
     });
 

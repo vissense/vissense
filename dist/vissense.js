@@ -140,7 +140,8 @@
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function VisMon(visobj, config) {
-        this._visobj = visobj, this._state = {}, this._pubsub = new PubSub(), this._events = [ "start", "stop", "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
+        this._visobj = visobj, this._state = {}, this._started = !1, this._pubsub = new PubSub(), 
+        this._events = [ "start", "stop", "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
         var _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ],
             async: !1
@@ -270,11 +271,13 @@
     }, VisMon.prototype.state = function() {
         return this._state;
     }, VisMon.prototype.start = function(config) {
+        if (this._started) return this;
         var _config = defaults(config, {
             async: !1
         });
         return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (this.update(), 
-        this._pubsub.publish("start", [ this ]), this._strategy.start(this), this);
+        this._pubsub.publish("start", [ this ]), this._strategy.start(this), this._started = !0, 
+        this);
     }, VisMon.prototype.startAsync = function(config) {
         this._cancelAsyncStart && this._cancelAsyncStart();
         var me = this, cancelAsyncStart = defer(function() {
@@ -286,8 +289,8 @@
             cancelAsyncStart(), me._cancelAsyncStart = null;
         }, this;
     }, VisMon.prototype.stop = function() {
-        this._cancelAsyncStart ? this._cancelAsyncStart() : (this._strategy.stop(this), 
-        this._pubsub.publish("stop", [ this ]));
+        this._cancelAsyncStart && this._cancelAsyncStart(), this._started && (this._strategy.stop(this), 
+        this._pubsub.publish("stop", [ this ])), this._started = !1;
     }, VisMon.prototype.update = function() {
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.on = function(topic, callback) {

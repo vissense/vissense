@@ -14,6 +14,9 @@ before changing this file!
 - removed deprecated method `VisMon.onVisibilityChange` - use `VisMon.on('visibilitychange', ...)`
 - removed deprecated method `VisMon.onPercentageChange` - use `VisMon.on('percentagechange', ...)`
 
+### Fixed
+- prevent emitting start/stop events if already started/stopped
+
 ## [0.4.0] - 2015-03-03
 ### Added
 - added function `Utils.once`

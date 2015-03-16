@@ -24,6 +24,15 @@
             }, delay);
         };
     }
+    function throttle(callback, delay, thisArg) {
+        var cancel = noop, last = !1;
+        return function() {
+            var time = now(), args = arguments, func = function() {
+                last = time, callback.apply(thisArg, args);
+            };
+            last && last + delay > time ? (cancel(), cancel = defer(func, delay)) : defer(func, 0);
+        };
+    }
     function defaults(dest, source) {
         var sourceIsObject = isObject(source), destIsObject = isObject(dest);
         return sourceIsObject || destIsObject ? sourceIsObject && destIsObject ? (forEach(Object.keys(source), function(property) {
@@ -332,20 +341,21 @@
         return this._started ? (this._clearInterval(), this._started = !1, !0) : !1;
     }, VisMon.Strategy.EventStrategy = function(config) {
         this._config = defaults(config, {
-            debounce: 50
-        }), this._started = !1;
+            throttle: 50
+        }), this._config.debounce > 0 && (this._config.throttle = +this._config.debounce), 
+        this._started = !1;
     }, VisMon.Strategy.EventStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
-        return this._started || (this._removeEventListeners = function(config) {
-            var update = debounce(function() {
-                monitor.update();
-            }, config.debounce), removeOnVisibilityChangeEvent = VisibilityApi.onVisibilityChange(update);
+        return this._started || (this._removeEventListeners = function(update) {
+            var removeOnVisibilityChangeEvent = VisibilityApi.onVisibilityChange(update);
             return addEventListener("scroll", update, !1), addEventListener("resize", update, !1), 
             addEventListener("touchmove", update, !1), function() {
                 removeEventListener("touchmove", update, !1), removeEventListener("resize", update, !1), 
                 removeEventListener("scroll", update, !1), removeOnVisibilityChangeEvent();
             };
-        }(this._config), this._started = !0), this._started;
+        }(throttle(function() {
+            monitor.update();
+        }, this._config.throttle)), this._started = !0), this._started;
     }, VisMon.Strategy.EventStrategy.prototype.stop = function() {
         return this._started ? (this._removeEventListeners(), this._started = !1, !0) : !1;
     }, VisSense.VisMon = VisMon, VisSense.PubSub = PubSub, VisSense.fn.monitor = function(config) {
@@ -369,6 +379,7 @@
         noop: noop,
         now: now,
         once: once,
+        throttle: throttle,
         percentage: percentage,
         VisibilityApi: VisibilityApi,
         _viewport: viewport,

@@ -123,33 +123,60 @@ describe('VisSense Monitor', function () {
         });
       });
 
-      it('should verify proper event handling', function () {
-        var debounceInMilliseconds = 10;
+      it('should that throttled function calls on multiple events', function () {
+        var throttled = 100;
 
-        var vismon = visobj.monitor({
+        var config = {
           strategy: new VisSense.VisMon.Strategy.EventStrategy({
-            debounce: debounceInMilliseconds
-          })
-        }).start();
+            debounce: throttled
+          }),
+          update: function () {
+          }
+        };
+
+        // deprecated 'debounce' options should still be supported
+        expect(config.strategy._config.throttle).toBe(throttled);
+
+        spyOn(config, 'update');
+
+        var vismon = visobj.monitor(config);
+
+        expect(config.update.calls.count()).toBe(0);
+
+        vismon.start();
 
         expect(vismon.state().visible).toBe(false);
+        expect(config.update.calls.count()).toBe(1);
 
         element.style.display = 'block'; // set visible
 
-        jasmine.clock().tick(42);
+        jasmine.clock().tick(throttled + 42);
 
         // must still be false, because no event has been fired yet
         expect(vismon.state().visible).toBe(false);
+        expect(config.update.calls.count()).toBe(1);
+
+        fireScrollEvent();
+
+        expect(vismon.state().visible).toBe(false);
+        expect(config.update.calls.count()).toBe(1);
+
+        jasmine.clock().tick(1);
+
+        expect(vismon.state().visible).toBe(true);
+        expect(config.update.calls.count()).toBe(2);
 
         fireScrollEvent();
 
         jasmine.clock().tick(1);
 
-        expect(vismon.state().visible).toBe(false);
+        expect(vismon.state().visible).toBe(true);
+        expect(config.update.calls.count()).toBe(2);
 
-        jasmine.clock().tick(debounceInMilliseconds);
+        jasmine.clock().tick(throttled);
 
         expect(vismon.state().visible).toBe(true);
+        expect(config.update.calls.count()).toBe(3);
 
         vismon.stop();
       });
@@ -242,7 +269,8 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start and stop a monitor with a smooth syntax', function () {
       var config = {
-        update: function () {}
+        update: function () {
+        }
       };
 
       spyOn(config, 'update');
@@ -262,7 +290,8 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start a monitor asynchronously', function () {
       var config = {
-        update: function () {}
+        update: function () {
+        }
       };
 
       spyOn(config, 'update');
@@ -280,7 +309,8 @@ describe('VisSense Monitor', function () {
 
     it('should be able to start and stop an async monitor before executing', function () {
       var config = {
-        update: function () {}
+        update: function () {
+        }
       };
 
       spyOn(config, 'update');
@@ -303,8 +333,10 @@ describe('VisSense Monitor', function () {
 
     it('should not fire start/stop events if already started/stopped', function () {
       var config = {
-        start: function () {},
-        stop: function () {}
+        start: function () {
+        },
+        stop: function () {
+        }
       };
 
       spyOn(config, 'start');

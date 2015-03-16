@@ -5,6 +5,15 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+### Added
+- added function `Utils.throttle`
+
+### Changed
+- adapted EventStrategy to use `Utils.throttle` instead of `Utils.debounce`
+
+### Deprecated
+- deprecated EventStrategy option `debounce` - use `throttle` instead
+
 ## [0.5.0] - 2015-03-14
 ### Added
 - added function `VisSense.noConflict`

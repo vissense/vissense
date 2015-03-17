@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.5.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.6.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, name, factory) {
     "use strict";
     var _oldValue = root[name], _newValue = factory(root, root.document);
@@ -30,7 +30,8 @@
             var time = now(), args = arguments, func = function() {
                 last = time, callback.apply(thisArg, args);
             };
-            last && last + delay > time ? (cancel(), cancel = defer(func, delay)) : defer(func, 0);
+            last && last + delay > time ? (cancel(), cancel = defer(func, delay)) : (last = time, 
+            defer(func, 0));
         };
     }
     function defaults(dest, source) {

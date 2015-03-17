@@ -78,6 +78,7 @@ describe('VisSense.Utils', function (undefined) {
         }, func.returnTrue)()).toBe(true);
         expect(func.returnTrue.calls.count()).toEqual(2);
       });
+
       it('should NOT fire if expression is false', function () {
         expect(VisSense.Utils.fireIf(false, func.returnTrue)()).not.toBeDefined();
         expect(VisSense.Utils.fireIf(func.returnFalse, func.returnTrue)()).not.toBeDefined();
@@ -88,13 +89,16 @@ describe('VisSense.Utils', function (undefined) {
 
     describe('debounce', function () {
       var callback;
+
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
         jasmine.clock().install();
       });
+
       afterEach(function () {
         jasmine.clock().uninstall();
       });
+
       it('should debounce a function', function () {
         var debouncedFunction = VisSense.Utils.debounce(function () {
           callback();
@@ -131,15 +135,74 @@ describe('VisSense.Utils', function (undefined) {
       });
     });
 
-    describe('defer', function () {
+    describe('throttle', function () {
       var callback;
+
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
         jasmine.clock().install();
       });
+
       afterEach(function () {
         jasmine.clock().uninstall();
       });
+
+      it('should throttle a function', function () {
+        var throttleFunction = VisSense.Utils.throttle(function () {
+          callback();
+        }, 1000);
+
+        throttleFunction();
+        throttleFunction();
+
+        jasmine.clock().tick(1);
+
+        expect(callback.calls.count()).toEqual(1);
+
+        jasmine.clock().tick(300);
+
+        throttleFunction();
+        throttleFunction();
+
+        jasmine.clock().tick(300);
+
+        throttleFunction();
+        throttleFunction();
+
+        jasmine.clock().tick(1);
+
+        expect(callback.calls.count()).toEqual(1);
+
+        jasmine.clock().tick(1001);
+
+        expect(callback.calls.count()).toEqual(2);
+
+        throttleFunction();
+        throttleFunction();
+
+        jasmine.clock().tick(1);
+
+        expect(callback.calls.count()).toEqual(2);
+
+        jasmine.clock().tick(1001);
+
+        expect(callback.calls.count()).toEqual(3);
+
+      });
+    });
+
+    describe('defer', function () {
+      var callback;
+
+      beforeEach(function () {
+        callback = jasmine.createSpy('callback');
+        jasmine.clock().install();
+      });
+
+      afterEach(function () {
+        jasmine.clock().uninstall();
+      });
+
       it('should defer function', function () {
         VisSense.Utils.defer(function () {
           callback();
@@ -186,10 +249,12 @@ describe('VisSense.Utils', function (undefined) {
 
     describe('async', function () {
       var callback;
+
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
         jasmine.clock().install();
       });
+
       afterEach(function () {
         jasmine.clock().uninstall();
       });
@@ -277,6 +342,7 @@ describe('VisSense.Utils', function (undefined) {
         expect(VisSense.Utils.isDefined()).toBe(false);
         expect(VisSense.Utils.isDefined(undefined)).toBe(false);
       });
+
       it('should detect {}/null/number/string/etc. as defined', function () {
         expect(VisSense.Utils.isDefined(VisSense.Utils.isDefined)).toBe(true);
         expect(VisSense.Utils.isDefined({})).toBe(true);
@@ -292,6 +358,7 @@ describe('VisSense.Utils', function (undefined) {
       it('should detect `isFunction` as function', function () {
         expect(VisSense.Utils.isFunction(VisSense.Utils.isFunction)).toBe(true);
       });
+
       it('should NOT detect {}/[]/null/undefined/number/string/etc. as function', function () {
         expect(VisSense.Utils.isFunction({})).toBe(false);
         expect(VisSense.Utils.isFunction([])).toBe(false);
@@ -310,6 +377,7 @@ describe('VisSense.Utils', function (undefined) {
 
         expect(VisSense.Utils.isElement($('#element')[0])).toBe(true);
       });
+
       it('should NOT detect {}/[]/null/undefined/number/string/etc. as element', function () {
         expect(VisSense.Utils.isElement({})).toBe(false);
         expect(VisSense.Utils.isElement([])).toBe(false);

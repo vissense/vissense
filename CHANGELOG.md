@@ -5,6 +5,10 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+## [0.6.1] - 2015-03-17
+### Fixed
+- prevent multiple executions of a throttled function
+
 ## [0.6.0] - 2015-03-16
 ### Added
 - added function `Utils.throttle`
@@ -59,7 +63,8 @@ before changing this file!
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.6.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.6.1...HEAD
+[0.6.1]: https://github.com/vissense/vissense/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/vissense/vissense/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/vissense/vissense/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/vissense/vissense/compare/0.3.0...0.4.0

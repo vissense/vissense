@@ -3,5 +3,8 @@
 *.iml
 .idea/
 
+dist/
+tmp-gh-pages/
+
 node_modules/
 bower_components/

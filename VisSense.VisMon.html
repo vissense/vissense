@@ -619,7 +619,10 @@ monitor.start();</pre>
     
     
     <div class="description">
-        <p>Starts monitoring the provided element.#</p>
+        <p>Starts monitoring the provided element.
+This will determine the element visibility once and
+subequentially execute every strategies <code>start</code> method.
+Call <code>stop</code> to stop observing the element.</p>
     </div>
     
 
@@ -697,11 +700,13 @@ monitor.start();</pre>
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">var monitor = VisSense.of(myElement).monitor().start();
+    <pre class="sunlight-highlight-javascript">var myElement = document.getElementById(&#x27;myElement&#x27;);
+var monitor = VisSense.of(myElement).monitor().start();
 ...
 monitor.stop();</pre>
 
-    <pre class="sunlight-highlight-javascript">var monitor = VisSense.VisMon(..., {
+    <pre class="sunlight-highlight-javascript">var visobj = new VisSense(myElement);
+var monitor = VisSense.VisMon(..., {
   strategy: [
     new ViSense.VisMon.Strategy.EventStrategy(...)
     new ViSense.VisMon.Strategy.PollingStrategy(...)

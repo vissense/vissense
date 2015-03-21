@@ -366,7 +366,8 @@ vis.percentage();
     
     
     <div class="description">
-        <p>Constructs a VisSense object.</p>
+        <p>Constructs and returns a VisSense object.
+This is syntactic sugar for <code>new VisSense(..)</code>.</p>
     </div>
     
 
@@ -421,7 +422,7 @@ vis.percentage();
     
             
 <div class="param-desc">
-    <p>The constructed VisSense object.</p>
+    <p>An initialized VisSense object.</p>
 </div>
 
 
@@ -445,7 +446,7 @@ vis.percentage();
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">var myElement = document.getElementById(&#x27;myElement&#x27;);
-var visElement = VisSense.of(m&lt;Element);</pre>
+var visElement = VisSense.of(myElement);</pre>
 
 
     

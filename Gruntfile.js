@@ -288,6 +288,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test-fast', ['jasmine', 'notify:test']);
 
   grunt.registerTask('docs', ['clean:docs', 'jsdoc:docstrap', 'connect:docs']);
+  grunt.registerTask('docs-only', ['clean:docs', 'jsdoc:docstrap']);
 
   grunt.registerTask('coverage', ['coveralls']);
 

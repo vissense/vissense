@@ -59,6 +59,13 @@ var visibility_monitor = visibility.monitor({
 }).start();
 ```
 
+[Documentation](https://vissense.github.io/vissense/)
+------------
+See [vissense.github.io/vissense](https://vissense.github.io/vissense/) or generate the documentation locally.
+
+#### Generate documentation
+Clone the repository and run `grunt docs`
+
 Download
 ------------
 
@@ -103,10 +110,6 @@ or
 `grunt serve`
 
 and it automatically opens `http://localhost:3000/SpecRunner.html` in your browser.
-
-#### Generate documentation
-
-`grunt docs`
 
 
 API

@@ -24,16 +24,6 @@
             }, delay);
         };
     }
-    function throttle(callback, delay, thisArg) {
-        var cancel = noop, last = !1;
-        return function() {
-            var time = now(), args = arguments, func = function() {
-                last = time, callback.apply(thisArg, args);
-            };
-            last && last + delay > time ? (cancel(), cancel = defer(func, delay)) : (last = time, 
-            defer(func, 0));
-        };
-    }
     function defaults(dest, source) {
         var sourceIsObject = isObject(source), destIsObject = isObject(dest);
         return sourceIsObject || destIsObject ? sourceIsObject && destIsObject ? (forEach(Object.keys(source), function(property) {
@@ -93,6 +83,16 @@
         var cache, called = !1;
         return function() {
             return called || (cache = callback.apply(undefined, arguments), called = !0), cache;
+        };
+    }
+    function throttle(callback, wait, thisArg) {
+        var cancel = noop, last = !1;
+        return function() {
+            var time = now(), args = arguments, func = function() {
+                last = time, callback.apply(thisArg, args);
+            };
+            last && last + wait > time ? (cancel(), cancel = defer(func, wait)) : (last = time, 
+            defer(func, 0));
         };
     }
     function viewport() {

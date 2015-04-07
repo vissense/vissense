@@ -498,6 +498,33 @@ describe('VisSense Monitor', function () {
       expect(unregister()).toBe(true);
     });
 
+    describe('Builder', function () {
+      it('should build a VisMon object', function () {
+        var vismon = null;
+
+        VisSense.VisMon.Builder(visobj)
+          .set('async', false)
+          .strategy(new VisSense.VisMon.Strategy.PollingStrategy({interval: 1000}))
+          .strategy(new VisSense.VisMon.Strategy.EventStrategy({debounce: 30}))
+          .on('percentagechange', function (monitor, newValue) {
+            console.log(newValue + '%');
+          })
+          .build(function (monitorByBuilder) {
+            vismon = monitorByBuilder;
+          });
+
+        expect(vismon).toBeDefined();
+      });
+
+      it('should build a VisMon object without strategies', function () {
+        var vismon = VisSense.VisMon.Builder(visobj)
+          .set('strategy', false)
+          .build();
+
+        expect(vismon).toBeDefined();
+      });
+    });
+
     describe('Events', function () {
 
       beforeEach(function () {

@@ -7,6 +7,7 @@ before changing this file!
 ## [Unreleased][unreleased]
 ### Added
 - added method `VisMon.publish`
+- added `VisMon.Builder`
 
 ## [0.6.1] - 2015-03-17
 ### Fixed

@@ -318,7 +318,41 @@
         this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
     }, VisMon.prototype.on = function(topic, callback) {
         return this._pubsub.on(topic, callback);
-    }, VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = noop, VisMon.Strategy.prototype.start = noop, 
+    }, VisMon.Builder = function() {
+        var combineStrategies = function(config, strategies) {
+            var combinedStrategies = null, forceDisableStrategies = config.strategy === !1, enableStrategies = !forceDisableStrategies && (config.strategy || strategies.length > 0);
+            if (enableStrategies) {
+                var configStrategyIsDefined = !!config.strategy, configStrategyIsArray = isArray(config.strategy), configStrategyAsArray = configStrategyIsDefined ? configStrategyIsArray ? config.strategy : [ config.strategy ] : [];
+                combinedStrategies = configStrategyAsArray.concat(strategies);
+            } else combinedStrategies = forceDisableStrategies ? [] : config.strategy;
+            return combinedStrategies;
+        };
+        return function(visobj) {
+            var config = {}, strategies = [], events = [], productBuilt = !1, product = null;
+            return {
+                set: function(name, value) {
+                    return config[name] = value, this;
+                },
+                strategy: function(strategy) {
+                    return strategies.push(strategy), this;
+                },
+                on: function(event, handler) {
+                    return events.push([ event, handler ]), this;
+                },
+                build: function(consumer) {
+                    var manufacture = function() {
+                        var combinedStrategies = combineStrategies(config, strategies);
+                        config.strategy = combinedStrategies;
+                        var monitor = visobj.monitor(config);
+                        return forEach(events, function(event) {
+                            monitor.on(event[0], event[1]);
+                        }), productBuilt = !0, product = monitor;
+                    }, monitor = productBuilt ? product : manufacture();
+                    return isFunction(consumer) ? consumer(monitor) : monitor;
+                }
+            };
+        };
+    }(), VisMon.Strategy = function() {}, VisMon.Strategy.prototype.init = noop, VisMon.Strategy.prototype.start = noop, 
     VisMon.Strategy.prototype.stop = noop, VisMon.Strategy.CompositeStrategy = function(strategies) {
         this._strategies = isArray(strategies) ? strategies : [ strategies ];
     }, VisMon.Strategy.CompositeStrategy.prototype = Object.create(VisMon.Strategy.prototype), 

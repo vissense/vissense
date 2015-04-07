@@ -1,10 +1,5 @@
 /* global VisSense,jasmine,beforeEach*/
-/**
- * @license
- * Vissense <http://vissense.com/>
- * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
- * Available under MIT license <http://opensource.org/licenses/MIT>
- */
+
 beforeEach(function () {
   'use strict';
   function getMessage(valueDescription, result, actual, expected) {

@@ -1,10 +1,5 @@
 /*global VisSense,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
-/**
- * @license
- * Vissense <http://vissense.com/>
- * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
- * Available under MIT license <http://opensource.org/licenses/MIT>
- */
+
 describe('VisSense.Utils', function (undefined) {
   'use strict';
 

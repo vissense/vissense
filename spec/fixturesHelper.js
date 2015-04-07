@@ -1,10 +1,5 @@
 /* global jasmine,beforeEach */
-/**
- * @license
- * Vissense <http://vissense.com/>
- * Copyright 2014 tbk <theborakompanioni+vissense@gmail.com>
- * Available under MIT license <http://opensource.org/licenses/MIT>
- */
+
 (function () {
   'use strict';
   function karma() {

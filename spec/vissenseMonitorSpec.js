@@ -772,6 +772,112 @@ describe('VisSense Monitor', function () {
         expect(config.stop.calls.count()).toEqual(1);
 
       });
+
+
+      it('should be possible to publish custom events', function () {
+        var consumer = {
+          onEvent: function () {
+          }
+        };
+
+        spyOn(consumer, 'onEvent').and.callThrough();
+
+        var config = {
+          strategy: []
+        };
+
+        var monitor = visobj.monitor(config);
+
+        monitor.on('myEvent', consumer.onEvent);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+        monitor.publish('myEvent', []);
+
+        expect(consumer.onEvent.calls.count()).toEqual(1);
+
+        monitor.stop();
+      });
+
+      it('should throw an error if an internal event is published', function () {
+        var consumer = {
+          onInternalEvent: function () {
+          }
+        };
+
+        spyOn(consumer, 'onInternalEvent').and.callThrough();
+
+        var monitor = visobj.monitor({
+          strategy: []
+        });
+
+        monitor.on('visible', consumer.onInternalEvent);
+
+        expect(consumer.onInternalEvent.calls.count()).toEqual(0);
+
+        var expectedError = new Error('Cannot publish internal event "visible" from external scope.');
+        expect(function () {
+          monitor.publish('visible', []);
+        }).toThrow(expectedError);
+
+        expect(consumer.onInternalEvent.calls.count()).toEqual(0);
+      });
+
+      it('should be able to publish events asynchronously', function () {
+        var consumer = {
+          onEvent: function () {
+          }
+        };
+
+        spyOn(consumer, 'onEvent').and.callThrough();
+
+        var monitor = new VisSense(element).monitor({
+          strategy: [],
+          async: true
+        });
+
+        monitor.on('myEvent', consumer.onEvent);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+        monitor.publish('myEvent', []);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+        jasmine.clock().tick(1);
+
+        expect(consumer.onEvent.calls.count()).toEqual(1);
+
+      });
+
+      it('should be able to cancel asynchronously published events', function () {
+        var consumer = {
+          onEvent: function () {
+          }
+        };
+
+        spyOn(consumer, 'onEvent').and.callThrough();
+
+        var monitor = new VisSense(element).monitor({
+          strategy: [],
+          async: true
+        });
+
+        monitor.on('myEvent', consumer.onEvent);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+        var cancel = monitor.publish('myEvent', []);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+        cancel();
+
+        jasmine.clock().tick(1000);
+
+        expect(consumer.onEvent.calls.count()).toEqual(0);
+
+      });
     });
   });
 

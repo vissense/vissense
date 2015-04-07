@@ -153,12 +153,16 @@
         return currentState && percentage === currentState.percentage && currentState.percentage === currentState.previous.percentage ? currentState : newState.hidden ? VisSense.VisState.hidden(percentage, currentState) : newState.fullyvisible ? VisSense.VisState.fullyvisible(percentage, currentState) : VisSense.VisState.visible(percentage, currentState);
     }
     function VisMon(visobj, config) {
-        this._visobj = visobj, this._state = {}, this._started = !1, this._pubsub = new PubSub(), 
-        this._events = [ "start", "stop", "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ];
         var _config = defaults(config, {
             strategy: [ new VisMon.Strategy.PollingStrategy(), new VisMon.Strategy.EventStrategy() ],
             async: !1
         });
+        this._visobj = visobj, this._state = {}, this._started = !1;
+        var anyTopicName = "*#" + now();
+        this._pubsub = new PubSub({
+            async: _config.async,
+            anyTopicName: anyTopicName
+        }), this._events = [ anyTopicName, "start", "stop", "update", "hidden", "visible", "fullyvisible", "percentagechange", "visibilitychange" ], 
         this._strategy = new VisMon.Strategy.CompositeStrategy(_config.strategy), this._strategy.init(this), 
         this._pubsub.on("update", function(monitor) {
             var newValue = monitor._state.percentage, oldValue = monitor._state.previous.percentage;
@@ -208,9 +212,9 @@
                 anyTopicName: "*"
             });
         }
-        var fireListeners = function(topic, listeners, args) {
-            forEach(listeners, function(listener) {
-                listener(args);
+        var syncFireListeners = function(consumers, args) {
+            forEach(consumers, function(consumer) {
+                consumer(args);
             });
         };
         return PubSub.prototype.on = function(topic, callback) {
@@ -226,8 +230,10 @@
             return topic === this._config.anyTopicName ? (this._onAnyCache.push(listener), unregister(listener, this._onAnyCache, "*")) : (this._cache[topic] || (this._cache[topic] = []), 
             this._cache[topic].push(listener), unregister(listener, this._cache[topic], topic));
         }, PubSub.prototype.publish = function(topic, args) {
-            var listeners = (this._cache[topic] || []).concat(topic === this._config.anyTopicName ? [] : this._onAnyCache), syncOrAsyncPublish = this._config.async ? async(fireListeners) : fireListeners;
-            return syncOrAsyncPublish(topic, listeners, args || []);
+            var listeners = (this._cache[topic] || []).concat(topic === this._config.anyTopicName ? [] : this._onAnyCache), enableAsync = !!this._config.async, syncOrAsyncPublish = enableAsync ? async(syncFireListeners) : function(listeners, args) {
+                return syncFireListeners(listeners, args), noop;
+            };
+            return syncOrAsyncPublish(listeners, args || []);
         }, PubSub;
     }();
     VisSense.prototype.state = function() {
@@ -281,6 +287,10 @@
         };
     }(), VisMon.prototype.visobj = function() {
         return this._visobj;
+    }, VisMon.prototype.publish = function(eventName, args) {
+        var isInternalEvent = this._events.indexOf(eventName) >= 0;
+        if (isInternalEvent) throw new Error('Cannot publish internal event "' + eventName + '" from external scope.');
+        return this._pubsub.publish(eventName, args);
     }, VisMon.prototype.state = function() {
         return this._state;
     }, VisMon.prototype.start = function(config) {

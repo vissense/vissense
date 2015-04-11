@@ -27,6 +27,7 @@
     "*.conf.js",
     "*.conf.json",
     "CONTRIBUTING.md",
+    "*.sh",
     "**/.*"
   ],
   "devDependencies": {

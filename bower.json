@@ -1,9 +1,9 @@
 {
   "name": "vissense",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "license": "MIT",
   "main": "dist/vissense.min.js",
-  "description": "",
+  "description": "A utility library for observing visibility changes of DOM elements.",
   "keywords": ["visibility", "viewtime", "viewport", "visible", "hidden", "monitor", "observe"],
   "homepage": "https://vissense.github.io/vissense",
   "authors": [

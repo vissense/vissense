@@ -609,14 +609,16 @@ describe('VisSense.Utils', function (undefined) {
       expect(viewport.width).toBeDefined();
     });
 
-    it('should verify defined values from viewport(element)', function () {
-      jasmine.getFixtures().set('<div id="element"></div>');
+  });
 
-      var viewport = VisSense.Utils._viewport($('#element')[0]);
+  describe('isPageVisible', function () {
 
-      expect(viewport.height).toBeDefined();
-      expect(viewport.width).toBeDefined();
+    it('should verify existence of isPageVisible function', function () {
+      var pageVisible = VisSense.Utils.isPageVisible();
+
+      expect(pageVisible).toBe(true);
     });
+
   });
 
   describe('elements visibility', function () {

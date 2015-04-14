@@ -5,6 +5,10 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+### Added
+- added support for defining a VisSense objects reference window
+- added function `Utils.createVisibilityApi`
+- added method `VisSense.referenceWindow`
 
 ## [0.7.0] - 2015-04-13
 ### Added

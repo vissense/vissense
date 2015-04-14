@@ -21,7 +21,16 @@ describe('VisSense Monitor', function () {
     var monitorMock;
 
     beforeEach(function () {
-      monitorMock = {update: VisSense.Utils.noop};
+      monitorMock = {
+        update: VisSense.Utils.noop,
+        visobj: function() {
+          return {
+            referenceWindow: function() {
+              return window;
+            }
+          };
+        }
+      };
     });
 
     describe('Strategy', function () {

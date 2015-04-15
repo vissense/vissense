@@ -5,6 +5,7 @@ See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog)
 before changing this file!
 
 ## [Unreleased][unreleased]
+## [0.8.0] - 2015-04-15
 ### Added
 - added support for defining a VisSense objects reference window
 - added function `Utils.createVisibilityApi`
@@ -73,7 +74,8 @@ before changing this file!
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.7.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/vissense/vissense/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/vissense/vissense/compare/0.6.1...0.7.0
 [0.6.1]: https://github.com/vissense/vissense/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/vissense/vissense/compare/0.5.0...0.6.0

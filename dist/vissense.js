@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.7.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.8.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, name, factory) {
     "use strict";
     var _oldValue = root[name], _newValue = factory(root, root.document);
@@ -247,7 +247,7 @@
             return hook(this._element) ? void 0 : VisSense.VisState.hidden(0);
         }, this);
         return hiddenByHook || function(element, config) {
-            var perc = config.percentageHook(element);
+            var perc = config.percentageHook(element, config.referenceWindow);
             return perc <= config.hidden ? VisSense.VisState.hidden(perc) : perc >= config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
         }(this._element, this._config);
     }, VisSense.prototype.percentage = function() {

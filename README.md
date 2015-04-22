@@ -13,16 +13,15 @@ VisSense.js
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.
 
-VisSense.js is **lightweight**, **highly extensible** and **easy to use** (very straight forward API). 
-It has **sane default values**, is **well tested**, **documented** and **production-ready** 
-(integrated on websites with > 1 billion impressions/month). Best of all: **No dependencies**.
+VisSense.js is **lightweight** (<4KB minified and gzipped) and **highly extensible**.
+It has **sane default values**, is **tested**, **documented** and **production-ready**. Best of all: **No dependencies**.
 
 #### What it does
  * provides methods for detecting visibility of DOM elements
- * provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage
+ * provides a convenience class with straightforward methods like `isHidden`, `isVisible`, `isFullyVisible`, `percentage`
  * provides a convenience class for detecting changes in visibility
 
-#### What it does *not* do
+#### What it does *not* do (by default)
  * detect if an element is overlapped by others
  * detect if an element is a hidden input element
  * take elements opacity into account
@@ -33,23 +32,22 @@ It has **sane default values**, is **well tested**, **documented** and **product
 ------------
 See more examples on the [demo page](https://vissense.github.io/vissense-demo/).
 
-In this simple example a video is played if at least 75% of its area is in the users viewport:
+In this simple example a video will only be started if at least 75% of its area is in the users viewport:
 ```javascript
 var video = $('#video'); 
-var visibility = VisSense(video[0], { fullyvisible: 0.75 });
+var videoVisibility = VisSense(video[0]);
 
-if(visibility.isFullyVisible()) { 
+if(videoVisibility.percentage() > 0.75) { 
   video.play();
 }
 ```
 
-In a more advanced example the video is stopped as soon as it is not visible anymore:
+In the following example the video will be started if it's at least 75% visible and stopped as soon as it is not visible anymore:
 ```javascript
 var video = $('#video'); 
 var visibility = VisSense(video[0], { fullyvisible: 0.75 });
 
-var visibility_monitor = visibility.monitor({ 
-  strategy: new VisSense.VisMon.Strategy.EventStrategy({ debounce: 100 }),
+var visibility_monitor = visibility.monitor({
   fullyvisible: function() { 
     video.play();
   }, 
@@ -115,7 +113,7 @@ and it automatically opens `http://localhost:3000/SpecRunner.html` in your brows
 API
 ------------
 
-### new VisSense([options])
+### VisSense([options])
 
 Object constructor. Options:
 
@@ -175,7 +173,7 @@ var visibility_monitor = VisSense(element).monitor({
 }).start();
 ```
 
-### new VisSense.VisMon(visobj, [, options])
+### VisSense.VisMon(visobj, [, options])
 
 Object constructor. Options:
 
@@ -192,7 +190,7 @@ Object constructor. Options:
 ```javascript
 var visobj = VisSense(document.getElementById('video'));
 
-var visibility_monitor = new VisSense.VisMon(visobj, { 
+var visibilityMonitor = VisSense.VisMon(visobj, { 
   strategy: [
     new VisSense.VisMon.Strategy.EventStrategy({ debounce: 42 })
   ],
@@ -206,12 +204,14 @@ var visibility_monitor = new VisSense.VisMon(visobj, {
 ```
 
 ##### Strategies
-VisSense comes with two predefined strategies:
-  - `EventStrategy` this strategy registers event handlers for visibilitychange, scroll and resize and calls `update()` accordingly.
-  - `PollingStrategy` this strategy invokes `update()` periodically.
+Strategies are hooks which let you intercept the monitoring process.
+e.g. updating the monitor, sending custom events, etc.
 
-The default monitor object uses a combination of EventStrategy and PollingStrategy as strategy.
-Feel free to write your own strategy to cover your specific requirements (it's super easy).
+VisSense comes with two predefined strategies:
+  - `PollingStrategy` a simple strategy which invokes `update()` periodically.
+  - `EventStrategy` this strategy registers event handlers for `visibilitychange`, `scroll` and `resize` events and calls `update()` accordingly.
+
+A monitor can use any number of strategies. The default monitor uses a combination of `EventStrategy` and `PollingStrategy`. Feel free to write your own strategy to cover your specific requirements (it's super easy).
 You can also pass an empty array if you don't want to use any strategy.
 
 #### .start() 
@@ -221,7 +221,7 @@ starts observing the element returns `this`
 stops observing the element
 
 #### .update() 
-manually run the update procedure. this will fire all registered hooks accordingly.
+manually run the update procedure. this will fire all registered hooks accordingly e.g. when a percentage change happened.
 
 #### .state() 
 returns a state object
@@ -251,6 +251,53 @@ registers an event hook
 ```javascript
 visibility_monitor.on('percentagechange', function() { ... });
 ```
+
+
+##### Builder
+There is a builder available if you want to build more complex monitor objects.
+
+```javascript
+var visobj = VisSense(document.getElementById('video'));
+
+var visibilityMonitor = VisSense.VisMon.Builder(visobj)
+  .strategy(new VisSense.VisMon.Strategy.ConfigurablePollingStrategy({
+    hidden: 1000,
+    visible: 2000,
+    fullyvisible: 5000
+  }))
+  .strategy(new VisSense.VisMon.Strategy.EventStrategy({ throttle: 200 }))
+  .strategy(new VisSense.VisMon.Strategy.UserActivityStrategy({ inactiveAfter: 60000 }))
+  .strategy(new VisSense.VisMon.Strategy.PercentageTimeTestEventStrategy('50%/10s', { 
+    percentageLimit: 0.5,
+    timeLimit: 10000,
+    interval: 100
+  }))
+  .strategy({
+    start: function(monitor) {
+      setTimeout(function() {
+        monitor.publish('mySpecialEvent');
+      }, 10000);
+    }
+  })
+  .on('start', function (monitor) {
+      console.log('[Visibility Monitor] Started!');
+  })
+  .on('stop', function (monitor) {
+    console.log('[Visibility Monitor] Stopped!');
+  })
+  .on('visible', function (monitor) {
+    console.log('[Visibility Monitor] Element became visible!');
+  })
+  .on('50%/10s', function (monitor) {
+    console.log('[Visibility Monitor] Element was >50% visible for 10 second!');
+  })
+  .on('mySpecialEvent', function (monitor) {
+    console.log('[Visibility Monitor] MySpecialEvent received!');
+  })
+  .build()
+  .startAsync();
+```
+This example uses external strategies. See [UserActivityStrategy](https://github.com/vissense/vissense-user-activity), [PercentageTimeTestEventStrategy](https://github.com/vissense/vissense-percentage-time-test) and [ConfigurablePollingStrategy](https://github.com/vissense/vissense-configurable-polling-strategy) for more information.
 
 
 License

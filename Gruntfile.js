@@ -122,7 +122,6 @@ module.exports = function (grunt) {
         tasks: ['jshint', 'default']
       },
       src: {
-        // We watch and compile sass files as normal but don't live reload here
         files: ['<%= dirs.src %>/vissense.js'],
         tasks: ['jshint', 'dist']
       },

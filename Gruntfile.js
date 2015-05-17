@@ -66,7 +66,7 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          banner: '<%= banner %>',
+          banner: '',
           report: 'gzip',
           compress: {
             drop_console: true

@@ -1,10 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
-See [Keep A Changelog](https://github.com/olivierlacan/keep-a-changelog) 
-before changing this file!
 
 ## [Unreleased][unreleased]
+
+## [0.8.1] - 2015-05-17
+### Changed
+- removed the banner from the minified file (a comment in the first row of the file vissense.min.js)
+
 ## [0.8.0] - 2015-04-15
 ### Added
 - added support for defining a VisSense objects reference window
@@ -74,7 +77,8 @@ before changing this file!
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.8.0...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.8.1...HEAD
+[0.8.1]: https://github.com/vissense/vissense/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/vissense/vissense/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/vissense/vissense/compare/0.6.1...0.7.0
 [0.6.1]: https://github.com/vissense/vissense/compare/0.6.0...0.6.1

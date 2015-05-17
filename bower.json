@@ -1,6 +1,6 @@
 {
   "name": "vissense",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "license": "MIT",
   "main": "dist/vissense.min.js",
   "description": "A utility library for observing visibility changes of DOM elements.",

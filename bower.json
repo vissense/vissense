@@ -31,7 +31,7 @@
     "**/.*"
   ],
   "devDependencies": {
-    "jasmine": "2.2.1",
+    "jasmine": "2.3.4",
     "lodash": "2.4.1",
     "jquery": "2.1.1",
     "jasmine-jquery": "velesin/jasmine-jquery#2.1.0",

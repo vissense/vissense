@@ -3,6 +3,14 @@
 describe('VisSense.Utils', function (undefined) {
   'use strict';
 
+  beforeEach(function () {
+    jasmine.clock().install();
+  });
+
+  afterEach(function () {
+    jasmine.clock().uninstall();
+  });
+
   it('should verify that identity() returns the object passed', function () {
     var a = {};
     expect(VisSense.Utils.identity(a)).toBe(a);
@@ -87,11 +95,6 @@ describe('VisSense.Utils', function (undefined) {
 
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
-        jasmine.clock().install();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       it('should debounce a function', function () {
@@ -135,11 +138,6 @@ describe('VisSense.Utils', function (undefined) {
 
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
-        jasmine.clock().install();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       it('should throttle a function', function () {
@@ -191,11 +189,6 @@ describe('VisSense.Utils', function (undefined) {
 
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
-        jasmine.clock().install();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       it('should defer function', function () {
@@ -247,11 +240,6 @@ describe('VisSense.Utils', function (undefined) {
 
       beforeEach(function () {
         callback = jasmine.createSpy('callback');
-        jasmine.clock().install();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       it('should create an async proxy function', function () {
@@ -888,12 +876,6 @@ describe('VisSense.Utils', function (undefined) {
   });
 
   describe('PubSub', function () {
-    beforeEach(function () {
-      jasmine.clock().install();
-    });
-    afterEach(function () {
-      jasmine.clock().uninstall();
-    });
     it('should not register invalid listeners', function () {
       var pubsub = new VisSense.PubSub();
 

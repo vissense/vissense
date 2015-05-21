@@ -3,8 +3,13 @@
 describe('VisSense Monitor', function () {
   'use strict';
 
-  it('should verify that jasmine mocks the Date object', function () {
-    expect(jasmine.clock().mockDate).toBeDefined();
+  beforeEach(function () {
+    jasmine.clock().install();
+    jasmine.clock().mockDate();
+  });
+
+  afterEach(function () {
+    jasmine.clock().uninstall();
   });
 
   describe('VisState', function () {
@@ -94,14 +99,6 @@ describe('VisSense Monitor', function () {
         jasmine.getFixtures().set('<div id="element" style="height: 100px; width: 100px; display: none;"></div>');
         element = $('#element')[0];
         visobj = new VisSense(element);
-
-        jasmine.clock().install();
-
-        jasmine.clock().mockDate();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       describe('start/stop', function () {
@@ -239,14 +236,6 @@ describe('VisSense Monitor', function () {
       jasmine.getFixtures().set('<div id="element" style="height: 100px; width: 100px; display: none;"></div>');
       element = $('#element')[0];
       visobj = new VisSense(element);
-
-      jasmine.clock().install();
-
-      jasmine.clock().mockDate();
-    });
-
-    afterEach(function () {
-      jasmine.clock().uninstall();
     });
 
     it('should create VisMon objects', function () {
@@ -542,14 +531,6 @@ describe('VisSense Monitor', function () {
         );
         element = $('#element')[0];
         visobj = new VisSense(element);
-
-        jasmine.clock().install();
-
-        jasmine.clock().mockDate();
-      });
-
-      afterEach(function () {
-        jasmine.clock().uninstall();
       });
 
       it('should be possible to unregister a listener when it is fired', function () {

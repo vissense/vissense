@@ -822,6 +822,14 @@ describe('VisSense.Utils', function (undefined) {
     });
 
     describe('visible elements', function () {
+
+      it('should detect element with ´visibility´ "visible" nested in container with "hidden" as visible', function () {
+        jasmine.getFixtures().load('visible_styling-visibility-visible_nested_in_hidden.html');
+        expect($('#element')[0]).toBeVisSenseVisible();
+        expect($('#element')[0]).not.toBeVisSenseHidden();
+        expect($('#element')[0]).toHaveVisSensePercentageOf(1);
+      });
+
       it('should detect element with 1% visibility as visible', function () {
         jasmine.getFixtures().load('visible_1_percent_top_left.html');
         expect($('#element')).toBeVisible();

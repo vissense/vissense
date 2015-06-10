@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [0.8.2] - 2015-06-11
+### Fixed
+- check computed style attribute "visibility" only once
+
 ## [0.8.1] - 2015-05-17
 ### Changed
 - removed the banner from the minified file (a comment in the first row of the file vissense.min.js)
@@ -77,7 +81,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.8.1...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.8.2...HEAD
+[0.8.2]: https://github.com/vissense/vissense/compare/0.8.1...0.8.2
 [0.8.1]: https://github.com/vissense/vissense/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/vissense/vissense/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/vissense/vissense/compare/0.6.1...0.7.0

@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.8.1", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.8.2", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
 !function(root, name, factory) {
     "use strict";
     var _oldValue = root[name], _newValue = factory(root, root.document);

@@ -198,7 +198,6 @@ describe('VisSense', function () {
 
   });
 
-
   it('should be possible to specify further requirements for an element to be visible', function () {
     jasmine.getFixtures().load('visible_50_percent_top.html');
 
@@ -221,5 +220,14 @@ describe('VisSense', function () {
     expect(visobj.isVisible()).toBe(false);
     expect(visobj.isVisible()).toBe(true);
 
+  });
+
+  describe('hidden input elements', function () {
+    it('should detect [input] elements with type "hidden" as hidden', function () {
+      jasmine.getFixtures().load('false_positives/hidden_input_element.html');
+
+      var visobj = new VisSense($('#element')[0]);
+      expect(visobj.isHidden()).toBe(true);
+    });
   });
 });

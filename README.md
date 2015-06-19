@@ -22,7 +22,6 @@ VisSense.js is **lightweight** (<4KB minified and gzipped), **tested** and **doc
 
 #### What it does *not* do (by default)
  * detect if an element is overlapped by others
- * detect if an element is a hidden input element
  * take elements opacity into account
  * take scrollbars into account - elements "hidden" behind scrollbars are considered visible
 

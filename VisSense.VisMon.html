@@ -46,6 +46,10 @@
 						</li>
 						
 						<li>
+							<a href="VisSense.PubSub.html">VisSense.PubSub</a>
+						</li>
+						
+						<li>
 							<a href="VisSense.VisMon.html">VisSense.VisMon</a>
 						</li>
 						
@@ -74,6 +78,10 @@
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#build">build</a>
+						</li>
 						
 						<li>
 							<a href="global.html#nextState">nextState</a>
@@ -291,7 +299,7 @@
             <td class="type">
             
                 
-<span class="param-type">VisSense.PubSub</span>
+<span class="param-type"><a href="VisSense.PubSub.html">VisSense.PubSub</a></span>
 
 
             
@@ -611,6 +619,165 @@ monitor.start();</pre>
         
             
 <dt>
+    <h4 class="name" id="publish"><span class="type-signature"></span>publish<span class="signature">(eventName, args)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Invokes all subscribers of the given event with the provided arguments.
+This method throws an error if an internal event is published.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>eventName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the event</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The arguments to pass to the subscribers of the event</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Returns a function that cancels the event execution - this can only
+be done if the monitor has an async queue (option async enabled).</p>
+</div>
+
+
+
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">var monitor = VisSense(element).monitor();
+
+monitor.publish(&#x27;myEvent&#x27;, [arg1, arg2]);</pre>
+
+
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="start"><span class="type-signature"></span>start<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="VisSense.VisMon.html">VisSense.VisMon</a>}</span></h4>
     
     
@@ -716,6 +883,95 @@ var monitor = VisSense.VisMon(..., {
 monitor.start();</pre>
 
 
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="startAsync"><span class="type-signature"></span>startAsync<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="VisSense.VisMon.html">VisSense.VisMon</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Asynchronously starts monitoring the provided element.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>itself.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="VisSense.VisMon.html">VisSense.VisMon</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
     
 </dd>
 
@@ -1910,6 +2166,76 @@ Returns <code>true</code> if the listener was successfully unregistered, otherwi
 
         <tr>
             
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
                 <td class="name"><code>update</code></td>
             
 
@@ -2113,6 +2439,43 @@ Returns <code>true</code> if the listener was successfully unregistered, otherwi
                 </td>
             
 
+            <td class="description last"></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>async</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
             <td class="description last"><p>A configuration object to configure a VisMon instance.</p></td>
         </tr>
 
@@ -2178,7 +2541,7 @@ Returns <code>true</code> if the listener was successfully unregistered, otherwi
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Sat Mar 21st 2015 using the <a
+		on Sat Jun 20th 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

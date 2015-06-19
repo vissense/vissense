@@ -46,6 +46,10 @@
 						</li>
 						
 						<li>
+							<a href="VisSense.PubSub.html">VisSense.PubSub</a>
+						</li>
+						
+						<li>
 							<a href="VisSense.VisMon.html">VisSense.VisMon</a>
 						</li>
 						
@@ -74,6 +78,10 @@
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#build">build</a>
+						</li>
 						
 						<li>
 							<a href="global.html#nextState">nextState</a>
@@ -130,37 +138,33 @@
 <h1>VisSense.js</h1>
 <p>A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.</p>
-<p>VisSense.js is <strong>lightweight</strong>, <strong>highly extensible</strong> and <strong>easy to use</strong> (very straight forward API). 
-It has <strong>sane default values</strong>, is <strong>well tested</strong>, <strong>documented</strong> and <strong>production-ready</strong> 
-(integrated on websites with &gt; 1 billion impressions/month). Best of all: <strong>No dependencies</strong>.</p>
+<p>VisSense.js is <strong>lightweight</strong> (&lt;4KB minified and gzipped), <strong>tested</strong> and <strong>documented</strong>. Best of all: <strong>No dependencies</strong>.</p>
 <h4>What it does</h4>
 <ul>
 <li>provides methods for detecting visibility of DOM elements</li>
-<li>provides a convenience class for calling isHidden, isVisible, isFullyVisible, percentage</li>
+<li>provides a convenience class with straightforward methods like <code>isHidden</code>, <code>isVisible</code>, <code>isFullyVisible</code>, <code>percentage</code></li>
 <li>provides a convenience class for detecting changes in visibility</li>
 </ul>
-<h4>What it does <em>not</em> do</h4>
+<h4>What it does <em>not</em> do (by default)</h4>
 <ul>
 <li>detect if an element is overlapped by others</li>
-<li>detect if an element is a hidden input element</li>
 <li>take elements opacity into account</li>
 <li>take scrollbars into account - elements &quot;hidden&quot; behind scrollbars are considered visible</li>
 </ul>
 <h2><a href="https://vissense.github.io/vissense-demo/">Demos</a> and Examples</h2>
 <p>See more examples on the <a href="https://vissense.github.io/vissense-demo/">demo page</a>.</p>
-<p>In this simple example a video is played if at least 75% of its area is in the users viewport:</p>
+<p>In this simple example a video will only be started if at least 75% of its area is in the users viewport:</p>
 <pre><code class="lang-javascript">var video = $('#video'); 
-var visibility = VisSense(video[0], { fullyvisible: 0.75 });
+var videoVisibility = VisSense(video[0]);
 
-if(visibility.isFullyVisible()) { 
+if(videoVisibility.percentage() &gt; 0.75) { 
   video.play();
 }</code></pre>
-<p>In a more advanced example the video is stopped as soon as it is not visible anymore:</p>
+<p>In the following example the video will be started if it's at least 75% visible and stopped as soon as it is not visible anymore:</p>
 <pre><code class="lang-javascript">var video = $('#video'); 
 var visibility = VisSense(video[0], { fullyvisible: 0.75 });
 
-var visibility_monitor = visibility.monitor({ 
-  strategy: new VisSense.VisMon.Strategy.EventStrategy({ debounce: 100 }),
+var visibility_monitor = visibility.monitor({
   fullyvisible: function() { 
     video.play();
   }, 
@@ -197,7 +201,7 @@ var visibility_monitor = visibility.monitor({
 <p><code>grunt serve</code></p>
 <p>and it automatically opens <code>http://localhost:3000/SpecRunner.html</code> in your browser.</p>
 <h2>API</h2>
-<h3>new VisSense([options])</h3>
+<h3>VisSense([options])</h3>
 <p>Object constructor. Options:</p>
 <ul>
 <li><code>hidden</code> (<em>default: 0</em>) - if percentage is equal or below this limit the element is considered hidden</li>
@@ -236,7 +240,7 @@ var visibility_monitor = VisSense(element).monitor({
     console.log('hidden');
   }
 }).start();</code></pre>
-<h3>new VisSense.VisMon(visobj, [, options])</h3>
+<h3>VisSense.VisMon(visobj, [, options])</h3>
 <p>Object constructor. Options:</p>
 <ul>
 <li><code>strategy</code> a strategy (or array of strategies) for observing the element. VisSense comes with two predefined strategies. See below.</li>
@@ -251,7 +255,7 @@ var visibility_monitor = VisSense(element).monitor({
 </ul>
 <pre><code class="lang-javascript">var visobj = VisSense(document.getElementById('video'));
 
-var visibility_monitor = new VisSense.VisMon(visobj, { 
+var visibilityMonitor = VisSense.VisMon(visobj, { 
   strategy: [
     new VisSense.VisMon.Strategy.EventStrategy({ debounce: 42 })
   ],
@@ -263,18 +267,19 @@ var visibility_monitor = new VisSense.VisMon(visobj, {
   }
 }).start();</code></pre>
 <h5>Strategies</h5>
+<p>Strategies are hooks which let you intercept the monitoring process.
+e.g. updating the monitor, sending custom events, etc.</p>
 <p>VisSense comes with two predefined strategies:
-  - <code>EventStrategy</code> this strategy registers event handlers for visibilitychange, scroll and resize and calls <code>update()</code> accordingly.
-  - <code>PollingStrategy</code> this strategy invokes <code>update()</code> periodically.</p>
-<p>The default monitor object uses a combination of EventStrategy and PollingStrategy as strategy.
-Feel free to write your own strategy to cover your specific requirements (it's super easy).
+  - <code>PollingStrategy</code> a simple strategy which invokes <code>update()</code> periodically.
+  - <code>EventStrategy</code> this strategy registers event handlers for <code>visibilitychange</code>, <code>scroll</code> and <code>resize</code> events and calls <code>update()</code> accordingly.</p>
+<p>A monitor can use any number of strategies. The default monitor uses a combination of <code>EventStrategy</code> and <code>PollingStrategy</code>. Feel free to write your own strategy to cover your specific requirements (it's super easy).
 You can also pass an empty array if you don't want to use any strategy.</p>
 <h4>.start()</h4>
 <p>starts observing the element returns <code>this</code></p>
 <h4>.stop()</h4>
 <p>stops observing the element</p>
 <h4>.update()</h4>
-<p>manually run the update procedure. this will fire all registered hooks accordingly.</p>
+<p>manually run the update procedure. this will fire all registered hooks accordingly e.g. when a percentage change happened.</p>
 <h4>.state()</h4>
 <p>returns a state object</p>
 <pre><code class="lang-javascript">{ 
@@ -296,6 +301,48 @@ You can also pass an empty array if you don't want to use any strategy.</p>
 <h4>.on(event, hook)</h4>
 <p>registers an event hook</p>
 <pre><code class="lang-javascript">visibility_monitor.on('percentagechange', function() { ... });</code></pre>
+<h5>Builder</h5>
+<p>There is a builder available if you want to build more complex monitor objects.</p>
+<pre><code class="lang-javascript">var visobj = VisSense(document.getElementById('video'));
+
+var visibilityMonitor = VisSense.VisMon.Builder(visobj)
+  .strategy(new VisSense.VisMon.Strategy.ConfigurablePollingStrategy({
+    hidden: 1000,
+    visible: 2000,
+    fullyvisible: 5000
+  }))
+  .strategy(new VisSense.VisMon.Strategy.EventStrategy({ throttle: 200 }))
+  .strategy(new VisSense.VisMon.Strategy.UserActivityStrategy({ inactiveAfter: 60000 }))
+  .strategy(new VisSense.VisMon.Strategy.PercentageTimeTestEventStrategy('50%/10s', { 
+    percentageLimit: 0.5,
+    timeLimit: 10000,
+    interval: 100
+  }))
+  .strategy({
+    start: function(monitor) {
+      setTimeout(function() {
+        monitor.publish('mySpecialEvent');
+      }, 10000);
+    }
+  })
+  .on('start', function (monitor) {
+      console.log('[Visibility Monitor] Started!');
+  })
+  .on('stop', function (monitor) {
+    console.log('[Visibility Monitor] Stopped!');
+  })
+  .on('visible', function (monitor) {
+    console.log('[Visibility Monitor] Element became visible!');
+  })
+  .on('50%/10s', function (monitor) {
+    console.log('[Visibility Monitor] Element was &gt;50% visible for 10 seconds!');
+  })
+  .on('mySpecialEvent', function (monitor) {
+    console.log('[Visibility Monitor] MySpecialEvent received!');
+  })
+  .build()
+  .startAsync();</code></pre>
+<p>This example uses external strategies. See <a href="https://github.com/vissense/vissense-user-activity">UserActivityStrategy</a>, <a href="https://github.com/vissense/vissense-percentage-time-test">PercentageTimeTestEventStrategy</a> and <a href="https://github.com/vissense/vissense-configurable-polling-strategy">ConfigurablePollingStrategy</a> for more information.</p>
 <h2>License</h2>
 <p>The project is licensed under the MIT license. See
 <a href="https://github.com/vissense/vissense/blob/master/LICENSE">LICENSE</a> for details.</p></article>
@@ -320,7 +367,7 @@ You can also pass an empty array if you don't want to use any strategy.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Sat Mar 21st 2015 using the <a
+		on Sat Jun 20th 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

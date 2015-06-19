@@ -30,4 +30,13 @@ describe('False positives detected by VisSense', function () {
     });
   });
 
+  describe('scrollbars', function () {
+    it('does not detect elements hidden behind scrollbars as hidden yet', function () {
+      jasmine.getFixtures().load('false_positives/hidden_behind_scrollbar.html');
+
+      var visobj = new VisSense($('#element')[0]);
+      expect(visobj.isVisible()).toBe(true);
+    });
+  });
+
 });

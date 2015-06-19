@@ -224,7 +224,7 @@ describe('VisSense', function () {
 
   describe('hidden input elements', function () {
     it('should detect [input] elements with type "hidden" as hidden', function () {
-      jasmine.getFixtures().load('false_positives/hidden_input_element.html');
+      jasmine.getFixtures().load('hidden_input_element.html');
 
       var visobj = new VisSense($('#element')[0]);
       expect(visobj.isHidden()).toBe(true);

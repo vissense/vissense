@@ -13,8 +13,7 @@ VisSense.js
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.
 
-VisSense.js is **lightweight** (<4KB minified and gzipped) and **highly extensible**.
-It has **sane default values**, is **tested**, **documented** and **production-ready**. Best of all: **No dependencies**.
+VisSense.js is **lightweight** (<4KB minified and gzipped), **tested** and **documented**. Best of all: **No dependencies**.
 
 #### What it does
  * provides methods for detecting visibility of DOM elements
@@ -289,7 +288,7 @@ var visibilityMonitor = VisSense.VisMon.Builder(visobj)
     console.log('[Visibility Monitor] Element became visible!');
   })
   .on('50%/10s', function (monitor) {
-    console.log('[Visibility Monitor] Element was >50% visible for 10 second!');
+    console.log('[Visibility Monitor] Element was >50% visible for 10 seconds!');
   })
   .on('mySpecialEvent', function (monitor) {
     console.log('[Visibility Monitor] MySpecialEvent received!');

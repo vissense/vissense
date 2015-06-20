@@ -241,6 +241,8 @@ var visibility_monitor = VisSense(element).monitor({
   }
 }).start();</code></pre>
 <h3>VisSense.VisMon(visobj, [, options])</h3>
+<p>A monitor object lets you observe an element over a period of time.
+It emits certain events you can subscribe to, and it can be extended with custom logic.</p>
 <p>Object constructor. Options:</p>
 <ul>
 <li><code>strategy</code> a strategy (or array of strategies) for observing the element. VisSense comes with two predefined strategies. See below.</li>
@@ -252,6 +254,7 @@ var visibility_monitor = VisSense(element).monitor({
 <li><code>fullyvisible</code> function to run when element becomes fully visible</li>
 <li><code>visibilitychange</code> function to run when the visibility of the element changes</li>
 <li><code>percentagechange</code> function to run when the percentage of the element changes</li>
+<li><code>async</code> a boolean flag indicating whether events are synchronous or asynchronous</li>
 </ul>
 <pre><code class="lang-javascript">var visobj = VisSense(document.getElementById('video'));
 

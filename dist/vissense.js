@@ -398,11 +398,11 @@
     }, VisMon.Strategy.EventStrategy.prototype = Object.create(VisMon.Strategy.prototype), 
     VisMon.Strategy.EventStrategy.prototype.start = function(monitor) {
         return this._started || (this._removeEventListeners = function(update) {
-            var visibilityApi = createVisibilityApi(monitor.visobj().referenceWindow()), removeOnVisibilityChangeEvent = visibilityApi.onVisibilityChange(update);
-            return addEventListener("scroll", update, !1), addEventListener("resize", update, !1), 
-            addEventListener("touchmove", update, !1), function() {
-                removeEventListener("touchmove", update, !1), removeEventListener("resize", update, !1), 
-                removeEventListener("scroll", update, !1), removeOnVisibilityChangeEvent();
+            var referenceWindow = monitor.visobj().referenceWindow(), visibilityApi = createVisibilityApi(referenceWindow), removeOnVisibilityChangeEvent = visibilityApi.onVisibilityChange(update);
+            return referenceWindow.addEventListener("scroll", update, !1), referenceWindow.addEventListener("resize", update, !1), 
+            referenceWindow.addEventListener("touchmove", update, !1), function() {
+                referenceWindow.removeEventListener("touchmove", update, !1), referenceWindow.removeEventListener("resize", update, !1), 
+                referenceWindow.removeEventListener("scroll", update, !1), removeOnVisibilityChangeEvent();
             };
         }(throttle(function() {
             monitor.update();

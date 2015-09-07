@@ -64,7 +64,7 @@ describe('VisSense', function () {
 
 
   describe('tests with hidden parents', function () {
-    it('should detect an element with parent without height = 0 or widht = 0 as hidden', function () {
+    it('should detect an element with parent with "height := 0" or "width := 0" as hidden', function () {
       jasmine.getFixtures().set('<div style="width: 10px; height: 0;"><div id="element"></div></div>');
       var visobj = new VisSense($('#element')[0]);
 

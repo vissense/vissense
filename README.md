@@ -194,7 +194,7 @@ var visobj = VisSense(document.getElementById('video'));
 
 var visibilityMonitor = VisSense.VisMon(visobj, { 
   strategy: [
-    new VisSense.VisMon.Strategy.EventStrategy({ debounce: 42 })
+    new VisSense.VisMon.Strategy.EventStrategy({ throttle: 42 })
   ],
   visibilitychange: function() { 
     console.log('visibilitychange');

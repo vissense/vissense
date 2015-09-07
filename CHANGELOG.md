@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+
+## [0.8.3] - 2015-09-07
 ### Fixed
 - EventStrategy adds listeners to referenceWindow
 
@@ -83,7 +85,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 - removed `VisMon.NoopStrategy`
 
-[unreleased]: https://github.com/vissense/vissense/compare/0.8.2...HEAD
+[unreleased]: https://github.com/vissense/vissense/compare/0.8.3...HEAD
+[0.8.3]: https://github.com/vissense/vissense/compare/0.8.2...0.8.3
 [0.8.2]: https://github.com/vissense/vissense/compare/0.8.1...0.8.2
 [0.8.1]: https://github.com/vissense/vissense/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/vissense/vissense/compare/0.7.0...0.8.0

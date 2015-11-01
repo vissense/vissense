@@ -69,16 +69,15 @@ Download
 ### Bower
 Install with bower
 ```
-bower install vissense/vissense --save-dev
+bower install vissense/vissense --save
 ```
 
 ### Github
 [Download from Github](https://github.com/vissense/vissense/releases)
 
-Add this `<script>` tag somewhere
-```
-<script src="/path/to/components/vissense/dist/vissense.min.js"></script>
-```
+
+### cdnjs
+[Reference from cdnjs.com](https://cdnjs.com/libraries/vissense)
 
 
 Contribute

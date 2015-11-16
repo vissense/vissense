@@ -171,7 +171,7 @@ var visibility_monitor = VisSense(element).monitor({
 }).start();
 ```
 
-### VisSense.VisMon(visobj, [, options])
+### VisSense.VisMon(visobj [, options])
 
 A monitor object lets you observe an element over a period of time.
 It emits certain events you can subscribe to, and it can be extended with custom logic.

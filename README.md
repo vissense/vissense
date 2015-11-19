@@ -9,14 +9,7 @@
 
 VisSense.js
 ====
-
-down vote
-accepted
-	
-
-Try this markdown:
-
-![alt tag](vissense-logo.png)
+![logo](vissense-logo.png)
 
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.

@@ -10,6 +10,14 @@
 VisSense.js
 ====
 
+down vote
+accepted
+	
+
+Try this markdown:
+
+![alt tag](vissense-logo.png)
+
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.
 
@@ -306,4 +314,4 @@ License
 -------
 
 The project is licensed under the MIT license. See
-[LICENSE](https://github.com/vissense/vissense/blob/master/LICENSE) for details.
+[LICENSE](LICENSE) for details.

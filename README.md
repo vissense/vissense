@@ -7,9 +7,10 @@
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/vissense.svg)](https://saucelabs.com/u/vissense)
 
+![logo](vissense-logo.png)
+
 VisSense.js
 ====
-![logo](vissense-logo.png)
 
 A utility library for observing visibility changes of DOM elements.
 Immediately know when an element becomes hidden, partly visible or fully visible.

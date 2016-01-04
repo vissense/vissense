@@ -113,19 +113,18 @@ and it automatically opens `http://localhost:3000/SpecRunner.html` in your brows
 API
 ------------
 
-### VisSense([options])
+### VisSense(element [, options])
 
 Object constructor. Options:
 
 - `hidden` (_default: 0_) - if percentage is equal or below this limit the element is considered hidden
 - `fullyvisible` (_default: 1_) -  if percentage is equal or above this limit the element is considered fully visible
 
-Note: you can omit `new` keyword when calling `VisSense()`
+Note: you can omit `new` keyword when calling `VisSense(...)`
 
 #### .percentage()
 
 gets the current visible percentage (0..1)
-
 
 #### .isHidden()
 

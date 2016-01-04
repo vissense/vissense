@@ -92,8 +92,12 @@ Contribute
 `git clone https://github.com/vissense/vissense.git`
 
 #### Install dependencies
-
-`npm install && bower install`
+```
+npm install -g grunt-cli
+npm install -g karma-cli
+npm install -g bower
+bower install
+```
 
 #### Build project
 

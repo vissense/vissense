@@ -7,7 +7,7 @@
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/vissense.svg)](https://saucelabs.com/u/vissense)
 
-![logo](vissense-logo.png)
+![logo](https://raw.githubusercontent.com/vissense/vissense/master/vissense-logo.png)
 
 VisSense.js
 ====
@@ -58,7 +58,7 @@ var visibility_monitor = visibility.monitor({
 }).start();
 ```
 
-[Documentation](https://vissense.github.io/vissense/)
+Documentation
 ------------
 See [vissense.github.io/vissense](https://vissense.github.io/vissense/) or generate the documentation locally.
 
@@ -96,6 +96,7 @@ Contribute
 npm install -g grunt-cli
 npm install -g karma-cli
 npm install -g bower
+npm install
 bower install
 ```
 

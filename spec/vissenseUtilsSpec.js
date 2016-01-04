@@ -1,6 +1,6 @@
 /*global VisSense,$,jasmine,describe,it,beforeEach,afterEach,spyOn,expect,_*/
 
-describe('VisSense.Utils', function (undefined) {
+describe('VisSense.Utils', function () {
   'use strict';
 
   beforeEach(function () {

@@ -13,7 +13,7 @@ module.exports = function (config) {
       process.env.SAUCE_ACCESS_KEY = require('./.sauce').SAUCE_ACCESS_KEY;
     }
   }
-  
+
   var customLaunchers = {
     'SL_Android_5.0': {
       base: 'SauceLabs',
@@ -167,7 +167,7 @@ module.exports = function (config) {
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'bower_components/jasmine-jsreporter/jasmine-jsreporter.js',
 
-      'lib/vissense.js',
+      'dist/vissense.js',
 
       'spec/**/*.js',
 

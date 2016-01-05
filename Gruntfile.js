@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         options: {
           src: '<%= concat.tmp.dest %>',
           dest: '<%= concat.tmp.dest %>',
-          template: './templates/browser-vissense-no-conflict.hbs',
+          template: './templates/umd-vissense-no-conflict.hbs',
           objectToExport: 'VisSense',
           indent: 2
         }

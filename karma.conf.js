@@ -14,7 +14,7 @@ module.exports = function (config) {
       'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
       'bower_components/jasmine-jsreporter/jasmine-jsreporter.js',
 
-      'lib/vissense.js',
+      'dist/vissense.js',
 
       'spec/**/*.js',
 

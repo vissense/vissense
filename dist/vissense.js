@@ -1,10 +1,19 @@
-/*! { "name": "vissense", "version": "0.8.3", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2015 tbk" } */
+/*! { "name": "vissense", "version": "0.8.3", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
 !function(root, name, factory) {
     "use strict";
-    var _oldValue = root[name], _newValue = factory(root, root.document);
-    root[name] = _newValue, root[name].noConflict = function() {
-        return root[name] = _oldValue, _newValue;
-    };
+    var document = "document";
+    if ("function" == typeof define && define.amd) define([], function() {
+        return function(win) {
+            return factory(win, win[document]);
+        };
+    }); else if ("object" == typeof exports) module.exports = function(win) {
+        return factory(win, win[document]);
+    }; else {
+        var _oldValue = root[name], _newValue = factory(root, root[document]);
+        root[name] = _newValue, root[name].noConflict = function() {
+            return root[name] = _oldValue, _newValue;
+        };
+    }
 }(this, "VisSense", function(window, document, undefined) {
     "use strict";
     function async(callback, delay) {

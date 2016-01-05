@@ -3,6 +3,7 @@
   "version": "0.8.3",
   "title": "VisSense.js",
   "homepage": "https://vissense.github.io/vissense",
+  "license": "MIT",
   "author": {
     "name": "tbk"
   },
@@ -17,6 +18,7 @@
     "type": "git",
     "url": "https://github.com/vissense/vissense.git"
   },
+  "main": "dist/vissense.min.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "0.4.5",

@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.8.3", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
+/*! { "name": "vissense", "version": "0.9.0-alpha1", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
 !function(root, name, factory) {
     "use strict";
     var document = "document";

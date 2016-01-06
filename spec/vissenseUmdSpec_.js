@@ -1,7 +1,7 @@
 /*global VisSense,it,expect*/
 /* jshint undef: false */
 
-describe('VisSense UMD', function () {
+describe('VisSense Globals', function () {
   'use strict';
 
   it('should have a `noConflict` method', function () {

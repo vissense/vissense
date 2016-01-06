@@ -1,25 +1,27 @@
  ;(function (root, name, factory) {
   'use strict';
-  var document = 'document';
+  var withWindow = function(win) {
+    var product = factory(win, win.document);
+    product.noConflict = function() { return product; };
+    return product;
+  };
 
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define([], function() {
-      return function(win) {
-        return factory(win, win[document]);
-      };
+      return withWindow;
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node. Must provide window like environment
     module.exports = function(win) {
-      return factory(win, win[document]);
+      return withWindow(win);
     };
   } else {
     // Browser globals
     var _oldValue = root[name];
-    var _newValue = factory(root, root[document]);
+    var _newValue = factory(root, root.document);
 
     root[name] = _newValue;
 

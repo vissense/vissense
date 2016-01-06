@@ -6,7 +6,7 @@ module.exports = function (config) {
     // base path, that will be used to resolve files and exclude
     basePath: './',
 
-    frameworks: ['jasmine'],
+    frameworks: ['browserify', 'jasmine'],
 
     files: [
       'bower_components/jquery/dist/jquery.min.js',
@@ -51,7 +51,13 @@ module.exports = function (config) {
     },
 
     preprocessors: {
-      'lib/vissense.js': ['coverage']
+      'lib/vissense.js': ['coverage'],
+      'spec/vissenseRequireSpec_.js': [ 'browserify' ]
+    },
+
+    browserify: {
+      debug: true,
+      transform: [ 'browserify-shim' ]
     },
 
     coverageReporter: {

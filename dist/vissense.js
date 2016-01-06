@@ -1,15 +1,18 @@
 /*! { "name": "vissense", "version": "0.9.0-alpha1", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
 !function(root, name, factory) {
     "use strict";
-    var document = "document";
+    var withWindow = function(win) {
+        var product = factory(win, win.document);
+        return product.noConflict = function() {
+            return product;
+        }, product;
+    };
     if ("function" == typeof define && define.amd) define([], function() {
-        return function(win) {
-            return factory(win, win[document]);
-        };
+        return withWindow;
     }); else if ("object" == typeof exports) module.exports = function(win) {
-        return factory(win, win[document]);
+        return withWindow(win);
     }; else {
-        var _oldValue = root[name], _newValue = factory(root, root[document]);
+        var _oldValue = root[name], _newValue = factory(root, root.document);
         root[name] = _newValue, root[name].noConflict = function() {
             return root[name] = _oldValue, _newValue;
         };

@@ -57,6 +57,7 @@ var visibility_monitor = visibility.monitor({
   }
 }).start();
 ```
+See a slightly adapted version of this example live and [try it on jsbin.com](https://jsbin.com/maqaco/edit?js,output).
 
 Documentation
 ------------

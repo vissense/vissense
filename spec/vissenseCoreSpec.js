@@ -136,11 +136,11 @@ describe('VisSense', function () {
     expect(visobj.percentage()).toBe(1);
   });
 
-  it('should detect an element streching the whole viewport as fully visible', function () {
+  it('should detect an element stretching the whole viewport as fully visible', function () {
     var viewport = VisSense.Utils._viewport();
 
-    jasmine.getFixtures().set('<div id="element" ' +
-    'style="top:0; left:0; position: fixed; width: ' + viewport.width + 'px; height: ' + viewport.height + 'px"></div>');
+    jasmine.getFixtures().set('<div id="element" style="top:0; left:0; position: fixed; ' +
+      'width: ' + viewport.width + 'px; height: ' + viewport.height + 'px"></div>');
 
     var visobj = new VisSense($('#element')[0]);
 
@@ -172,6 +172,23 @@ describe('VisSense', function () {
     expect(visobj.isVisible()).toBe(false);
     expect(visobj.isFullyVisible()).toBe(false);
     expect(visobj.percentage()).toEqual(0.5);
+  });
+
+  it('should be able to set the accuracy of the default percentage algorithm', function () {
+    jasmine.getFixtures().set('<div id="element" ' +
+      'style="width: 9px; height: 9px; position: fixed; top:-3px;"></div>');
+
+    expect(new VisSense($('#element')[0], {
+      precision: 0
+    }).percentage()).toEqual(1);
+
+    expect(new VisSense($('#element')[0], {
+      precision: 2
+    }).percentage()).toEqual(0.67);
+
+    expect(new VisSense($('#element')[0], {
+      precision: 5
+    }).percentage()).toEqual(0.66667);
   });
 
   it('should be possible to specify an alternative logic to get the visible percentage', function () {

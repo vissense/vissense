@@ -142,7 +142,7 @@
         var vh = 0, vw = 0;
         return rect.top >= 0 ? vh = Math.min(rect.height, view.height - rect.top) : rect.bottom > 0 && (vh = Math.min(view.height, rect.bottom)), 
         rect.left >= 0 ? vw = Math.min(rect.width, view.width - rect.left) : rect.right > 0 && (vw = Math.min(view.width, rect.right)), 
-        Math.round(vh * vw / (rect.height * rect.width) * 1e3) / 1e3;
+        vh * vw / (rect.height * rect.width);
     }
     function isPageVisible(referenceWindow) {
         return !createVisibilityApi(referenceWindow || window).isHidden();
@@ -155,8 +155,13 @@
             hidden: 0,
             referenceWindow: window,
             percentageHook: percentage,
+            precision: 3,
             visibilityHooks: []
         });
+        var roundFactor = this._config.precision <= 0 ? 1 : Math.pow(10, this._config.precision || 3);
+        this._round = function(val) {
+            return Math.round(val * roundFactor) / roundFactor;
+        };
         var visibilityApi = createVisibilityApi(this._config.referenceWindow);
         this._config.visibilityHooks.push(function() {
             return !visibilityApi.isHidden();
@@ -256,10 +261,10 @@
         var hiddenByHook = forEach(this._config.visibilityHooks, function(hook) {
             return hook(this._element) ? void 0 : VisSense.VisState.hidden(0);
         }, this);
-        return hiddenByHook || function(element, config) {
-            var perc = config.percentageHook(element, config.referenceWindow);
+        return hiddenByHook || function(visobj, element, config) {
+            var perc = visobj._round(config.percentageHook(element, config.referenceWindow));
             return perc <= config.hidden ? VisSense.VisState.hidden(perc) : perc >= config.fullyvisible ? VisSense.VisState.fullyvisible(perc) : VisSense.VisState.visible(perc);
-        }(this._element, this._config);
+        }(this, this._element, this._config);
     }, VisSense.prototype.percentage = function() {
         return this.state().percentage;
     }, VisSense.prototype.element = function() {

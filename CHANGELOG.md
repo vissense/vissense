@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 ### Added
 - CommonJS compatibility
+- added config parameter `precision` to VisSense config object
 
 ## [0.8.3] - 2015-09-07
 ### Fixed

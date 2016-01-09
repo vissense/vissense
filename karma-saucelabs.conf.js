@@ -82,9 +82,8 @@ module.exports = function (config) {
     },
     'SL_IE_EDGE': {
       base: 'SauceLabs',
-      browserName: 'Internet Explorer',
-      platform: 'Windows 10',
-      version: '20' // edge
+      browserName: 'edge',
+      platform: 'Windows 10'
     },
     'SL_IOS_8': {
       base: 'SauceLabs',
@@ -131,7 +130,7 @@ module.exports = function (config) {
     'SL_Safari_5': {
       base: 'SauceLabs',
       browserName: 'Safari',
-      platform: 'OS X 10.6',
+      platform: 'Windows 7',
       version: '5'
     },
     'SL_Safari_6': {

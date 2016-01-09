@@ -63,13 +63,13 @@ module.exports = function (config) {
       browserName: 'Internet Explorer',
       platform: 'Windows 10',
       version: '11'
-    },/*
+    },
     'SL_IE_EDGE': {
       base: 'SauceLabs',
       browserName: 'Internet Explorer',
       platform: 'Windows 10',
       version: '20' // edge
-    },*/
+    },
     'SL_IOS_8': {
       base: 'SauceLabs',
       browserName: 'iPhone',
@@ -87,7 +87,7 @@ module.exports = function (config) {
       browserName: 'Safari',
       platform: 'OS X 10.11',
       version: '9'
-    }
+    },
     /*'SL_Android_4.0': {
      base: 'SauceLabs',
      browserName: 'Android',
@@ -111,22 +111,12 @@ module.exports = function (config) {
      browserName: 'Android',
      platform: 'Linux',
      version: '4.3'
-     },
+     },*/
      'SL_Android_4.4': {
      base: 'SauceLabs',
      browserName: 'Android',
      platform: 'Linux',
      version: '4.4'
-     },
-     'SL_Chrome': {
-     base: 'SauceLabs',
-     browserName: 'Chrome',
-     platform: 'Windows 8.1'
-     },
-     'SL_Chrome_Linux': {
-     base: 'SauceLabs',
-     browserName: 'Chrome',
-     platform: 'Linux'
      },
      'SL_Firefox': {
      base: 'SauceLabs',
@@ -138,18 +128,6 @@ module.exports = function (config) {
      base: 'SauceLabs',
      browserName: 'Firefox',
      platform: 'OS X 10.10'
-     },
-     'SL_IE_10': {
-     base: 'SauceLabs',
-     browserName: 'Internet Explorer',
-     platform: 'Windows 8',
-     version: '10'
-     },
-     'SL_IOS_6': {
-     base: 'SauceLabs',
-     browserName: 'iPhone',
-     platform: 'OS X 10.8',
-     version: '6.1'
      },
      'SL_IOS_7': {
      base: 'SauceLabs',
@@ -184,7 +162,7 @@ module.exports = function (config) {
      browserName: 'Safari',
      platform: 'OS X 10.9',
      version: '7'
-     },*/
+     }
   };
   config.set({
 

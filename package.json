@@ -1,10 +1,18 @@
 {
   "name": "vissense",
-  "version": "0.9.0-alpha1",
+  "version": "0.9.0",
   "title": "VisSense.js",
   "homepage": "https://vissense.github.io/vissense",
   "license": "MIT",
-  "keywords": ["visibility", "viewtime", "viewport", "visible", "hidden", "monitor", "observe"],
+  "keywords": [
+    "visibility",
+    "viewtime",
+    "viewport",
+    "visible",
+    "hidden",
+    "monitor",
+    "observe"
+  ],
   "main": "dist/vissense.js",
   "author": {
     "name": "tbk"

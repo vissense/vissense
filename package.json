@@ -4,6 +4,8 @@
   "title": "VisSense.js",
   "homepage": "https://vissense.github.io/vissense",
   "license": "MIT",
+  "keywords": ["visibility", "viewtime", "viewport", "visible", "hidden", "monitor", "observe"],
+  "main": "dist/vissense.js",
   "author": {
     "name": "tbk"
   },
@@ -18,7 +20,6 @@
     "type": "git",
     "url": "https://github.com/vissense/vissense.git"
   },
-  "main": "dist/vissense.min.js",
   "dependencies": {},
   "devDependencies": {
     "browserify": "^12.0.1",

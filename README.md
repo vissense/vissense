@@ -69,6 +69,12 @@ Clone the repository and run `grunt docs`
 Download
 ------------
 
+### npm
+Install with [npm](https://www.npmjs.com/package/vissense)
+```
+npm install vissense --save
+```
+
 ### Bower
 Install with bower
 ```

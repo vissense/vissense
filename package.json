@@ -4,6 +4,9 @@
   "title": "VisSense.js",
   "homepage": "https://vissense.github.io/vissense",
   "license": "MIT",
+  "author": {
+    "name": "tbk"
+  },
   "keywords": [
     "visibility",
     "viewtime",
@@ -14,9 +17,9 @@
     "observe"
   ],
   "main": "dist/vissense.js",
-  "author": {
-    "name": "tbk"
-  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "grunt default --verbose",
     "citest": "karma start karma-saucelabs.conf.js"

@@ -1,4 +1,4 @@
-/*! { "name": "vissense", "version": "0.9.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
+/*! { "name": "vissense", "version": "0.10.0", "homepage": "https://vissense.github.io/vissense","copyright": "(c) 2016 tbk" } */
 !function(root, name, factory) {
     "use strict";
     var withWindow = function(win) {

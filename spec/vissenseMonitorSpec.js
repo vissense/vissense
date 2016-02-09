@@ -496,6 +496,7 @@ describe('VisSense Monitor', function () {
       expect(unregister()).toBe(true);
     });
 
+
     describe('Builder', function () {
       it('should build a VisMon object', function () {
         var vismon = null;
@@ -629,6 +630,47 @@ describe('VisSense Monitor', function () {
         vismon.stop();
       });
 
+
+      it('should verify that provided listeners can stop the monitor immediately', function () {
+        element.style.display = 'block'; // set visible
+
+        var config = {
+          visible: function (monitor) {
+            monitor.stop();
+          },
+          start: function () {
+          },
+          stop: function () {
+          }
+        };
+
+        spyOn(config, 'start').and.callThrough();
+        spyOn(config, 'visible').and.callThrough();
+        spyOn(config, 'stop').and.callThrough();
+
+        var vismon = visobj.monitor(config).start();
+
+        expect(vismon._started).toEqual(false);
+        expect(config.visible.calls.count()).toEqual(1);
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(1);
+
+        jasmine.clock().tick(10000);
+
+        element.style.display = 'none'; // set hidden
+
+        jasmine.clock().tick(10000);
+
+        element.style.display = 'block'; // set hidden
+
+        jasmine.clock().tick(10000);
+
+        expect(vismon._started).toEqual(false);
+        expect(config.visible.calls.count()).toEqual(1);
+        expect(config.start.calls.count()).toEqual(1);
+        expect(config.stop.calls.count()).toEqual(1);
+      });
+
       it('should verify event chain initially hidden -> visible -> fullyvisible -> visible -> hidden', function () {
         var model = {state: '?'};
         var config = {
@@ -697,7 +739,7 @@ describe('VisSense Monitor', function () {
 
         expect(model.state).toEqual('hidden');
 
-        jasmine.clock().tick(150);
+        jasmine.clock().tick(100);
 
         expect(config.start.calls.count()).toEqual(1);
         expect(config.stop.calls.count()).toEqual(0);

@@ -321,8 +321,8 @@
         var _config = defaults(config, {
             async: !1
         });
-        return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (this.update(), 
-        this._pubsub.publish("start", [ this ]), this._strategy.start(this), this._started = !0, 
+        return this._cancelAsyncStart && this._cancelAsyncStart(), _config.async ? this.startAsync() : (this._started = !0, 
+        this.update(), this._pubsub.publish("start", [ this ]), this._strategy.start(this), 
         this);
     }, VisMon.prototype.startAsync = function(config) {
         this._cancelAsyncStart && this._cancelAsyncStart();
@@ -338,7 +338,7 @@
         this._cancelAsyncStart && this._cancelAsyncStart(), this._started && (this._strategy.stop(this), 
         this._pubsub.publish("stop", [ this ])), this._started = !1;
     }, VisMon.prototype.update = function() {
-        this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]);
+        this._started && (this._state = nextState(this._visobj, this._state), this._pubsub.publish("update", [ this ]));
     }, VisMon.prototype.on = function(topic, callback) {
         return this._pubsub.on(topic, callback);
     }, VisMon.Builder = function() {

@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
+### Changed
+- monitor can only be updated if it has been started before
+
+### Fixed
+- possible multiple calls to monitor listeners after stop event
+- publish 'stop' event if monitor is stopped in first update cycle
 
 ## [0.9.0] - 2016-01-12
 ### Added

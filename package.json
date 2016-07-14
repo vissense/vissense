@@ -1,76 +1,61 @@
 {
   "name": "vissense",
-  "version": "0.10.0",
-  "title": "VisSense.js",
-  "homepage": "https://vissense.github.io/vissense",
-  "license": "MIT",
-  "author": {
-    "name": "tbk"
-  },
-  "keywords": [
-    "visibility",
-    "viewtime",
-    "viewport",
-    "visible",
-    "hidden",
-    "monitor",
-    "observe"
-  ],
+  "version": "1.0.0",
+  "description": "",
   "main": "dist/vissense.js",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "test": "grunt default --verbose",
-    "citest": "karma start karma-saucelabs.conf.js"
+    "precommit": "npm test && npm run build",
+    "build": "rimraf dist && webpack --no-minimize && webpack",
+    "coverage": "babel-node node_modules/isparta/bin/isparta cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
+    "coveralls": "npm run coverage && coveralls < coverage/lcov.info && rimraf coverage",
+    "test": "npm run test-server && npm run test-browser",
+    "test-server": "mocha test/server --recursive --compilers js:babel-core/register --bail --require mocha.config.js",
+    "test-browser": "karma start --single-run",
+    "tdd": "npm run test-server -- --watch",
+    "tdd-browser": "karma start"
   },
-  "bugs": {
-    "url": "https://github.com/vissense/vissense/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vissense/vissense.git"
-  },
-  "dependencies": {},
+  "repository": "theborakompanioni/vissense",
+  "keywords": [
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "browserify-shim": "^3.8.12",
-    "grunt": "0.4.5",
-    "grunt-bump": "0.7.0",
-    "grunt-complexity": "0.3.0",
-    "grunt-contrib-clean": "0.7.0",
-    "grunt-contrib-concat": "0.5.1",
-    "grunt-contrib-connect": "0.11.2",
-    "grunt-contrib-jasmine": "0.9.2",
-    "grunt-contrib-jshint": "0.11.3",
-    "grunt-contrib-uglify": "0.11.0",
-    "grunt-contrib-watch": "0.6.1",
-    "grunt-coveralls": "1.0.0",
-    "grunt-jsdoc": "^1.1.0",
-    "grunt-karma": "0.12.1",
-    "grunt-micro": "0.1.0",
-    "grunt-notify": "0.4.3",
-    "grunt-saucelabs": "8.6.2",
-    "grunt-template-jasmine-istanbul": "0.4.0",
-    "grunt-umd": "2.3.5",
-    "ink-docstrap": "^1.1.0",
-    "jsdoc": "^3.4.0",
-    "karma": "^0.13.19",
-    "karma-browserify": "^4.4.2",
-    "karma-chrome-launcher": "0.2.2",
-    "karma-coverage": "0.5.3",
-    "karma-firefox-launcher": "0.1.7",
-    "karma-ie-launcher": "0.2.0",
-    "karma-jasmine": "0.3.6",
-    "karma-opera-launcher": "0.3.0",
-    "karma-phantomjs-launcher": "^0.2.3",
-    "karma-safari-launcher": "0.1.1",
-    "karma-sauce-launcher": "0.3.0",
-    "karma-spec-reporter": "0.0.23",
-    "phantomjs": "1.9.19",
-    "time-grunt": "1.3.0"
+    "babel": "^5.8.3",
+    "babel-core": "^5.8.3",
+    "babel-eslint": "^4.1.4",
+    "babel-loader": "^5.3.3",
+    "chai": "^3.2.0",
+    "coveralls": "^2.11.4",
+    "eslint": "^1.4.1",
+    "eslint-plugin-babel": "^2.1.1",
+    "husky": "^0.10.1",
+    "isparta": "^3.5.1",
+    "karma": "^0.13.14",
+
+
+
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon-chai": "^1.1.0",
+    "karma-spec-reporter": "0.0.18",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.0.0",
+    "phantomjs-polyfill": "0.0.1",
+    "rimraf": "^2.4.3",
+     "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "webpack": "^1.12.2"
   },
-  "browserify-shim": {
-    "external": "global:External"
-  }
+  "author": {
+    "name": "theborakompanioni",
+    "email": "theborakompanioni+github@gmail.com"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "license": "MIT",
+  "dependencies": {}
 }

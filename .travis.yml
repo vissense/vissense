@@ -19,7 +19,7 @@ before_script:
   - 'npm install -g webpack'
   - 'npm install'
 script:
-  - 'npm run test'
+  - 'npm run test-browser'
   - 'npm run build'
 after_success:
   - 'npm run coverage'

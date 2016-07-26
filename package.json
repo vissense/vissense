@@ -33,9 +33,6 @@
     "husky": "^0.10.1",
     "isparta": "^3.5.1",
     "karma": "^0.13.14",
-
-
-
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-sinon-chai": "^1.1.0",

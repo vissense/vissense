@@ -56,9 +56,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
 
 	var VisSense = __webpack_require__(1);
 	var Utils = __webpack_require__(9);
@@ -116,7 +117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	VisSenseWrapper.fn = VisSense.prototype;
 
-	exports['default'] = VisSenseWrapper;
+	exports.default = VisSenseWrapper;
 	module.exports = exports['default'];
 
 /***/ },
@@ -125,13 +126,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var defaults = __webpack_require__(2);
 	var forEach = __webpack_require__(4);
@@ -205,7 +206,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	var VisSense = (function () {
+	var VisSense = function () {
 	    function VisSense(element, config) {
 	        _classCallCheck(this, VisSense);
 
@@ -257,6 +258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     */
 
+
 	    _createClass(VisSense, [{
 	        key: 'element',
 	        value: function element() {
@@ -284,6 +286,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * // => true
 	         *
 	         */
+
 	    }, {
 	        key: 'isFullyVisible',
 	        value: function isFullyVisible() {
@@ -306,6 +309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * // => true
 	         *
 	         */
+
 	    }, {
 	        key: 'isVisible',
 	        value: function isVisible() {
@@ -328,6 +332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * // => false
 	         *
 	         */
+
 	    }, {
 	        key: 'isHidden',
 	        value: function isHidden() {
@@ -351,6 +356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * // => 0.33
 	         *
 	         */
+
 	    }, {
 	        key: 'percentage',
 	        value: function percentage() {
@@ -383,6 +389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *  }
 	         *
 	         */
+
 	    }, {
 	        key: 'state',
 	        value: function state() {
@@ -395,7 +402,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }, this);
 
-	            return hiddenByHook || (function (visobj, element, config) {
+	            return hiddenByHook || function (visobj, element, config) {
 	                var perc = visobj._round(config.percentageHook(element, config.referenceWindow));
 
 	                if (perc <= config.hidden) {
@@ -405,14 +412,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 
 	                return VisState.visible(perc);
-	            })(this, this._element, this._config);
+	            }(this, this._element, this._config);
 	        }
 	    }]);
 
 	    return VisSense;
-	})();
+	}();
 
-	exports['default'] = VisSense;
+	exports.default = VisSense;
 	module.exports = exports['default'];
 
 /***/ },
@@ -421,10 +428,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports['default'] = defaults;
+	exports.default = defaults;
 	var isObject = __webpack_require__(3);
 
 	/**
@@ -452,7 +459,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => { name: 'Max', gender: 'male', age: 31 }
 	 *
 	 */
-
 	function defaults(dest, source) {
 	  var sourceIsObject = isObject(source);
 	  var destIsObject = isObject(dest);
@@ -471,13 +477,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return dest;
 	}
-
 	module.exports = exports['default'];
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	exports.default = isObject;
 	/**
 	 * @function
 	 * @name isObject
@@ -504,26 +518,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * From lodash: [isObject](https://lodash.com/docs#isObject)
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = isObject;
-
 	function isObject(value) {
-	  var type = typeof value;
+	  var type = typeof value === 'undefined' ? 'undefined' : _typeof(value);
 	  return type === 'function' || value && type === 'object' || false;
-	}
-
-	;
+	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
-	
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = forEach;
+
 	/**
 	 * @function
 	 * @name forEach
@@ -545,13 +556,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * });
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = forEach;
-
 	function forEach(array, callback, thisArg) {
 	  for (var i = 0, n = array.length; i < n; i++) {
 	    var result = callback.call(thisArg, array[i], i, array);
@@ -560,14 +564,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 	}
-
-	module.exports = exports["default"];
+	module.exports = exports['default'];
 
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
 
-	
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isElement;
+
 	/**
 	 * @function
 	 * @name isElement
@@ -593,19 +602,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = isElement;
-
 	function isElement(value) {
 	  return value && value.nodeType === 1 || false;
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 6 */
@@ -613,7 +613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	exports.viewport = viewport;
@@ -649,7 +649,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => e.g. { height: 1280, width: 790 }
 	 *
 	 */
-
 	function viewport(referenceWindow) {
 	    var win = referenceWindow || window;
 	    return {
@@ -657,7 +656,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        width: win.innerWidth
 	    };
 	}
-
 	/****************************************************** element-position end */
 
 	/*********************************************************** element-styling */
@@ -682,7 +680,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => CSSStyleDeclaration {parentRule: null, length: 0, cssText: "", ... }
 	 *
 	 */
-
 	function computedStyle(element, referenceWindow) {
 	    return (referenceWindow || window).getComputedStyle(element, null);
 	}
@@ -708,7 +705,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => 'block'
 	 *
 	 */
-
 	function styleProperty(style, property) {
 	    return style.getPropertyValue(property);
 	}
@@ -742,35 +738,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-
-	function isDisplayed(_x, _x2) {
-	    var _again = true;
-
-	    _function: while (_again) {
-	        var element = _x,
-	            style = _x2;
-	        _again = false;
-
-	        if (!style) {
-	            style = computedStyle(element);
-	        }
-
-	        var display = styleProperty(style, 'display');
-	        if (display === 'none') {
-	            return false;
-	        }
-
-	        var parent = element.parentNode;
-	        if (isElement(parent)) {
-	            _x = parent;
-	            _x2 = undefined;
-	            _again = true;
-	            display = parent = undefined;
-	            continue _function;
-	        } else {
-	            return true;
-	        }
+	function isDisplayed(element, style) {
+	    if (!style) {
+	        style = computedStyle(element);
 	    }
+
+	    var display = styleProperty(style, 'display');
+	    if (display === 'none') {
+	        return false;
+	    }
+
+	    var parent = element.parentNode;
+	    return isElement(parent) ? isDisplayed(parent) : true;
 	}
 
 	/**
@@ -795,7 +774,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-
 	function isVisibleByStyling(element, referenceWindow) {
 	    if (element === (referenceWindow || window).document) {
 	        return true;
@@ -814,7 +792,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    return isDisplayed(element, style);
 	}
-
 	/******************************************************* element-styling end */
 
 	/******************************************************** element visibility */
@@ -847,7 +824,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-
 	function isInViewport(rect, viewport) {
 	    if (!rect || rect.width <= 0 || rect.height <= 0) {
 	        return false;
@@ -873,7 +849,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => e.g. 0.333
 	 *
 	 */
-
 	function percentage(element, referenceWindow) {
 	    var rect = element.getBoundingClientRect();
 	    var view = viewport(referenceWindow);
@@ -911,9 +886,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*********************************************************** page visibility */
 	/* istanbul ignore next */
-
 	function createVisibilityApi(referenceWindow) {
-	    return (function (document, undefined) {
+	    return function (document, undefined) {
 	        var entry = function entry(propertyName, eventName) {
 	            return {
 	                property: propertyName,
@@ -947,7 +921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return noop;
 	            }
 	        };
-	    })((referenceWindow || window).document);
+	    }((referenceWindow || window).document);
 	}
 
 	/**
@@ -973,7 +947,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-
 	function isPageVisible(referenceWindow) {
 	    return !createVisibilityApi(referenceWindow || window).isHidden();
 	}
@@ -982,6 +955,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = noop;
 	/**
 	 * @function
 	 * @name noop
@@ -998,17 +977,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = noop;
-
-	function noop() {}
-
-	;
-	module.exports = exports["default"];
+	function noop() {};
+	module.exports = exports['default'];
 
 /***/ },
 /* 8 */
@@ -1016,7 +986,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	var STATES = {
@@ -1084,7 +1054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {boolean} hidden `true` if the element is hidden, otherwise
 	 * `false`.
 	 */
-	exports['default'] = {
+	exports.default = {
 	  /**
 	   * @static
 	   * @function
@@ -1142,7 +1112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	var _async = __webpack_require__(10);
@@ -1176,7 +1146,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var isPageVisible = _elementFunctions.isPageVisible;
 	var createVisibilityApi = _elementFunctions.createVisibilityApi;
 
-	exports['default'] = {
+	exports.default = {
 	    async: _async,
 	    debounce: debounce,
 	    defaults: defaults,
@@ -1220,10 +1190,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports['default'] = async;
+	exports.default = async;
 	var defer = __webpack_require__(11);
 
 	/**
@@ -1253,7 +1223,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-
 	function async(callback, delay) {
 	  return function () {
 	    var args = arguments;
@@ -1262,13 +1231,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, delay || 0);
 	  };
 	}
-
 	module.exports = exports['default'];
 
 /***/ },
 /* 11 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = defer;
 	/**
 	 * @function
 	 * @name defer
@@ -1295,22 +1269,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = defer;
-
 	function defer(callback, delay) {
 	  var timer = setTimeout(callback, delay || 0);
 	  return function () {
 	    clearTimeout(timer);
 	  };
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 12 */
@@ -1318,10 +1283,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports['default'] = debounce;
+	exports.default = debounce;
 	var defer = __webpack_require__(11);
 	var noop = __webpack_require__(7);
 
@@ -1346,7 +1311,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => logs 'resized' after receiving resize events stopped for 200ms
 	 *
 	 */
-
 	function debounce(callback, delay) {
 	  var _this = this,
 	      _arguments = arguments;
@@ -1360,9 +1324,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      callback.apply(self, args);
 	    }, delay);
 	  };
-	}
-
-	;
+	};
 	module.exports = exports['default'];
 
 /***/ },
@@ -1371,10 +1333,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports['default'] = extend;
+	exports.default = extend;
 	var isFunction = __webpack_require__(14);
 	/**
 	 * @function
@@ -1417,7 +1379,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => { name: 'Bradley', age: 73, gender: 'male' }
 	 *
 	 */
-
 	function extend(dest, source, callback) {
 	  var index = -1,
 	      props = Object.keys(source),
@@ -1430,15 +1391,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  return dest;
-	}
-
-	;
+	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 14 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isFunction;
 	/**
 	 * @function
 	 * @name isFunction
@@ -1460,25 +1425,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * From lodash: [isFunction](https://lodash.com/docs#isFunction)
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = isFunction;
-
 	function isFunction(value) {
 	  return typeof value === 'function' || false;
-	}
-
-	;
+	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 15 */
 /***/ function(module, exports) {
 
-	
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = identity;
+
 	/**
 	 * @function
 	 * @name identity
@@ -1497,24 +1459,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = identity;
-
 	function identity(value) {
 	  return value;
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 16 */
 /***/ function(module, exports) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	exports.default = isArray;
 	/**
 	 * @function
 	 * @name isArray
@@ -1536,25 +1498,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * From lodash: [isArray](https://lodash.com/docs#isArray)
 	 */
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = isArray;
-
 	function isArray(value) {
-	  return value && typeof value === 'object' && typeof value.length === 'number' && Object.prototype.toString.call(value) === '[object Array]' || false;
-	}
-
-	;
+	  return value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.length === 'number' && Object.prototype.toString.call(value) === '[object Array]' || false;
+	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 17 */
 /***/ function(module, exports) {
 
-	
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isDefined;
+
 	/**
 	 * @function
 	 * @name isDefined
@@ -1571,19 +1530,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => true
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = isDefined;
-
 	function isDefined(value) {
 	  return value !== undefined;
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 18 */
@@ -1591,10 +1541,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports['default'] = isFriendlyIframeContext;
+	exports.default = isFriendlyIframeContext;
 	var isIframeContext = __webpack_require__(19);
 
 	function isFriendlyIframeContext(win) {
@@ -1610,7 +1560,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return false;
 	  }
 	}
-
 	module.exports = exports['default'];
 
 /***/ },
@@ -1622,8 +1571,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports["default"] = isIframeContext;
-
+	exports.default = isIframeContext;
 	function isIframeContext(win) {
 	  try {
 	    return win.self !== win.top;
@@ -1631,13 +1579,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return true;
 	  }
 	}
-
-	module.exports = exports["default"];
+	module.exports = exports['default'];
 
 /***/ },
 /* 20 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = now;
 	/**
 	 * @function
 	 * @name now
@@ -1657,24 +1610,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => logs the time it took for the deferred function to be invoked
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = now;
-
 	function now() {
 	  return new Date().getTime();
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 21 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = once;
 	/**
 	 * @function
 	 * @name once
@@ -1696,13 +1646,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => exensiveNumber is actually invocing `calculateExpensiveNumber` only once
 	 *
 	 */
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports["default"] = once;
-
 	function once(callback) {
 	  var _arguments = arguments;
 
@@ -1715,10 +1658,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    return cache;
 	  };
-	}
-
-	;
-	module.exports = exports["default"];
+	};
+	module.exports = exports['default'];
 
 /***/ },
 /* 22 */
@@ -1726,10 +1667,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports['default'] = throttle;
+	exports.default = throttle;
 	var defer = __webpack_require__(11);
 	var noop = __webpack_require__(7);
 	var now = __webpack_require__(20);
@@ -1755,7 +1696,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // => logs 'resizing..' at most every 100ms while resizing the browser window
 	 *
 	 */
-
 	function throttle(callback, wait, thisArg) {
 	    var _arguments = arguments;
 
@@ -1779,7 +1719,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	}
-
 	module.exports = exports['default'];
 
 /***/ },
@@ -1792,11 +1731,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var StrategyBase = (function () {
+	var StrategyBase = function () {
 	    function StrategyBase() {
 	        _classCallCheck(this, StrategyBase);
 	    }
@@ -1813,10 +1752,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return StrategyBase;
-	})();
+	}();
 
-	exports["default"] = StrategyBase;
-	module.exports = exports["default"];
+	exports.default = StrategyBase;
+	module.exports = exports['default'];
 
 /***/ },
 /* 24 */
@@ -1824,17 +1763,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var StrategyBase = __webpack_require__(23);
 	var isArray = __webpack_require__(16);
@@ -1865,14 +1804,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	var CompositeStrategy = (function (_StrategyBase) {
+	var CompositeStrategy = function (_StrategyBase) {
 	    _inherits(CompositeStrategy, _StrategyBase);
 
 	    function CompositeStrategy(strategies) {
 	        _classCallCheck(this, CompositeStrategy);
 
-	        _get(Object.getPrototypeOf(CompositeStrategy.prototype), 'constructor', this).call(this);
-	        this._strategies = !strategies ? [] : isArray(strategies) ? strategies : [strategies];
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CompositeStrategy).call(this));
+
+	        _this._strategies = !strategies ? [] : isArray(strategies) ? strategies : [strategies];
+	        return _this;
 	    }
 
 	    _createClass(CompositeStrategy, [{
@@ -1905,15 +1846,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return CompositeStrategy;
-	})(StrategyBase);
+	}(StrategyBase);
 
-	exports['default'] = CompositeStrategy;
+	exports.default = CompositeStrategy;
 	;
 	module.exports = exports['default'];
 
 /***/ },
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
 	 * @typedef {Object} PollingStrategyConfig
@@ -1952,34 +1907,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 	var StrategyBase = __webpack_require__(23);
 	var defaults = __webpack_require__(2);
 
-	var PollingStrategy = (function (_StrategyBase) {
+	var PollingStrategy = function (_StrategyBase) {
 	    _inherits(PollingStrategy, _StrategyBase);
 
 	    function PollingStrategy(config) {
 	        _classCallCheck(this, PollingStrategy);
 
-	        _get(Object.getPrototypeOf(PollingStrategy.prototype), 'constructor', this).call(this);
-	        this._config = defaults(config, {
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PollingStrategy).call(this));
+
+	        _this._config = defaults(config, {
 	            interval: 1000
 	        });
-	        this._started = false;
+	        _this._started = false;
+	        return _this;
 	    }
 
 	    _createClass(PollingStrategy, [{
@@ -2015,9 +1958,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return PollingStrategy;
-	})(StrategyBase);
+	}(StrategyBase);
 
-	exports['default'] = PollingStrategy;
+	exports.default = PollingStrategy;
 	module.exports = exports['default'];
 
 /***/ },
@@ -2026,17 +1969,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var StrategyBase = __webpack_require__(23);
 	var defaults = __webpack_require__(2);
@@ -2082,29 +2025,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	var EventStrategy = (function (_StrategyBase) {
+	var EventStrategy = function (_StrategyBase) {
 	    _inherits(EventStrategy, _StrategyBase);
 
 	    function EventStrategy(config) {
 	        _classCallCheck(this, EventStrategy);
 
-	        _get(Object.getPrototypeOf(EventStrategy.prototype), 'constructor', this).call(this);
-	        this._config = defaults(config, {
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EventStrategy).call(this));
+
+	        _this._config = defaults(config, {
 	            throttle: 50
 	        });
 
-	        if (this._config.debounce > 0) {
-	            this._config.throttle = +this._config.debounce;
+	        if (_this._config.debounce > 0) {
+	            _this._config.throttle = +_this._config.debounce;
 	        }
 
-	        this._started = false;
+	        _this._started = false;
+	        return _this;
 	    }
 
 	    _createClass(EventStrategy, [{
 	        key: 'start',
 	        value: function start(monitor) {
 	            if (!this._started) {
-	                this._removeEventListeners = (function (update) {
+	                this._removeEventListeners = function (update) {
 	                    var referenceWindow = monitor.visobj().referenceWindow();
 	                    var visibilityApi = createVisibilityApi(referenceWindow);
 
@@ -2119,7 +2064,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        referenceWindow.removeEventListener('scroll', update, false);
 	                        removeOnVisibilityChangeEvent();
 	                    };
-	                })(throttle(function () {
+	                }(throttle(function () {
 	                    return monitor.update();
 	                }, this._config.throttle));
 
@@ -2135,6 +2080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *
 	         * @param {VisSense.VisMon} monitor
 	         */
+
 	    }, {
 	        key: 'stop',
 	        value: function stop() {
@@ -2151,9 +2097,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return EventStrategy;
-	})(StrategyBase);
+	}(StrategyBase);
 
-	exports['default'] = EventStrategy;
+	exports.default = EventStrategy;
 	module.exports = exports['default'];
 
 /***/ },
@@ -2162,13 +2108,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var defer = __webpack_require__(11);
 	var defaults = __webpack_require__(2);
@@ -2276,7 +2222,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 
-	var VisMon = (function () {
+	var VisMon = function () {
 	    function VisMon(visobj, config) {
 	        _classCallCheck(this, VisMon);
 
@@ -2338,115 +2284,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, this);
 	    }
 
-	    /**
-	     * This callback function will unregister a previously registered listener.
-	     * It will be returned from any function registering a listener.
-	     * Returns `true` if the listener was successfully unregistered, otherwise
-	     * `false`.
-	     *
-	     * @callback RemoveListenerCallback
-	     * @memberof VisSense.VisMon#
-	     * @param {boolean} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the monitor updates its
-	     * state.
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * @callback OnUpdateCallback
-	     * @memberof VisSense.VisMon#
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the visibility state
-	     * changes.
-	     *
-	     * A visibility change can occur if a state transits from
-	     * - HIDDEN to VISIBILE or FULLY_VISIBILE
-	     * - VISIBLE to FULLY_VISIBLE or HIDDEN
-	     * - FULLY_VISIBLE to HIDDEN or VISIBLE
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * @callback VisMon.OnVisibilityChangeCallback
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the visibility
-	     * percentage changes.
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * This callback will currently be provided with different
-	     * parameters than the others. This is likely to change in
-	     * future versions in favour of a uniform approach.
-	     *
-	     * @callback OnPercentageChangeCallback
-	     * @memberof VisSense.VisMon#
-	     *
-	     * @param {number} newValue The new visible percentage.
-	     * @param {number} oldValue The former visible percentage.
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the visibility
-	     * states changes and the element becomes visible.
-	     *
-	     * This can occur if a state changes from
-	     * - HIDDEN to VISIBLE
-	     * - HIDDEN to FULLY_VISIBLE
-	     *
-	     * *NOTE*: This does not occur when changing from
-	     * - FULLY_VISIBLE to VISIBLE
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * @callback OnVisibleCallback
-	     * @memberof VisSense.VisMon#
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the visibility
-	     * states changes and the element becomes fully visible.
-	     *
-	     * This can occur if a state changes from
-	     * - HIDDEN to FULLY_VISIBLE
-	     * - VISIBLE to FULLY_VISIBLE
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * @callback OnFullyVisibleCallback
-	     * @memberof VisSense.VisMon
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
-	    /**
-	     * This callback function will be called everytime the visibility
-	     * states changes and the element becomes hidden.
-	     *
-	     * This can occur if a state changes from
-	     * - FULLY_VISIBLE to HIDDEN
-	     * - VISIBLE to HIDDEN
-	     *
-	     * As all listeners, it can be removed with the returned
-	     * `RemoveListenerCallback` function of the method registering it.
-	     *
-	     * @callback OnHiddenCallback
-	     * @memberof VisSense.VisMon#
-	     * @param {VisSense.VisMon} vismon A reference to the monitor.
-	     */
-
 	    _createClass(VisMon, [{
 	        key: 'visobj',
 	        value: function visobj() {
@@ -2474,6 +2311,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *
 	         * monitor.publish('myEvent', [arg1, arg2]);
 	         */
+
 	    }, {
 	        key: 'publish',
 	        value: function publish(eventName, args) {
@@ -2518,6 +2356,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *  }
 	         *
 	         */
+
 	    }, {
 	        key: 'state',
 	        value: function state() {
@@ -2555,6 +2394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * monitor.start();
 	         *
 	         */
+
 	    }, {
 	        key: 'start',
 	        value: function start(config) {
@@ -2596,6 +2436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *
 	         * @description Asynchronously starts monitoring the provided element.
 	         */
+
 	    }, {
 	        key: 'startAsync',
 	        value: function startAsync(config) {
@@ -2637,6 +2478,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * visElement.stop();
 	         *
 	         */
+
 	    }, {
 	        key: 'stop',
 	        value: function stop() {
@@ -2674,6 +2516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * vismon.update();
 	         * // -> prints 'update' to console
 	         */
+
 	    }, {
 	        key: 'update',
 	        value: function update() {
@@ -2723,6 +2566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * monitor.start();
 	         *
 	         */
+
 	    }, {
 	        key: 'on',
 	        value: function on(topic, callback) {
@@ -2731,9 +2575,118 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return VisMon;
-	})();
+	}();
 
-	VisMon.Builder = (function () {
+	/**
+	 * This callback function will unregister a previously registered listener.
+	 * It will be returned from any function registering a listener.
+	 * Returns `true` if the listener was successfully unregistered, otherwise
+	 * `false`.
+	 *
+	 * @callback RemoveListenerCallback
+	 * @memberof VisSense.VisMon#
+	 * @param {boolean} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the monitor updates its
+	 * state.
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * @callback OnUpdateCallback
+	 * @memberof VisSense.VisMon#
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the visibility state
+	 * changes.
+	 *
+	 * A visibility change can occur if a state transits from
+	 * - HIDDEN to VISIBILE or FULLY_VISIBILE
+	 * - VISIBLE to FULLY_VISIBLE or HIDDEN
+	 * - FULLY_VISIBLE to HIDDEN or VISIBLE
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * @callback VisMon.OnVisibilityChangeCallback
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the visibility
+	 * percentage changes.
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * This callback will currently be provided with different
+	 * parameters than the others. This is likely to change in
+	 * future versions in favour of a uniform approach.
+	 *
+	 * @callback OnPercentageChangeCallback
+	 * @memberof VisSense.VisMon#
+	 *
+	 * @param {number} newValue The new visible percentage.
+	 * @param {number} oldValue The former visible percentage.
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the visibility
+	 * states changes and the element becomes visible.
+	 *
+	 * This can occur if a state changes from
+	 * - HIDDEN to VISIBLE
+	 * - HIDDEN to FULLY_VISIBLE
+	 *
+	 * *NOTE*: This does not occur when changing from
+	 * - FULLY_VISIBLE to VISIBLE
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * @callback OnVisibleCallback
+	 * @memberof VisSense.VisMon#
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the visibility
+	 * states changes and the element becomes fully visible.
+	 *
+	 * This can occur if a state changes from
+	 * - HIDDEN to FULLY_VISIBLE
+	 * - VISIBLE to FULLY_VISIBLE
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * @callback OnFullyVisibleCallback
+	 * @memberof VisSense.VisMon
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	/**
+	 * This callback function will be called everytime the visibility
+	 * states changes and the element becomes hidden.
+	 *
+	 * This can occur if a state changes from
+	 * - FULLY_VISIBLE to HIDDEN
+	 * - VISIBLE to HIDDEN
+	 *
+	 * As all listeners, it can be removed with the returned
+	 * `RemoveListenerCallback` function of the method registering it.
+	 *
+	 * @callback OnHiddenCallback
+	 * @memberof VisSense.VisMon#
+	 * @param {VisSense.VisMon} vismon A reference to the monitor.
+	 */
+
+	VisMon.Builder = function () {
 	    var combineStrategies = function combineStrategies(config, strategies) {
 	        var combinedStrategies = null;
 	        var forceDisableStrategies = config.strategy === false;
@@ -2834,9 +2787,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        };
 	    };
-	})();
+	}();
 
-	exports['default'] = VisMon;
+	exports.default = VisMon;
 	module.exports = exports['default'];
 
 /***/ },
@@ -2845,13 +2798,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var isFunction = __webpack_require__(14);
 	var defaults = __webpack_require__(2);
@@ -2875,7 +2828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @memberof VisSense
 	 */
 
-	var PubSub = (function () {
+	var PubSub = function () {
 	    function PubSub(config) {
 	        _classCallCheck(this, PubSub);
 
@@ -2948,7 +2901,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (enableAsync) {
 	                syncOrAsyncPublish = async(fireListenersSynchronously);
 	            } else {
-	                syncOrAsyncPublish = function (listeners, args) {
+	                syncOrAsyncPublish = function syncOrAsyncPublish(listeners, args) {
 	                    fireListenersSynchronously(listeners, args);
 	                    return noop;
 	                };
@@ -2961,9 +2914,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }]);
 
 	    return PubSub;
-	})();
+	}();
 
-	exports['default'] = PubSub;
+	exports.default = PubSub;
 	module.exports = exports['default'];
 
 /***/ }

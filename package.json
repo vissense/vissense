@@ -15,8 +15,7 @@
     "tdd-browser": "karma start"
   },
   "repository": "theborakompanioni/vissense",
-  "keywords": [
-  ],
+  "keywords": [],
   "files": [
     "dist",
     "src"
@@ -33,6 +32,7 @@
     "husky": "^0.10.1",
     "isparta": "^3.5.1",
     "karma": "^0.13.14",
+    "karma-fixture": "file:node_modules/karma-fixture",
     "karma-mocha": "^0.1.10",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-sinon-chai": "^1.1.0",
@@ -42,7 +42,7 @@
     "mocha-lcov-reporter": "^1.0.0",
     "phantomjs-polyfill": "0.0.1",
     "rimraf": "^2.4.3",
-     "sinon": "^1.17.2",
+    "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
     "webpack": "^1.12.2"
   },

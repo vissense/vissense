@@ -1,11 +1,10 @@
 [![Build Status](https://api.travis-ci.org/vissense/vissense.png?branch=master)](https://travis-ci.org/vissense/vissense)
+[![Test Status](https://saucelabs.com/buildstatus/vissense)](https://saucelabs.com/beta/builds/fe8f8b9ad75042fb875b4f3e0fd1e8f1)
 [![Coverage Status](https://coveralls.io/repos/vissense/vissense/badge.png)](https://coveralls.io/r/vissense/vissense)
 [![Dependency Status](https://david-dm.org/vissense/vissense.svg)](https://david-dm.org/vissense/vissense)
 [![devDependency Status](https://david-dm.org/vissense/vissense/dev-status.svg)](https://david-dm.org/vissense/vissense#info=devDependencies)
 [![Inline docs](http://inch-ci.org/github/vissense/vissense.svg?branch=master)](http://inch-ci.org/github/vissense/vissense)
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/vissense.svg)](https://saucelabs.com/u/vissense)
 
 ![logo](https://raw.githubusercontent.com/vissense/vissense/master/vissense-logo.png)
 

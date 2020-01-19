@@ -29,7 +29,7 @@ VisSense.js is **lightweight** (<4KB minified and gzipped), **tested** and **doc
 
 Demos and Examples
 ------------
-Check out [this bin for a quick demo](https://jsbin.com/yoqopa/edit?js,console,output).
+Check out [this bin for a quick demo](https://jsbin.com/yoqopa/edit?js,console,output), [or here](https://jsbin.com/zegofij/edit?js,console,output).
 See more examples on the [demo page](https://vissense.github.io/vissense-demo/).
 
 In this simple example a video will only be started if at least 75% of its area is in the users viewport:

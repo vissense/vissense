@@ -1,4 +1,5 @@
 sudo: false
+dist: trusty # needed for "xvfb start"
 language: node_js
 node_js:
   - '0.12'
